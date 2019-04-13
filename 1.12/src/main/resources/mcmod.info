@@ -1,0 +1,16 @@
+[
+{
+  "modid": "randomenchantments",
+  "name": "Random Enchantments",
+  "description": "Adds various miscellaneous enchants and curses to Minecraft.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/Tfarcenim/RandomEnchantments",
+  "updateUrl": "",
+  "authorList": ["Tfarcemin"],
+  "credits": "null",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
