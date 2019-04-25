@@ -94,21 +94,12 @@ public class EventHandler {
     if (arrows.size()==0)return;
     for (Entity arrow : arrows) {
       double speed = arrow.getEntityData().getDouble("speed");
-      //  if (speed < .01) return;
-      // Vec2d arrowXZ = unitVector(new Vec2d(arrowVelocityVector.x, arrowVelocityVector.z));
       AxisAlignedBB box = target.getEntityBoundingBox();
       double diff = box.maxY - box.minY;
       double x1 = target.posX - arrow.posX;
       double y1 = (target.posY+diff/2) - arrow.posY;
       double z1 = target.posZ - arrow.posZ;
-      //  Vec3d entityVec =
-      // Vec2d flatEntityVec = new Vec2d(entityVec.x, entityVec.z);
-      // double angle = (180 / Math.PI) * getAngle(arrowXZ, flatEntityVec);
-      //  if (Math.abs(angle) > 90)continue;
       Vec3d targetDirectionVector = unitVector(new Vec3d(x1, y1, z1));
-
-      // Vec2d shiftedDirection = shift(arrowXZ,targetDirectionVector);
-      //  System.out.println(shiftedDirection);
       if (!world.isRemote) {
         arrow.setVelocity(speed * targetDirectionVector.x, speed * targetDirectionVector.y, speed * targetDirectionVector.z);
         arrow.velocityChanged = true;
