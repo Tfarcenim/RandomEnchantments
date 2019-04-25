@@ -1,6 +1,5 @@
 package com.tfar.randomenchantments.ench.enchantment;
 
-import com.tfar.randomenchantments.EnchantmentConfig;
 import com.tfar.randomenchantments.util.GlobalVars;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -12,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.fml.common.Mod;
 
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.RandomEnchantments.WEAPONS;
 import static com.tfar.randomenchantments.init.ModEnchantment.CURSED_JUMP;
@@ -43,18 +43,18 @@ public class EnchantmentCursedJumping extends Enchantment {
     }
 
     @Override
-    public boolean isAllowedOnBooks() {
-        return weapons.enableCursedJumping == EnchantmentConfig.EnumAccessLevel.NORMAL;
+    public boolean canApply(ItemStack stack){
+        return weapons.enableCursedJumping != DISABLED && super.canApply(stack);
     }
 
     @Override
-    public boolean canApply(ItemStack stack){
-        return weapons.enableCursedJumping != EnchantmentConfig.EnumAccessLevel.DISABLED && super.canApply(stack);
+    public boolean isTreasureEnchantment() {
+        return weapons.enableCursedJumping == ANVIL;
     }
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return isAllowedOnBooks();
+        return weapons.enableCursedJumping == NORMAL && super.canApplyAtEnchantingTable(stack);
     }
 
     @Override

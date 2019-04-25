@@ -3,6 +3,7 @@ package com.tfar.randomenchantments.init;
 import com.tfar.randomenchantments.ench.curse.EnchantmentBreakingCurse;
 import com.tfar.randomenchantments.ench.curse.EnchantmentButterfingersCurse;
 import com.tfar.randomenchantments.ench.curse.EnchantmentFumblingCurse;
+import com.tfar.randomenchantments.ench.curse.EnchantmentShadowCurse;
 import com.tfar.randomenchantments.ench.enchantment.*;
 import com.tfar.randomenchantments.util.GlobalVars;
 
@@ -29,9 +30,13 @@ public class ModEnchantment {
   public static final Enchantment CURSED_JUMP = new EnchantmentCursedJumping();
   public static final Enchantment PARALYSIS = new EnchantmentParalysis();
   public static final Enchantment TRUE_LIFESTEAL = new EnchantmentTrueLifesteal();
+  public static final Enchantment TRUE_SHOT = new EnchantmentTrueShot();
+  public static final Enchantment HOOKED = new EnchantmentHooked();
+  public static final Enchantment PHASING = new EnchantmentPhasing();
+
 
   public static final Enchantment LIGHTNING = new EnchantmentLightning();
-  // public static final enchantment TRANSPOSITION = new EnchantmentTransposition();
+  public static final Enchantment TRANSPOSITION = new EnchantmentTransposition();
   public static final Enchantment RANDOMNESS = new EnchantmentRandomness();
   public static final Enchantment DISARM = new EnchantmentDisarm();
   public static final Enchantment HOMING = new EnchantmentHoming();
@@ -41,6 +46,10 @@ public class ModEnchantment {
   public static final Enchantment COMBO = new EnchantmentCombo();
   public static final Enchantment QUICKDRAW = new EnchantmentQuickdraw();
   public static final Enchantment SWIFT = new EnchantmentSwift();
+  public static final Enchantment PULLING = new EnchantmentGrappling();
+  public static final Enchantment TELEPORTATON = new EnchantmentTeleportation();
+  public static final Enchantment SOLAR = new EnchantmentSolar();
+  public static final Enchantment LUMBERJACK = new EnchantmentLumberjack();
 
 
   public static final Enchantment OBSIDIAN_BUSTER = new EnchantmentObsidianBuster();
@@ -53,7 +62,7 @@ public class ModEnchantment {
   public static final Enchantment BUTTERFINGERS = new EnchantmentButterfingersCurse();
   public static final Enchantment FUMBLING = new EnchantmentFumblingCurse();
   public static final Enchantment BREAKING = new EnchantmentBreakingCurse();
-  //public static final Enchantment LIGHTNING_ROD = new EnchantmentLightningRodCurse();
+  public static final Enchantment SHADOW = new EnchantmentShadowCurse();
 
   @SubscribeEvent
   public static void registerEnchantments(Register<Enchantment> event) {
@@ -70,8 +79,15 @@ public class ModEnchantment {
     enchants.put(DEFLECT,weapons.enableDeflect);
     enchants.put(QUICKDRAW,weapons.enableQuickdraw);
     enchants.put(COMBO,weapons.enableCombo);
-    //enchants.put(SWIFT);
+    enchants.put(SOLAR,weapons.enableSolar);
+    enchants.put(TRUE_SHOT,weapons.enableTrueShot);
+    enchants.put(TELEPORTATON,weapons.enableTeleportation);
+    enchants.put(TRANSPOSITION,weapons.enableTransposition);
+    enchants.put(LUMBERJACK,tools.enableLumberjack);
+    enchants.put(PHASING,weapons.enablePhasing);
 
+
+    //enchants.put(SWIFT);
 
     enchants.put(OBSIDIAN_BUSTER,tools.enableObsidianBuster);
     enchants.put(EQUAL_MINE,tools.enableEqualMine);
@@ -79,12 +95,13 @@ public class ModEnchantment {
     enchants.put(STONELOVER,tools.enableStonelover);
     enchants.put(RANDOMNESS,tools.enableRandomness);
     enchants.put(MOMENTUM,tools.enableMomentum);
+    enchants.put(HOOKED,tools.enableHooked);
+    enchants.put(PULLING,tools.enableGrappling);
 
     enchants.put(BUTTERFINGERS,curses.enableButterfingers);
     enchants.put(FUMBLING,curses.enableFumbling);
     enchants.put(BREAKING,curses.enableBreaking);
-
-    //enchants.put(LIGHTNING_ROD,curses.enableLightningRod);
+    enchants.put(SHADOW,curses.enableShadow);
 
     IForgeRegistry<Enchantment> r = event.getRegistry();
 

@@ -11,6 +11,9 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -19,68 +22,60 @@ import java.util.List;
 
 import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
-import static com.tfar.randomenchantments.init.ModEnchantment.BACK_TO_THE_CHAMBER;
+import static com.tfar.randomenchantments.init.ModEnchantment.*;
+import static com.tfar.randomenchantments.util.EventHandler.eventHandler;
 
 @Mod.EventBusSubscriber(modid = GlobalVars.MOD_ID)
 
-public class EnchantmentBackToTheChamber extends Enchantment {
-  public EnchantmentBackToTheChamber() {
+public class EnchantmentPhasing extends Enchantment {
+  public EnchantmentPhasing() {
     super(Rarity.RARE, EnumEnchantmentType.BOW, new EntityEquipmentSlot[]{
             EntityEquipmentSlot.MAINHAND
     });
-    this.setRegistryName("back_to_the_chamber");
-    this.setName("back_to_the_chamber");
+    this.setRegistryName("phasing");
+    this.setName("phasing");
   }
 
   @Override
   public int getMinEnchantability(int level) {
-    return 5 + 10 * (level - 1);
+    return 25;
   }
 
   @Override
   public int getMaxEnchantability(int level) {
-    return super.getMinEnchantability(level) + 25;
+     return 100;
   }
 
   @Override
   public int getMaxLevel() {
-    return 5;
+    return 1;
   }
 
   @Override
   public boolean canApply(ItemStack stack){
-    return weapons.enableBackToTheChamber != DISABLED && super.canApply(stack);
+    return weapons.enablePhasing != DISABLED && super.canApply(stack);
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return weapons.enableBackToTheChamber == ANVIL;
+    return weapons.enablePhasing == ANVIL;
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return weapons.enableBackToTheChamber == NORMAL && super.canApplyAtEnchantingTable(stack);
+    return weapons.enablePhasing == NORMAL && super.canApplyAtEnchantingTable(stack);
   }
 
   @SubscribeEvent
-  public static void arrowHit(ProjectileImpactEvent event) {
-    if (!(event.getRayTraceResult().entityHit instanceof EntityLivingBase)) return;
+  public static void arrowSpawn(ProjectileImpactEvent event)  {
     Entity entity = event.getEntity();
-    if (!(entity instanceof EntityArrow)) return;
+    if (!(entity instanceof EntityArrow))return;
     Entity shooter = ((EntityArrow) entity).shootingEntity;
-    if (!(shooter instanceof EntityPlayer)) return;
+    if (!(shooter instanceof EntityPlayer))return;
     EntityPlayer player = (EntityPlayer) shooter;
-    int level = EnchantmentHelper.getMaxEnchantmentLevel(BACK_TO_THE_CHAMBER, player);
-    if (5 * Math.random() > level) return;
-    if (!player.world.isRemote) {
-      List<ItemStack> inventory = player.inventory.mainInventory;
-      for (ItemStack stack : inventory) {
-        if (!(stack.getItem() == Items.ARROW || stack.getItem() == Items.TIPPED_ARROW))
-          continue;
-        stack.grow(1);
-        break;
-      }
+    if (EnchantmentHelper.getMaxEnchantmentLevel(PHASING, player)==0)return;
+    if(event.getRayTraceResult().entityHit == null)event.setCanceled(true);
     }
   }
-}
+
 

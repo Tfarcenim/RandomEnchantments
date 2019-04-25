@@ -1,5 +1,6 @@
 package com.tfar.randomenchantments.ench.enchantment;
 
+import com.tfar.randomenchantments.EnchantmentConfig;
 import com.tfar.randomenchantments.util.GlobalVars;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -15,21 +16,22 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.ANVIL;
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.DISABLED;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
+import static com.tfar.randomenchantments.init.ModEnchantment.HOMING;
+import static com.tfar.randomenchantments.init.ModEnchantment.TRUE_SHOT;
 import static com.tfar.randomenchantments.util.EventHandler.eventHandler;
 
-
-import static com.tfar.randomenchantments.init.ModEnchantment.HOMING;
 @Mod.EventBusSubscriber(modid= GlobalVars.MOD_ID)
 
-public class EnchantmentHoming extends Enchantment {
-  public EnchantmentHoming() {
+public class EnchantmentTrueShot extends Enchantment {
+  public EnchantmentTrueShot() {
     super(Rarity.RARE, EnumEnchantmentType.BOW, new EntityEquipmentSlot[]{
             EntityEquipmentSlot.MAINHAND
     });
-    this.setRegistryName("homing");
-    this.setName("homing");
+    this.setRegistryName("true_shot");
+    this.setName("true_shot");
   }
 
   @Override
@@ -49,30 +51,23 @@ public class EnchantmentHoming extends Enchantment {
 
   @Override
   public boolean canApply(ItemStack stack){
-    return weapons.enableHoming != DISABLED && super.canApply(stack);
+    return weapons.enableTrueShot != DISABLED && super.canApply(stack);
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return weapons.enableHoming == ANVIL;
+    return weapons.enableTrueShot == ANVIL;
   }
 
   @SubscribeEvent
-  public static void arrowImpact(EntityJoinWorldEvent event)  {
+  public static void arrowSpawn(EntityJoinWorldEvent event)  {
     Entity entity = event.getEntity();
     if (!(entity instanceof EntityArrow))return;
     Entity shooter = ((EntityArrow) entity).shootingEntity;
     if (!(shooter instanceof EntityPlayer))return;
     EntityPlayer player = (EntityPlayer) shooter;
-      if (EnchantmentHelper.getMaxEnchantmentLevel(HOMING, player)==0)return;
-    NBTTagCompound compound = entity.getEntityData();
-    compound.setInteger("homing",1);
-    compound.setDouble("speed", eventHandler.absValue(new Vec3d(entity.motionX, entity.motionY, entity.motionZ)));
-
+      if (EnchantmentHelper.getMaxEnchantmentLevel(TRUE_SHOT, player)==0)return;
     entity.setNoGravity(true);
-  //  if ((EnchantmentHelper.getMaxEnchantmentLevel(FLOAT, user) > 0 && target instanceof EntityLivingBase)){
-   //   ((EntityLivingBase)target).
-      //        addPotionEffect(new PotionEffect(MobEffects.LEVITATION, 200, 1));
     }
   }
 

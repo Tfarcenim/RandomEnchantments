@@ -1,6 +1,5 @@
 package com.tfar.randomenchantments.ench.enchantment;
 
-import com.tfar.randomenchantments.EnchantmentConfig;
 import com.tfar.randomenchantments.util.GlobalVars;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
@@ -10,6 +9,8 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.ANVIL;
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.DISABLED;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.RandomEnchantments.WEAPONS;
 
@@ -41,18 +42,13 @@ public class EnchantmentLightning extends Enchantment {
     }
 
     @Override
-    public boolean isAllowedOnBooks() {
-        return weapons.enableLightning == EnchantmentConfig.EnumAccessLevel.NORMAL;
-    }
-
-    @Override
     public boolean canApply(ItemStack stack){
-        return weapons.enableLightning != EnchantmentConfig.EnumAccessLevel.DISABLED && super.canApply(stack);
+        return weapons.enableLightning != DISABLED && super.canApply(stack);
     }
 
     @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return isAllowedOnBooks();
+    public boolean isTreasureEnchantment() {
+        return weapons.enableLightning == ANVIL;
     }
 
     @Override

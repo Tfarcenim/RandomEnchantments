@@ -11,6 +11,9 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.ANVIL;
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.DISABLED;
+import static com.tfar.randomenchantments.EnchantmentConfig.tools;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.RandomEnchantments.WEAPONS;
 import static com.tfar.randomenchantments.init.ModEnchantment.INSTANT_DEATH;
@@ -42,24 +45,18 @@ public class EnchantmentInstantDeath extends Enchantment {
     }
 
     @Override
-    public boolean isAllowedOnBooks() {
-        return weapons.enableInstantDeath == EnchantmentConfig.EnumAccessLevel.NORMAL;
-    }
-
-    @Override
     public boolean canApply(ItemStack stack){
-        return weapons.enableInstantDeath != EnchantmentConfig.EnumAccessLevel.DISABLED && super.canApply(stack);
+        return weapons.enableInstantDeath != DISABLED && super.canApply(stack);
     }
 
     @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return isAllowedOnBooks();
+    public boolean isTreasureEnchantment() {
+        return weapons.enableInstantDeath == ANVIL;
     }
 
     @Override
     public void onEntityDamaged(EntityLivingBase user, Entity target, int level) {
-        EntityLivingBase u = user;
-        if (EnchantmentHelper.getMaxEnchantmentLevel(INSTANT_DEATH, u) > 0 && target instanceof EntityLivingBase) {
+        if (EnchantmentHelper.getMaxEnchantmentLevel(INSTANT_DEATH, user) > 0 && target instanceof EntityLivingBase) {
 
             EntityLivingBase victim = (EntityLivingBase) target;
             victim.setHealth(0);

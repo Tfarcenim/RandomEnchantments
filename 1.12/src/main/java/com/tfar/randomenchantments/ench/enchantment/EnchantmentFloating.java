@@ -12,6 +12,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.fml.common.Mod;
 
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.ANVIL;
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.DISABLED;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.RandomEnchantments.WEAPONS;
 import static com.tfar.randomenchantments.init.ModEnchantment.FLOATING;
@@ -42,18 +44,13 @@ public class EnchantmentFloating extends Enchantment {
     }
 
     @Override
-    public boolean isAllowedOnBooks() {
-        return weapons.enableFloating == EnchantmentConfig.EnumAccessLevel.NORMAL;
-    }
-
-    @Override
     public boolean canApply(ItemStack stack){
-        return weapons.enableFloating != EnchantmentConfig.EnumAccessLevel.DISABLED && super.canApply(stack);
+        return weapons.enableFloating != DISABLED && super.canApply(stack);
     }
 
     @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return isAllowedOnBooks();
+    public boolean isTreasureEnchantment() {
+        return weapons.enableFloating == ANVIL;
     }
 
     @Override

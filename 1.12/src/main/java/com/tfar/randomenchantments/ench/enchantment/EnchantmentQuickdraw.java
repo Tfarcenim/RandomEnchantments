@@ -15,6 +15,8 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.ANVIL;
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.DISABLED;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.init.ModEnchantment.*;
 import static net.minecraft.enchantment.EnchantmentHelper.*;
@@ -46,18 +48,13 @@ public class EnchantmentQuickdraw extends Enchantment {
   }
 
   @Override
-  public boolean isAllowedOnBooks() {
-    return weapons.enableQuickdraw == EnchantmentConfig.EnumAccessLevel.NORMAL;
-  }
-
-  @Override
   public boolean canApply(ItemStack stack){
-    return weapons.enableQuickdraw != EnchantmentConfig.EnumAccessLevel.DISABLED && super.canApply(stack);
+    return weapons.enableQuickdraw != DISABLED && super.canApply(stack);
   }
 
   @Override
-  public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return isAllowedOnBooks();
+  public boolean isTreasureEnchantment() {
+    return weapons.enableQuickdraw == ANVIL;
   }
 
   @SubscribeEvent

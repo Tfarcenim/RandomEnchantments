@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Mod;
 
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.RandomEnchantments.WEAPONS;
 import static com.tfar.randomenchantments.init.ModEnchantment.DISARM;
@@ -44,18 +45,18 @@ public class EnchantmentDisarm extends Enchantment {
     }
 
     @Override
-    public boolean isAllowedOnBooks() {
-        return weapons.enableDisarm == EnchantmentConfig.EnumAccessLevel.NORMAL;
-    }
-
-    @Override
     public boolean canApply(ItemStack stack){
-        return weapons.enableDisarm != EnchantmentConfig.EnumAccessLevel.DISABLED && super.canApply(stack);
+        return weapons.enableDisarm != DISABLED && super.canApply(stack);
     }
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return isAllowedOnBooks();
+        return weapons.enableDisarm == NORMAL && super.canApplyAtEnchantingTable(stack);
+    }
+
+    @Override
+    public boolean isTreasureEnchantment() {
+        return weapons.enableDisarm == ANVIL;
     }
 
     @Override

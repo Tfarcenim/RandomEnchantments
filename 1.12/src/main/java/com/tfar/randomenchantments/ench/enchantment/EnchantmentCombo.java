@@ -1,6 +1,5 @@
 package com.tfar.randomenchantments.ench.enchantment;
 
-import com.tfar.randomenchantments.EnchantmentConfig;
 import com.tfar.randomenchantments.RandomEnchantments;
 import com.tfar.randomenchantments.network.PacketHandler;
 import com.tfar.randomenchantments.util.GlobalVars;
@@ -18,14 +17,16 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
+import static com.tfar.randomenchantments.EnchantmentConfig.*;
 import static com.tfar.randomenchantments.init.ModEnchantment.COMBO;
+import static net.minecraft.enchantment.EnumEnchantmentType.WEAPON;
 
 @Mod.EventBusSubscriber(modid = GlobalVars.MOD_ID)
 public class EnchantmentCombo extends Enchantment {
   public EnchantmentCombo() {
 
-    super(Rarity.RARE, EnumEnchantmentType.WEAPON, new EntityEquipmentSlot[]{
+    super(Rarity.RARE, WEAPON, new EntityEquipmentSlot[]{
             EntityEquipmentSlot.MAINHAND
     });
     this.setRegistryName("combo");
@@ -48,18 +49,18 @@ public class EnchantmentCombo extends Enchantment {
   }
 
   @Override
-  public boolean isAllowedOnBooks() {
-    return weapons.enableCombo == EnchantmentConfig.EnumAccessLevel.NORMAL;
+  public boolean canApply(ItemStack stack){
+    return weapons.enableCombo != DISABLED && super.canApply(stack);
   }
 
   @Override
-  public boolean canApply(ItemStack stack){
-    return weapons.enableBackToTheChamber != EnchantmentConfig.EnumAccessLevel.DISABLED && super.canApply(stack);
+  public boolean isTreasureEnchantment() {
+    return weapons.enableCombo == ANVIL;
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return isAllowedOnBooks();
+    return weapons.enableCombo == NORMAL && super.canApplyAtEnchantingTable(stack);
   }
 
   @SubscribeEvent

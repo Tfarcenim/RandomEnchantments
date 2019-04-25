@@ -14,6 +14,8 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.ANVIL;
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.DISABLED;
 import static com.tfar.randomenchantments.EnchantmentConfig.tools;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.init.ModEnchantment.*;
@@ -45,18 +47,13 @@ public class EnchantmentStonebound extends Enchantment {
     }
 
     @Override
-    public boolean isAllowedOnBooks() {
-        return tools.enableStonebound == EnchantmentConfig.EnumAccessLevel.NORMAL;
-    }
-
-    @Override
     public boolean canApply(ItemStack stack){
-        return tools.enableStonebound != EnchantmentConfig.EnumAccessLevel.DISABLED && super.canApply(stack);
+        return tools.enableStonebound != DISABLED && super.canApply(stack);
     }
 
     @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return isAllowedOnBooks();
+    public boolean isTreasureEnchantment() {
+        return tools.enableStonebound == ANVIL;
     }
 
     @SubscribeEvent

@@ -9,11 +9,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.config.Config;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.tools;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.init.ModEnchantment.MOMENTUM;
@@ -45,18 +47,13 @@ public class EnchantmentMomentum extends Enchantment {
   }
 
   @Override
-  public boolean isAllowedOnBooks() {
-    return tools.enableMomentum == EnchantmentConfig.EnumAccessLevel.NORMAL;
-  }
-
-  @Override
   public boolean canApply(ItemStack stack){
-    return tools.enableMomentum != EnchantmentConfig.EnumAccessLevel.DISABLED && super.canApply(stack);
+    return tools.enableMomentum != DISABLED && super.canApply(stack);
   }
 
   @Override
-  public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return isAllowedOnBooks();
+  public boolean isTreasureEnchantment() {
+    return tools.enableMomentum == ANVIL;
   }
 
   @SubscribeEvent

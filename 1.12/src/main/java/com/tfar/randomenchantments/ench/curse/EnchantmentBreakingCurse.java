@@ -13,6 +13,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.curses;
+import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.init.ModEnchantment.BREAKING;
 
 @Mod.EventBusSubscriber(modid= GlobalVars.MOD_ID)
@@ -51,8 +52,9 @@ public class EnchantmentBreakingCurse extends Enchantment {
     {
         return true;
     }
+
     @Override
-    public boolean isTreasureEnchantment(){
+    public boolean isTreasureEnchantment() {
         return curses.enableBreaking == ANVIL;
     }
 

@@ -1,7 +1,5 @@
 package com.tfar.randomenchantments.ench.enchantment;
 
-import com.tfar.randomenchantments.EnchantmentConfig;
-import com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel;
 import com.tfar.randomenchantments.util.GlobalVars;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -46,18 +44,18 @@ public class EnchantmentTrueLifesteal extends Enchantment {
     }
 
     @Override
-    public boolean isAllowedOnBooks() {
-        return weapons.enable2Lifesteal == EnchantmentConfig.EnumAccessLevel.NORMAL;
+    public boolean canApply(ItemStack stack){
+        return weapons.enable2Lifesteal != DISABLED && super.canApply(stack);
     }
 
     @Override
-    public boolean canApply(ItemStack stack){
-        return weapons.enable2Lifesteal != EnchantmentConfig.EnumAccessLevel.DISABLED && super.canApply(stack);
+    public boolean isTreasureEnchantment() {
+        return weapons.enable2Lifesteal == ANVIL;
     }
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return isAllowedOnBooks();
+        return weapons.enable2Lifesteal == NORMAL && super.canApplyAtEnchantingTable(stack);
     }
 
     @SubscribeEvent
@@ -71,5 +69,6 @@ public class EnchantmentTrueLifesteal extends Enchantment {
                 player.heal(damage);
             }
         }
+        //Ingredient.fromStacks(new ItemStack(Items.DIAMOND));
     }
 }

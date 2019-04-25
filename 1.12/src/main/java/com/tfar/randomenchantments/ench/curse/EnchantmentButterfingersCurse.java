@@ -46,7 +46,7 @@ public class EnchantmentButterfingersCurse extends Enchantment {
     @Override
     public boolean canApply(ItemStack stack)
     {
-        return curses.enableButterfingers != DISABLED && stack.isItemStackDamageable() || super.canApply(stack);
+        return curses.enableButterfingers != DISABLED && super.canApply(stack);
     }
 
     @Override

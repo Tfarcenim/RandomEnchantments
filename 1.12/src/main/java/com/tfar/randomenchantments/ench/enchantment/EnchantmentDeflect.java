@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.init.ModEnchantment.DEFLECT;
 
@@ -49,18 +50,18 @@ public class EnchantmentDeflect extends Enchantment {
   }
 
   @Override
-  public boolean isAllowedOnBooks() {
-    return weapons.enableDeflect == EnchantmentConfig.EnumAccessLevel.NORMAL;
+  public boolean canApply(ItemStack stack){
+    return weapons.enableDeflect != DISABLED && super.canApply(stack);
   }
 
   @Override
-  public boolean canApply(ItemStack stack){
-    return weapons.enableDeflect != EnchantmentConfig.EnumAccessLevel.DISABLED && super.canApply(stack);
+  public boolean isTreasureEnchantment() {
+    return weapons.enableDeflect == ANVIL;
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return isAllowedOnBooks();
+    return weapons.enableDeflect == NORMAL && super.canApplyAtEnchantingTable(stack);
   }
 
   @SubscribeEvent

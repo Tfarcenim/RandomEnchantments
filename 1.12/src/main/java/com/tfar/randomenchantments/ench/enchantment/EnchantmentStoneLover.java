@@ -12,6 +12,8 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.ANVIL;
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.DISABLED;
 import static com.tfar.randomenchantments.EnchantmentConfig.tools;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.RandomEnchantments.PICKAXE;
@@ -44,18 +46,13 @@ public class EnchantmentStoneLover extends Enchantment{
     }
 
     @Override
-    public boolean isAllowedOnBooks() {
-        return tools.enableStonelover == EnchantmentConfig.EnumAccessLevel.NORMAL;
-    }
-
-    @Override
     public boolean canApply(ItemStack stack){
-        return tools.enableStonelover != EnchantmentConfig.EnumAccessLevel.DISABLED && super.canApply(stack);
+        return tools.enableStonelover != DISABLED && super.canApply(stack);
     }
 
     @Override
-    public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return isAllowedOnBooks();
+    public boolean isTreasureEnchantment() {
+        return tools.enableStonelover == ANVIL;
     }
 
     @SubscribeEvent
