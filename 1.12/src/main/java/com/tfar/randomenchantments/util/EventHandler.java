@@ -3,6 +3,9 @@ package com.tfar.randomenchantments.util;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityEnderman;
+import net.minecraft.entity.passive.EntityAnimal;
+import net.minecraft.entity.passive.EntityOcelot;
+import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -77,8 +80,7 @@ public class EventHandler {
   @SubscribeEvent
     public void homingArrows(LivingEvent.LivingUpdateEvent event) {
     EntityLivingBase target = event.getEntityLiving();
-    if (target == null)return;
-    if (target instanceof EntityPlayer || target instanceof EntityEnderman)return;
+    if (target.world.isRemote)return;
     World world = target.world;
     int r = 8;
     double x = target.posX;
@@ -88,22 +90,17 @@ public class EventHandler {
     if (arrows.size() == 0)return;
     ArrayList<Entity> nonHoming = new ArrayList<>();
     for (Entity arrow : arrows) {
+      if (arrow.ticksExisted > 400 && arrow.hasNoGravity())arrow.setDead();
       if ((arrow.getEntityData().getInteger("homing")) != 1) nonHoming.add(arrow);
     }
     arrows.removeAll(nonHoming);
-    if (arrows.size()==0)return;
+    if (arrows.size() == 0 || target instanceof EntityPlayer || target instanceof EntityEnderman || target instanceof EntityAnimal)return;
     for (Entity arrow : arrows) {
       double speed = arrow.getEntityData().getDouble("speed");
       AxisAlignedBB box = target.getEntityBoundingBox();
       double diff = box.maxY - box.minY;
-      double x1 = target.posX - arrow.posX;
-      double y1 = (target.posY+diff/2) - arrow.posY;
-      double z1 = target.posZ - arrow.posZ;
-      Vec3d targetDirectionVector = unitVector(new Vec3d(x1, y1, z1));
-      if (!world.isRemote) {
-        arrow.setVelocity(speed * targetDirectionVector.x, speed * targetDirectionVector.y, speed * targetDirectionVector.z);
+        arrow.setVelocity(speed * (target.posX - arrow.posX), speed * (target.posY+diff/2 - arrow.posY), speed * (target.posZ - arrow.posZ));
         arrow.velocityChanged = true;
-      }
     }
   }
 

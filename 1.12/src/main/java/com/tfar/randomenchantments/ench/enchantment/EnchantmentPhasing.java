@@ -74,6 +74,7 @@ public class EnchantmentPhasing extends Enchantment {
     if (!(shooter instanceof EntityPlayer))return;
     EntityPlayer player = (EntityPlayer) shooter;
     if (EnchantmentHelper.getMaxEnchantmentLevel(PHASING, player)==0)return;
+    if (entity.ticksExisted > 1200)entity.setDead();
     if(event.getRayTraceResult().entityHit == null)event.setCanceled(true);
     }
   }
