@@ -1,6 +1,5 @@
 package com.tfar.randomenchantments.ench.enchantment;
 
-import com.tfar.randomenchantments.EnchantmentConfig;
 import com.tfar.randomenchantments.util.GlobalVars;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -10,8 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -19,9 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.ANVIL;
 import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.DISABLED;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
-import static com.tfar.randomenchantments.init.ModEnchantment.HOMING;
 import static com.tfar.randomenchantments.init.ModEnchantment.TRUE_SHOT;
-import static com.tfar.randomenchantments.util.EventHandler.eventHandler;
 
 @Mod.EventBusSubscriber(modid= GlobalVars.MOD_ID)
 

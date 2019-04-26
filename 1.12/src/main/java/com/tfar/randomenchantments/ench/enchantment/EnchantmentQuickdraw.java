@@ -1,8 +1,7 @@
 package com.tfar.randomenchantments.ench.enchantment;
 
-import com.tfar.randomenchantments.EnchantmentConfig;
+import com.tfar.randomenchantments.RandomEnchantments;
 import com.tfar.randomenchantments.util.GlobalVars;
-import com.tfar.randomenchantments.util.ReflectionUtils;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.EntityLivingBase;
@@ -13,7 +12,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.lang.reflect.Method;
 
 import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.ANVIL;
 import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.DISABLED;
@@ -57,6 +59,8 @@ public class EnchantmentQuickdraw extends Enchantment {
     return weapons.enableQuickdraw == ANVIL;
   }
 
+  private static Method m = ObfuscationReflectionHelper.findMethod(EntityLivingBase.class,"func_184608_ct",Void.TYPE);
+
   @SubscribeEvent
   public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
     if (event.getEntity() instanceof EntityPlayer) {
@@ -72,11 +76,15 @@ public class EnchantmentQuickdraw extends Enchantment {
       }
     }
   }
-
+  //borrowed from cyclic
+  //player.updateActiveHand();//BUT its protected bahhhh
   private static void tickHeldBow(EntityPlayer player) {
-    //borrowed from cyclic
-    //player.updateActiveHand();//BUT its protected bahhhh
-    ReflectionUtils.callPrivateMethod(EntityLivingBase.class, player, "updateActiveHand", "func_184608_ct");
+    try {
+      m.invoke(player);
+    }
+    catch (Exception e) {
+      RandomEnchantments.logger.error("Reflection error ", e);
+    }
   }
 }
 

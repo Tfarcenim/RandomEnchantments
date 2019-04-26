@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.Mod;
 import static com.tfar.randomenchantments.RandomEnchantments.SHIELDS;
 
 
-@Mod.EventBusSubscriber(modid= GlobalVars.MOD_ID)
+//@Mod.EventBusSubscriber(modid= GlobalVars.MOD_ID)
 public class EnchantmentReflect extends Enchantment {
     public EnchantmentReflect() {
 

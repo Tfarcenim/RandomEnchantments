@@ -46,7 +46,7 @@ public class EnchantmentFlight extends Enchantment {
                         && ((ItemArmor) stack.getItem()).armorType == EntityEquipmentSlot.CHEST;
     }
 
-    @SubscribeEvent
+  /*  @SubscribeEvent
     public static void onLivingUpdateEvent(LivingEvent.LivingUpdateEvent event) {
 
         EntityLivingBase e = event.getEntityLiving();
@@ -58,5 +58,5 @@ public class EnchantmentFlight extends Enchantment {
                 ((EntityPlayer) e).capabilities.isFlying = false;
             }
       //  }
-    }
+    }*/
 }
