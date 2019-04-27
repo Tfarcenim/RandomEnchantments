@@ -48,7 +48,7 @@ public class EventHandler {
     if (e.phase != TickEvent.Phase.END) return;
     List<EntityArrow> remove = new ArrayList<>();
     for (EntityArrow arrow : homingarrows) {
-      if (arrow.ticksExisted > 1200 || arrow.isDead) { arrow.setDead();remove.add(arrow);continue; }
+      if (arrow.ticksExisted > 400 || arrow.isDead) { arrow.setDead();remove.add(arrow);continue; }
       World world = arrow.world;
       int r = 8;
       double x = arrow.posX;

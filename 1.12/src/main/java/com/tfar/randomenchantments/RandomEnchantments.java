@@ -22,7 +22,7 @@ import java.util.function.Predicate;
 import static com.tfar.randomenchantments.util.GlobalVars.*;
 
 @Mod.EventBusSubscriber
-@Mod(modid = MOD_ID, name = GlobalVars.NAME, version = GlobalVars.VERSION)
+@Mod(modid = MOD_ID, name = GlobalVars.NAME, version = GlobalVars.VERSION,dependencies = "required:forge@[14.23.5.2796,);")
 
 public class RandomEnchantments {
     public static final EnumEnchantmentType WEAPONS = RandomEnchantments.addEnchantment("weapons", item -> item instanceof ItemSword || item instanceof ItemBow);
