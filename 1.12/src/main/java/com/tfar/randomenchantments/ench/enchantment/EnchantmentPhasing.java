@@ -55,7 +55,12 @@ public class EnchantmentPhasing extends Enchantment {
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return weapons.enablePhasing == NORMAL && super.canApplyAtEnchantingTable(stack);
+    return weapons.enablePhasing != DISABLED && super.canApplyAtEnchantingTable(stack);
+  }
+
+  @Override
+  public boolean isAllowedOnBooks() {
+    return weapons.enablePhasing == NORMAL;
   }
 
   @SubscribeEvent

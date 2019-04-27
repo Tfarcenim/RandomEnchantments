@@ -5,7 +5,6 @@ import com.tfar.randomenchantments.network.PacketHandler;
 import com.tfar.randomenchantments.util.GlobalVars;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -60,7 +59,12 @@ public class EnchantmentCombo extends Enchantment {
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return weapons.enableCombo == NORMAL && super.canApplyAtEnchantingTable(stack);
+    return weapons.enableCombo != DISABLED && super.canApplyAtEnchantingTable(stack);
+  }
+
+  @Override
+  public boolean isAllowedOnBooks() {
+    return weapons.enableCombo == NORMAL;
   }
 
   @SubscribeEvent

@@ -61,7 +61,12 @@ public class EnchantmentDeflect extends Enchantment {
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return weapons.enableDeflect == NORMAL && super.canApplyAtEnchantingTable(stack);
+    return weapons.enableDeflect != DISABLED && super.canApplyAtEnchantingTable(stack);
+  }
+
+  @Override
+  public boolean isAllowedOnBooks() {
+    return weapons.enableDeflect == NORMAL;
   }
 
   @SubscribeEvent

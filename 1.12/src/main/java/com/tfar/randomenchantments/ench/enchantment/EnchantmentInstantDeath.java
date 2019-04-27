@@ -11,8 +11,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.ANVIL;
-import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.DISABLED;
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.tools;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.RandomEnchantments.WEAPONS;
@@ -52,6 +51,16 @@ public class EnchantmentInstantDeath extends Enchantment {
     @Override
     public boolean isTreasureEnchantment() {
         return weapons.enableInstantDeath == ANVIL;
+    }
+
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack) {
+        return weapons.enableInstantDeath != DISABLED && super.canApplyAtEnchantingTable(stack);
+    }
+
+    @Override
+    public boolean isAllowedOnBooks() {
+        return weapons.enableInstantDeath == NORMAL;
     }
 
     @Override

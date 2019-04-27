@@ -15,8 +15,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.ANVIL;
-import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.DISABLED;
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.tools;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.init.ModEnchantment.EQUAL_MINE;
@@ -55,6 +54,16 @@ public class EnchantmentEqualMine extends Enchantment {
   @Override
   public boolean isTreasureEnchantment() {
     return tools.enableEqualMine == ANVIL;
+  }
+
+  @Override
+  public boolean canApplyAtEnchantingTable(ItemStack stack) {
+    return tools.enableEqualMine != DISABLED && super.canApplyAtEnchantingTable(stack);
+  }
+
+  @Override
+  public boolean isAllowedOnBooks() {
+    return tools.enableEqualMine == NORMAL;
   }
 
 @SubscribeEvent

@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
+import static com.tfar.randomenchantments.EnchantmentConfig.tools;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.ench.curse.EnchantmentShadowCurse.repair;
 import static com.tfar.randomenchantments.init.ModEnchantment.SOLAR;
@@ -57,6 +58,16 @@ public class EnchantmentSolar extends Enchantment {
     @Override
     public boolean isTreasureEnchantment() {
         return weapons.enableSolar == ANVIL;
+    }
+
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack) {
+        return weapons.enableSolar != DISABLED && super.canApplyAtEnchantingTable(stack);
+    }
+
+    @Override
+    public boolean isAllowedOnBooks() {
+        return weapons.enableSolar == NORMAL;
     }
 
     @SubscribeEvent

@@ -55,7 +55,12 @@ public class EnchantmentTrueLifesteal extends Enchantment {
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return weapons.enable2Lifesteal == NORMAL && super.canApplyAtEnchantingTable(stack);
+        return weapons.enable2Lifesteal != DISABLED && super.canApplyAtEnchantingTable(stack);
+    }
+
+    @Override
+    public boolean isAllowedOnBooks() {
+        return weapons.enable2Lifesteal == NORMAL;
     }
 
     @SubscribeEvent

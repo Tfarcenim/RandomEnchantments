@@ -59,8 +59,14 @@ public class EnchantmentBackToTheChamber extends Enchantment {
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return weapons.enableBackToTheChamber == NORMAL && super.canApplyAtEnchantingTable(stack);
+    return weapons.enableBackToTheChamber != DISABLED && super.canApplyAtEnchantingTable(stack);
   }
+
+  @Override
+  public boolean isAllowedOnBooks() {
+      return weapons.enableBackToTheChamber == NORMAL;
+    }
+
 
   @SubscribeEvent
   public static void arrowHit(ProjectileImpactEvent event) {

@@ -1,6 +1,5 @@
 package com.tfar.randomenchantments.ench.enchantment;
 
-import com.tfar.randomenchantments.EnchantmentConfig;
 import com.tfar.randomenchantments.util.GlobalVars;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -15,12 +14,11 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.ANVIL;
-import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.DISABLED;
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.tools;
-import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.init.ModEnchantment.PULLING;
-import static java.lang.Math.*;
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 
 @Mod.EventBusSubscriber(modid = GlobalVars.MOD_ID)
 
@@ -56,6 +54,16 @@ public class EnchantmentGrappling extends Enchantment {
   @Override
   public boolean isTreasureEnchantment() {
     return tools.enableGrappling == ANVIL;
+  }
+
+  @Override
+  public boolean canApplyAtEnchantingTable(ItemStack stack) {
+    return tools.enableGrappling != DISABLED && super.canApplyAtEnchantingTable(stack);
+  }
+
+  @Override
+  public boolean isAllowedOnBooks() {
+    return tools.enableGrappling == NORMAL;
   }
 
   @SubscribeEvent

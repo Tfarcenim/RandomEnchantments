@@ -7,28 +7,19 @@ import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.init.Enchantments;
-import net.minecraft.init.Items;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemArrow;
-import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.StatList;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
-
-
 import static com.tfar.randomenchantments.init.ModEnchantment.HOMING;
-import static com.tfar.randomenchantments.util.EventHandler.*;
+import static com.tfar.randomenchantments.util.EventHandler.absValue;
+import static com.tfar.randomenchantments.util.EventHandler.homingarrows;
 
 @Mod.EventBusSubscriber(modid= GlobalVars.MOD_ID)
 
@@ -64,6 +55,16 @@ public class EnchantmentHoming extends Enchantment {
   @Override
   public boolean isTreasureEnchantment() {
     return weapons.enableHoming == ANVIL;
+  }
+
+  @Override
+  public boolean canApplyAtEnchantingTable(ItemStack stack) {
+    return weapons.enableHoming != DISABLED && super.canApplyAtEnchantingTable(stack);
+  }
+
+  @Override
+  public boolean isAllowedOnBooks() {
+    return weapons.enableHoming == NORMAL;
   }
 
   @SubscribeEvent

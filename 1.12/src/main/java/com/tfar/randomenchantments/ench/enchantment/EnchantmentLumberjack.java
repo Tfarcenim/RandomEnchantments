@@ -14,9 +14,9 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.ANVIL;
-import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.DISABLED;
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.tools;
+import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.RandomEnchantments.AXE;
 import static com.tfar.randomenchantments.ench.curse.EnchantmentShadowCurse.damage;
 import static com.tfar.randomenchantments.init.ModEnchantment.LUMBERJACK;
@@ -56,6 +56,16 @@ public class EnchantmentLumberjack extends Enchantment {
     @Override
     public boolean isTreasureEnchantment() {
         return tools.enableLumberjack == ANVIL;
+    }
+
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack) {
+        return tools.enableLumberjack != DISABLED && super.canApplyAtEnchantingTable(stack);
+    }
+
+    @Override
+    public boolean isAllowedOnBooks() {
+        return tools.enableLumberjack == NORMAL;
     }
 
     @SubscribeEvent

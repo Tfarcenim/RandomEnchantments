@@ -13,8 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.ANVIL;
-import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.DISABLED;
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.tools;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.RandomEnchantments.WEAPONS;
@@ -54,6 +53,16 @@ public class EnchantmentParalysis extends Enchantment {
     @Override
     public boolean isTreasureEnchantment() {
         return weapons.enableParalysis == ANVIL;
+    }
+
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack) {
+        return weapons.enableParalysis != DISABLED && super.canApplyAtEnchantingTable(stack);
+    }
+
+    @Override
+    public boolean isAllowedOnBooks() {
+        return weapons.enableParalysis == NORMAL;
     }
 
     @Override

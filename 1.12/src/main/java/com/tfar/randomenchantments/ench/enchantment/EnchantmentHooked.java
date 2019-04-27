@@ -1,6 +1,5 @@
 package com.tfar.randomenchantments.ench.enchantment;
 
-import com.tfar.randomenchantments.EnchantmentConfig;
 import com.tfar.randomenchantments.util.GlobalVars;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -20,8 +19,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 
-import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.ANVIL;
-import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.DISABLED;
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.tools;
 import static com.tfar.randomenchantments.init.ModEnchantment.HOOKED;
 
@@ -59,6 +57,16 @@ public class EnchantmentHooked extends Enchantment {
   @Override
   public boolean isTreasureEnchantment() {
     return tools.enableHooked == ANVIL;
+  }
+
+  @Override
+  public boolean canApplyAtEnchantingTable(ItemStack stack) {
+    return tools.enableHooked != DISABLED && super.canApplyAtEnchantingTable(stack);
+  }
+
+  @Override
+  public boolean isAllowedOnBooks() {
+    return tools.enableHooked == NORMAL;
   }
 
   private static ArrayList<EntityEquipmentSlot> list = new ArrayList<>();

@@ -51,7 +51,12 @@ public class EnchantmentDisarm extends Enchantment {
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return weapons.enableDisarm == NORMAL && super.canApplyAtEnchantingTable(stack);
+        return weapons.enableDisarm != DISABLED && super.canApplyAtEnchantingTable(stack);
+    }
+
+    @Override
+    public boolean isAllowedOnBooks() {
+        return weapons.enableCursedJumping == NORMAL;
     }
 
     @Override

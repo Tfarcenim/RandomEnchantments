@@ -17,8 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.lang.reflect.Method;
 
-import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.ANVIL;
-import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.DISABLED;
+import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.init.ModEnchantment.*;
 import static net.minecraft.enchantment.EnchantmentHelper.*;
@@ -57,6 +56,16 @@ public class EnchantmentQuickdraw extends Enchantment {
   @Override
   public boolean isTreasureEnchantment() {
     return weapons.enableQuickdraw == ANVIL;
+  }
+
+  @Override
+  public boolean canApplyAtEnchantingTable(ItemStack stack) {
+    return weapons.enableQuickdraw != DISABLED && super.canApplyAtEnchantingTable(stack);
+  }
+
+  @Override
+  public boolean isAllowedOnBooks() {
+    return weapons.enableQuickdraw == NORMAL;
   }
 
   private static Method m = ObfuscationReflectionHelper.findMethod(EntityLivingBase.class,"func_184608_ct",Void.TYPE);
