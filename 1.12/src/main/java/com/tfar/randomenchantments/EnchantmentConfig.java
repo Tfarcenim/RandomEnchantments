@@ -82,6 +82,12 @@ public class EnchantmentConfig {
 
     @Config.Name(f+"Teleportation")
     public EnumAccessLevel enableTeleportation = NORMAL;
+
+    @Config.Name(f+"Shattering")
+    public EnumAccessLevel enableShattering = NORMAL;
+
+    @Config.Name(f+"Ricochet")
+    public EnumAccessLevel enableRicochet = NORMAL;
   }
 
   public static class ConfigTools{

@@ -22,7 +22,6 @@ public class EventHandler {
 
   public static List<EntityArrow> homingarrows = new ArrayList<>();
 
-
   public static double absValue(Vec3d vec) {
     return Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2) + Math.pow(vec.z, 2));
   }
@@ -46,9 +45,9 @@ public class EventHandler {
   @SubscribeEvent
   public void serverTick(TickEvent.ServerTickEvent e) {
     if (e.phase != TickEvent.Phase.END) return;
-    List<EntityArrow> remove = new ArrayList<>();
+    List<EntityArrow> removeHoming = new ArrayList<>();
     for (EntityArrow arrow : homingarrows) {
-      if (arrow.ticksExisted > 400 || arrow.isDead) { arrow.setDead();remove.add(arrow);continue; }
+      if (arrow.ticksExisted > 400 || arrow.isDead) { arrow.setDead();removeHoming.add(arrow);continue; }
       World world = arrow.world;
       int r = 8;
       double x = arrow.posX;
@@ -68,6 +67,7 @@ public class EventHandler {
         arrow.velocityChanged = true;
       }
     }
-    homingarrows.removeAll(remove);
+
+    homingarrows.removeAll(removeHoming);
   }
 }

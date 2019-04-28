@@ -8,9 +8,11 @@ import com.tfar.randomenchantments.ench.enchantment.*;
 import com.tfar.randomenchantments.util.GlobalVars;
 
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.HashMap;
@@ -34,6 +36,9 @@ public class ModEnchantment {
   public static final Enchantment HOOKED = new EnchantmentHooked();
   public static final Enchantment PHASING = new EnchantmentPhasing();
 
+  public static Enchantment MULTISHOT = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation("cofhcore","multishot"));
+
+
 
   public static final Enchantment LIGHTNING = new EnchantmentLightning();
   public static final Enchantment TRANSPOSITION = new EnchantmentTransposition();
@@ -50,12 +55,14 @@ public class ModEnchantment {
   public static final Enchantment TELEPORTATON = new EnchantmentTeleportation();
   public static final Enchantment SOLAR = new EnchantmentSolar();
   public static final Enchantment LUMBERJACK = new EnchantmentLumberjack();
-
+  public static final Enchantment SHATTERING = new EnchantmentShattering();
 
   public static final Enchantment OBSIDIAN_BUSTER = new EnchantmentObsidianBuster();
   public static final Enchantment EQUAL_MINE = new EnchantmentEqualMine();
   public static final Enchantment STONEBOUND = new EnchantmentStonebound();
   public static final Enchantment STONELOVER = new EnchantmentStoneLover();
+  public static final Enchantment RICOCHET = new EnchantmentRicochet();
+
 
   //register curses
 
@@ -67,6 +74,8 @@ public class ModEnchantment {
   @SubscribeEvent
   public static void registerEnchantments(Register<Enchantment> event) {
 
+    enchants.put(RICOCHET,weapons.enableRicochet);
+    enchants.put(SHATTERING,weapons.enableShattering);
     enchants.put(FLOATING,weapons.enableFloating);
     enchants.put(INSTANT_DEATH,weapons.enableInstantDeath);
     enchants.put(CURSED_JUMP,weapons.enableCursedJumping);
