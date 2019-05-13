@@ -35,8 +35,17 @@ public class EnchantmentConfig {
     @Config.Name(f+"Back to the chamber")
     public EnumAccessLevel enableBackToTheChamber = NORMAL;
 
+    @Config.Name(f+"Torches")
+    public EnumAccessLevel enableTorches = NORMAL;
+
     @Config.Name(f+"Phasing")
     public EnumAccessLevel enablePhasing = NORMAL;
+
+    @Config.Name(f+"Exploding")
+    public EnumAccessLevel enableExploding = NORMAL;
+
+    @Config.Name(f+"Piercing")
+    public EnumAccessLevel enablePiercing = NORMAL;
 
     @Config.Name(f+"Combo")
     public EnumAccessLevel enableCombo = NORMAL;
@@ -88,6 +97,9 @@ public class EnchantmentConfig {
 
     @Config.Name(f+"Ricochet")
     public EnumAccessLevel enableRicochet = NORMAL;
+
+    @Config.Name(f+"Ricochet")
+    public EnumAccessLevel enableHarvesting = NORMAL;
   }
 
   public static class ConfigTools{

@@ -83,7 +83,7 @@ public static void applySolar(TickEvent.PlayerTickEvent e) {
     private static boolean isLight(EntityLivingBase e) {
         BlockPos pos = e.getPosition();
         World world = e.world;
-        int i = world.getLightFromNeighborsFor(EnumSkyBlock.SKY, pos);
+        int i = world.getLightFor(EnumSkyBlock.SKY, pos);
         return i > 8;
     }
 }

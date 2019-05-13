@@ -1,5 +1,6 @@
 package com.tfar.randomenchantments.init;
 
+import com.tfar.randomenchantments.RandomEnchantments;
 import com.tfar.randomenchantments.ench.curse.EnchantmentBreakingCurse;
 import com.tfar.randomenchantments.ench.curse.EnchantmentButterfingersCurse;
 import com.tfar.randomenchantments.ench.curse.EnchantmentFumblingCurse;
@@ -35,11 +36,13 @@ public class ModEnchantment {
   public static final Enchantment TRUE_SHOT = new EnchantmentTrueShot();
   public static final Enchantment HOOKED = new EnchantmentHooked();
   public static final Enchantment PHASING = new EnchantmentPhasing();
+  public static final Enchantment LIGHTING = new EnchantmentTorches();
+
 
   public static Enchantment MULTISHOT = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation("cofhcore","multishot"));
 
 
-
+  public static final Enchantment EXPLODING = new EnchantmentExploding();
   public static final Enchantment LIGHTNING = new EnchantmentLightning();
   public static final Enchantment TRANSPOSITION = new EnchantmentTransposition();
   public static final Enchantment RANDOMNESS = new EnchantmentRandomness();
@@ -56,12 +59,15 @@ public class ModEnchantment {
   public static final Enchantment SOLAR = new EnchantmentSolar();
   public static final Enchantment LUMBERJACK = new EnchantmentLumberjack();
   public static final Enchantment SHATTERING = new EnchantmentShattering();
+  public static final Enchantment PIERCING = new EnchantmentPiercing();
 
   public static final Enchantment OBSIDIAN_BUSTER = new EnchantmentObsidianBuster();
   public static final Enchantment EQUAL_MINE = new EnchantmentEqualMine();
   public static final Enchantment STONEBOUND = new EnchantmentStonebound();
   public static final Enchantment STONELOVER = new EnchantmentStoneLover();
   public static final Enchantment RICOCHET = new EnchantmentRicochet();
+  public static final Enchantment HARVEST = new EnchantmentHarvesting();
+
 
 
   //register curses
@@ -74,6 +80,10 @@ public class ModEnchantment {
   @SubscribeEvent
   public static void registerEnchantments(Register<Enchantment> event) {
 
+    enchants.put(HARVEST,weapons.enableHarvesting);
+    enchants.put(LIGHTING,weapons.enableTorches);
+    enchants.put(EXPLODING,weapons.enableExploding);
+    enchants.put(PIERCING,weapons.enablePiercing);
     enchants.put(RICOCHET,weapons.enableRicochet);
     enchants.put(SHATTERING,weapons.enableShattering);
     enchants.put(FLOATING,weapons.enableFloating);
@@ -94,10 +104,7 @@ public class ModEnchantment {
     enchants.put(TRANSPOSITION,weapons.enableTransposition);
     enchants.put(LUMBERJACK,tools.enableLumberjack);
     enchants.put(PHASING,weapons.enablePhasing);
-
-
     //enchants.put(SWIFT);
-
     enchants.put(OBSIDIAN_BUSTER,tools.enableObsidianBuster);
     enchants.put(EQUAL_MINE,tools.enableEqualMine);
     enchants.put(STONEBOUND,tools.enableStonebound);
@@ -112,10 +119,16 @@ public class ModEnchantment {
     enchants.put(BREAKING,curses.enableBreaking);
     enchants.put(SHADOW,curses.enableShadow);
 
+    int size = 0;
+
     IForgeRegistry<Enchantment> r = event.getRegistry();
 
     for (Map.Entry<Enchantment,EnumAccessLevel> enchant : enchants.entrySet())
       //don't register the enchant if disabled and nuclear option is enabled
-      if (enchant.getValue() != EnumAccessLevel.DISABLED || !nuclearOption) r.register(enchant.getKey());
+      if (enchant.getValue() != EnumAccessLevel.DISABLED || !nuclearOption) {
+        r.register(enchant.getKey());
+        size++;
+      }
+    RandomEnchantments.logger.info("Registered "+size+" enchantments!");
   }
 }

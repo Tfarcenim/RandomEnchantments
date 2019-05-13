@@ -2,8 +2,7 @@ package com.tfar.randomenchantments.ench.enchantment;
 
 import com.tfar.randomenchantments.RandomEnchantments;
 import com.tfar.randomenchantments.util.GlobalVars;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockGlass;
+import net.minecraft.block.*;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
@@ -17,19 +16,21 @@ import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import javax.annotation.Nonnull;
+
 import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
-import static com.tfar.randomenchantments.init.ModEnchantment.SHATTERING;
+import static com.tfar.randomenchantments.init.ModEnchantment.HARVEST;
 
 @Mod.EventBusSubscriber(modid = GlobalVars.MOD_ID)
 
-public class EnchantmentShattering extends Enchantment {
-  public EnchantmentShattering() {
+public class EnchantmentHarvesting extends Enchantment {
+  public EnchantmentHarvesting() {
     super(Rarity.RARE, EnumEnchantmentType.BOW, new EntityEquipmentSlot[]{
             EntityEquipmentSlot.MAINHAND
     });
-    this.setRegistryName("shattering");
-    this.setName("shattering");
+    this.setRegistryName("harvesting");
+    this.setName("harvesting");
   }
 
   @Override
@@ -48,23 +49,23 @@ public class EnchantmentShattering extends Enchantment {
   }
 
   @Override
-  public boolean canApply(ItemStack stack){
-    return weapons.enableShattering != DISABLED && super.canApply(stack);
+  public boolean canApply(@Nonnull ItemStack stack){
+    return weapons.enableHarvesting != DISABLED && super.canApply(stack);
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return weapons.enableShattering == ANVIL;
+    return weapons.enableHarvesting == ANVIL;
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return weapons.enableShattering != DISABLED && super.canApplyAtEnchantingTable(stack);
+    return weapons.enableHarvesting != DISABLED && super.canApplyAtEnchantingTable(stack);
   }
 
   @Override
   public boolean isAllowedOnBooks() {
-      return weapons.enableShattering == NORMAL;
+      return weapons.enableHarvesting == NORMAL;
     }
 
 
@@ -74,17 +75,26 @@ public class EnchantmentShattering extends Enchantment {
     Entity block = event.getRayTraceResult().entityHit;
     if(RandomEnchantments.isArrowinBlock(arrow, block))return;
     EntityPlayer player = (EntityPlayer)((EntityArrow)arrow).shootingEntity;
-    int level = EnchantmentHelper.getMaxEnchantmentLevel(SHATTERING, player);
+    int level = EnchantmentHelper.getMaxEnchantmentLevel(HARVEST, player);
     if (level <= 0)return;
     BlockPos pos = event.getRayTraceResult().getBlockPos();
 
-    Block glass = arrow.world.getBlockState(pos).getBlock();
+    Block plant = arrow.world.getBlockState(pos).getBlock();
 
-    if (!(glass instanceof BlockGlass))return;
+    if (!(checkBlock(plant)))return;
 
     if (player.canHarvestBlock(arrow.world.getBlockState(pos)))
       arrow.world.destroyBlock(pos,true);
       event.setCanceled(true);
+    }
+
+  private static boolean checkBlock(Block plant){
+    return plant instanceof BlockMelon ||
+            plant instanceof BlockChorusFlower ||
+            plant instanceof BlockChorusPlant ||
+            plant instanceof BlockCocoa ||
+            plant instanceof BlockPumpkin ||
+            plant instanceof BlockCactus;
     }
   }
 

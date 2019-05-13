@@ -1,12 +1,12 @@
 package com.tfar.randomenchantments.ench.enchantment;
 
+import com.tfar.randomenchantments.RandomEnchantments;
 import com.tfar.randomenchantments.util.GlobalVars;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentArrowInfinite;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Items;
@@ -77,12 +77,9 @@ public class EnchantmentBackToTheChamber extends Enchantment {
 
   @SubscribeEvent
   public static void arrowHit(ProjectileImpactEvent event) {
-    if (!(event.getRayTraceResult().entityHit instanceof EntityLivingBase)) return;
-    Entity entity = event.getEntity();
-    if (!(entity instanceof EntityArrow)) return;
-    Entity shooter = ((EntityArrow) entity).shootingEntity;
-    if (!(shooter instanceof EntityPlayer)) return;
-    EntityPlayer player = (EntityPlayer) shooter;
+    Entity arrow = event.getEntity();
+    if (RandomEnchantments.checkShooterArrowAndVictim(arrow, event.getRayTraceResult().entityHit))return;
+    EntityPlayer player = (EntityPlayer)((EntityArrow)arrow).shootingEntity;
     int level = EnchantmentHelper.getMaxEnchantmentLevel(BACK_TO_THE_CHAMBER, player);
     if (5 * Math.random() > level) return;
     if (!player.world.isRemote) {

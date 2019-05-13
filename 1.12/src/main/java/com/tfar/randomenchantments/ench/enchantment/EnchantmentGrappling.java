@@ -14,6 +14,8 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import javax.annotation.Nonnull;
+
 import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.tools;
 import static com.tfar.randomenchantments.init.ModEnchantment.PULLING;
@@ -47,7 +49,7 @@ public class EnchantmentGrappling extends Enchantment {
   }
 
   @Override
-  public boolean canApply(ItemStack stack){
+  public boolean canApply(@Nonnull ItemStack stack){
     return tools.enableGrappling != DISABLED && super.canApply(stack);
   }
 

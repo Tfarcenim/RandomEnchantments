@@ -12,6 +12,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.fml.common.Mod;
 
+import javax.annotation.Nonnull;
+
 import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.RandomEnchantments.WEAPONS;
@@ -43,7 +45,7 @@ public class EnchantmentFloating extends Enchantment {
     }
 
     @Override
-    public boolean canApply(ItemStack stack){
+    public boolean canApply(@Nonnull ItemStack stack){
         return weapons.enableFloating != DISABLED && super.canApply(stack);
     }
 

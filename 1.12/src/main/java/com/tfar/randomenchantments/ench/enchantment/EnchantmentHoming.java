@@ -15,6 +15,8 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+import javax.annotation.Nonnull;
+
 import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.init.ModEnchantment.HOMING;
@@ -48,7 +50,7 @@ public class EnchantmentHoming extends Enchantment {
   }
 
   @Override
-  public boolean canApply(ItemStack stack){
+  public boolean canApply(@Nonnull ItemStack stack){
     return weapons.enableHoming != DISABLED && super.canApply(stack);
   }
 
@@ -75,10 +77,8 @@ public class EnchantmentHoming extends Enchantment {
     if (!(shooter instanceof EntityPlayer))return;
     EntityPlayer player = (EntityPlayer) shooter;
       if (EnchantmentHelper.getMaxEnchantmentLevel(HOMING, player)==0)return;
-    NBTTagCompound compound = entity.getEntityData();
-    compound.setDouble("speed", absValue(new Vec3d(entity.motionX, entity.motionY, entity.motionZ)));
     entity.setNoGravity(true);
-    homingarrows.add((EntityArrow)entity);
+    homingarrows.put((EntityArrow)entity,absValue(new Vec3d(entity.motionX, entity.motionY, entity.motionZ)));
   }
 }
 

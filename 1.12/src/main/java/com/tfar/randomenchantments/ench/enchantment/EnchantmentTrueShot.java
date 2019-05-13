@@ -9,6 +9,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -16,6 +18,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import static com.tfar.randomenchantments.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchantments.EnchantmentConfig.weapons;
 import static com.tfar.randomenchantments.init.ModEnchantment.TRUE_SHOT;
+import static com.tfar.randomenchantments.util.EventHandler.absValue;
+import static com.tfar.randomenchantments.util.EventHandler.trueshotarrows;
 
 @Mod.EventBusSubscriber(modid= GlobalVars.MOD_ID)
 
@@ -72,6 +76,7 @@ public class EnchantmentTrueShot extends Enchantment {
     EntityPlayer player = (EntityPlayer) shooter;
       if (EnchantmentHelper.getMaxEnchantmentLevel(TRUE_SHOT, player)==0)return;
     entity.setNoGravity(true);
+    trueshotarrows.add((EntityArrow)entity);
     }
   }
 
