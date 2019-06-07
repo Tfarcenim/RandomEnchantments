@@ -1,5 +1,6 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.RandomEnchants;
 import com.tfar.randomenchants.util.Coord4D;
 import com.tfar.randomenchants.util.EnchantmentUtils;
 import net.minecraft.block.Block;
@@ -40,7 +41,7 @@ import static com.tfar.randomenchants.util.EnchantmentUtils.getTagSafe;
 public class EnchantmentGlobalTraveler extends Enchantment {
   public EnchantmentGlobalTraveler() {
 
-    super(Rarity.VERY_RARE, EnumEnchantmentType.ALL, new EntityEquipmentSlot[]{
+    super(Rarity.VERY_RARE, RandomEnchants.TOOLSANDWEAPONS, new EntityEquipmentSlot[]{
             EntityEquipmentSlot.MAINHAND
     });
     this.setRegistryName("global_traveler");

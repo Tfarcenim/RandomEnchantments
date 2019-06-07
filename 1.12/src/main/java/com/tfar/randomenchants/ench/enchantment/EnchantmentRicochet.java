@@ -1,5 +1,6 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.util.EnchantmentUtils;
 import com.tfar.randomenchants.util.GlobalVars;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -17,6 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.weapons;
 import static com.tfar.randomenchants.init.ModEnchantment.RICOCHET;
+import static com.tfar.randomenchants.util.EnchantmentUtils.*;
 
 @Mod.EventBusSubscriber(modid = GlobalVars.MOD_ID)
 
@@ -78,26 +80,25 @@ public class EnchantmentRicochet extends Enchantment {
     if (level <= 0)return;
     EnumFacing facing = event.getRayTraceResult().sideHit;
     switch (facing){
-      case UP:{
-        arrow.setVelocity(entity.motionX,-entity.motionY, entity.motionZ);break;
+      case UP:{  serverSafeSetVelocity(entity.motionX,-entity.motionY, entity.motionZ,arrow);break;
       }
       case DOWN:{
-        arrow.setVelocity(entity.motionX,-entity.motionY, entity.motionZ);break;
+        serverSafeSetVelocity(entity.motionX,-entity.motionY, entity.motionZ,arrow);break;
       }
       case EAST:{
-        arrow.setVelocity(-entity.motionX,entity.motionY, entity.motionZ);break;
+        serverSafeSetVelocity(-entity.motionX,entity.motionY, entity.motionZ,arrow);break;
       }
       case WEST:{
-        arrow.setVelocity(-entity.motionX,entity.motionY, entity.motionZ);break;
+        serverSafeSetVelocity(-entity.motionX,entity.motionY, entity.motionZ,arrow);break;
       }
       case NORTH:{
-        arrow.setVelocity(entity.motionX,entity.motionY, -entity.motionZ);break;
+        serverSafeSetVelocity(entity.motionX,entity.motionY, -entity.motionZ,arrow);break;
       }
       case SOUTH:{
-        arrow.setVelocity(entity.motionX,entity.motionY, -entity.motionZ);break;
+        serverSafeSetVelocity(entity.motionX,entity.motionY, -entity.motionZ,arrow);break;
       }
       default:{
-        throw new IllegalStateException("INVALID ENUM DETECTED");
+        throw new IllegalStateException("INVALID ENUM DETECTED: "+facing);
       }
     }
     arrow.velocityChanged = true;

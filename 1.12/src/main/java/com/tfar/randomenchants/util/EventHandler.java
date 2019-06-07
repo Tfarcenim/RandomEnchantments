@@ -1,6 +1,5 @@
 package com.tfar.randomenchants.util;
 
-import com.tfar.randomenchants.ench.enchantment.EnchantmentGlobalTraveler;
 import com.tfar.randomenchants.init.ModEnchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -11,10 +10,12 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -25,6 +26,7 @@ import java.util.Map;
 
 import static com.tfar.randomenchants.ench.enchantment.EnchantmentGlobalTraveler.KEY;
 import static com.tfar.randomenchants.util.EnchantmentUtils.getTagSafe;
+import static com.tfar.randomenchants.util.EnchantmentUtils.serverSafeSetVelocity;
 import static net.minecraft.util.math.Vec3d.ZERO;
 
 public class EventHandler {
@@ -77,7 +79,7 @@ public class EventHandler {
         double diff = box.maxY - box.minY;
         Vec3d arrowDirection = new Vec3d(target.posX - arrow.posX, target.posY + diff / 2 - arrow.posY, target.posZ - arrow.posZ);
         arrowDirection = normalize(arrowDirection);
-        arrow.setVelocity(speed * arrowDirection.x, speed * arrowDirection.y, speed * arrowDirection.z);
+        serverSafeSetVelocity(speed * arrowDirection.x, speed * arrowDirection.y, speed * arrowDirection.z, arrow);
         arrow.velocityChanged = true;
         break;
       }
@@ -92,28 +94,30 @@ public class EventHandler {
         removeTrueShot.add(arrow);
       }
       if (arrow.isDead) continue;
-      arrow.setVelocity(arrow.motionX / .99, arrow.motionY / .99, arrow.motionZ / .99);
+      serverSafeSetVelocity(arrow.motionX / .99, arrow.motionY / .99, arrow.motionZ / .99, arrow);
       arrow.velocityChanged = true;
     }
     trueshotarrows.removeAll(removeTrueShot);
   }
 
   @SubscribeEvent
-  public void toggle(PlayerInteractEvent.RightClickItem e){
-    if (e.getWorld().isRemote)return;
-   // if (e.getWorld().getTileEntity(e.getPos()) != null)return;
+  public void toggle(PlayerInteractEvent.RightClickItem e) {
+    if (e.getWorld().isRemote) return;
+    // if (e.getWorld().getTileEntity(e.getPos()) != null)return;
 
     ItemStack stack = e.getItemStack();
-    if (EnchantmentUtils.stackHasEnch(stack, ModEnchantment.GLOBAL_TRAVELLER) && e.getEntityPlayer().isSneaking()){
+    if (EnchantmentUtils.stackHasEnch(stack, ModEnchantment.GLOBAL_TRAVELLER) && e.getEntityPlayer().isSneaking()) {
       toggle(stack);
     }
   }
 
-  public static void toggle(ItemStack stack){
+  public static void toggle(ItemStack stack) {
     NBTTagCompound nbt = getTagSafe(stack);
     if (nbt.hasKey(KEY)) {
       boolean toggle = stack.getTagCompound().getBoolean("toggle");
       stack.getTagCompound().setBoolean("toggle", !toggle);
     }
   }
+
+
 }

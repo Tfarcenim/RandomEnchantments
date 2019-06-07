@@ -33,10 +33,11 @@ import static com.tfar.randomenchants.util.GlobalVars.*;
 @Mod(modid = MOD_ID, name = GlobalVars.NAME, version = GlobalVars.VERSION, dependencies = "required:forge@[14.23.5.2796,);")
 
 public class RandomEnchants {
-  public static final EnumEnchantmentType WEAPONS = RandomEnchants.addEnchantment("weapons", item -> item instanceof ItemSword || item instanceof ItemBow);
-  public static final EnumEnchantmentType PICKAXE = RandomEnchants.addEnchantment("pickaxe", ItemPickaxe.class::isInstance);
-  public static final EnumEnchantmentType SHIELDS = RandomEnchants.addEnchantment("shields", ItemShield.class::isInstance);
-  public static final EnumEnchantmentType AXE = RandomEnchants.addEnchantment("axe", ItemAxe.class::isInstance);
+  public static final EnumEnchantmentType WEAPONS = addEnchantment("weapons", item -> item instanceof ItemSword || item instanceof ItemBow);
+  public static final EnumEnchantmentType PICKAXE = addEnchantment("pickaxe", ItemPickaxe.class::isInstance);
+  public static final EnumEnchantmentType SHIELDS = addEnchantment("shields", ItemShield.class::isInstance);
+  public static final EnumEnchantmentType AXE = addEnchantment("axe", ItemAxe.class::isInstance);
+  public static final EnumEnchantmentType TOOLSANDWEAPONS = addEnchantment("tools&weapons",item -> item instanceof ItemSword || item instanceof ItemBow || item instanceof ItemTool);
 
 
   public static final SimpleNetworkWrapper NETWORK_WRAPPER = new SimpleNetworkWrapper(MOD_ID);
