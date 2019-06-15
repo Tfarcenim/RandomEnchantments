@@ -34,6 +34,11 @@ enchantment.torches=Torches
 enchantment.eternal=Eternal
 enchantment.resistance=Resistant
 enchantment.global_traveler=Global Traveler
+enchantment.lumberjack=Lumber Jack
+enchantment.fast_place=Fast Place
+enchantment.reflect=Reflect
+
+
 
 enchantment.breaking=Curse of Breaking
 enchantment.shadow=Curse of Shadow
@@ -79,6 +84,7 @@ enchantment.randomenchantments.torches.desc=torches but in arrow form
 enchantment.randomenchantments.eternal.desc=ever lasting, ever present
 enchantment.randomenchantments.resistance.desc=only twinkies and cockroaches
 enchantment.randomenchantments.global_traveler.desc=around the world and back again
+enchantment.randomenchantments.lumberjack.desc=Birch Beware
 
 enchantment.randomenchantments.breaking.desc=surprisingly brittle
 enchantment.randomenchantments.shadow.desc=fades in sunlight

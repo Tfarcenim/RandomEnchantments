@@ -103,6 +103,12 @@ public class EnchantmentConfig {
 
     @Config.Name(f+"Harvesting")
     public EnumAccessLevel enableHarvesting = NORMAL;
+
+    @Config.Name(f+"Reflect")
+    public EnumAccessLevel enableReflect = NORMAL;
+
+    @Config.Name(f+"Fast Placing")
+    public EnumAccessLevel enableFastPlacing = NORMAL;
   }
 
   public static class ConfigTools{

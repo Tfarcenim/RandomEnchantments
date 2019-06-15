@@ -2,18 +2,22 @@ package com.tfar.randomenchants.util;
 
 import com.tfar.randomenchants.EnchantmentConfig;
 import com.tfar.randomenchants.init.ModEnchantment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.ArrayList;
 
@@ -77,5 +81,16 @@ public class ClientEventHandler {
              getWorldNameFromid( nbt.getInteger("dim"))));
 
     }
+  }// cant be in common code or it will crash dedicated servers!
+  @SubscribeEvent
+  public void playerTick(TickEvent.PlayerTickEvent event) {
+    if (event.phase == TickEvent.Phase.END)return;
+    EntityPlayer player = Minecraft.getMinecraft().player;
+    if (player == null) return;
+    if (!EnchantmentUtils.stackHasEnch(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST), FAST_PLACING)) return;
+    int delay = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class,Minecraft.getMinecraft(),"field_71467_ac");
+    delay -= EnchantmentHelper.getEnchantmentLevel(FAST_PLACING,player.getItemStackFromSlot(EntityEquipmentSlot.CHEST));
+    if (delay<0) delay = 0;
+    ObfuscationReflectionHelper.setPrivateValue(Minecraft.class,Minecraft.getMinecraft(),delay,"field_71467_ac");
   }
 }

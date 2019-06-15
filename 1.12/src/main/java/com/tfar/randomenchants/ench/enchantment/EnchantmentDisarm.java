@@ -55,7 +55,7 @@ public class EnchantmentDisarm extends Enchantment {
 
     @Override
     public boolean isAllowedOnBooks() {
-        return weapons.enableCursedJumping == NORMAL;
+        return weapons.enableDisarm == NORMAL;
     }
 
     @Override

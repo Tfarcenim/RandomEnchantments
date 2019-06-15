@@ -59,7 +59,6 @@ public class EnchantmentUtils {
 
   public static void serverSafeSetVelocity(double x, double y, double z, EntityArrow arrow) {
 
-
     arrow.motionX = x;
     arrow.motionY = y;
     arrow.motionZ = z;

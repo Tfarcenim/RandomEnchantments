@@ -32,17 +32,17 @@ public class EnchantmentResistant extends Enchantment {
 
   @Override
   public int getMinEnchantability(int level) {
-    return 5 + 10 * (level - 1);
+    return 15;
   }
 
   @Override
   public int getMaxEnchantability(int level) {
-    return super.getMinEnchantability(level) + 25;
+    return 100;
   }
 
   @Override
   public int getMaxLevel() {
-    return 5;
+    return 1;
   }
 
   @Override

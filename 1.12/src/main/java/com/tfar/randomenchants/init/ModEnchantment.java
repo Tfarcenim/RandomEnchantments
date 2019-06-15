@@ -44,7 +44,8 @@ public class ModEnchantment {
 
   public static Enchantment MULTISHOT = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation("cofhcore","multishot"));
 
-
+  public static final Enchantment REFLECT = new EnchantmentReflect();
+  public static final Enchantment FAST_PLACING = new EnchantmentFastPlace();
   public static final Enchantment EXPLODING = new EnchantmentExploding();
   public static final Enchantment LIGHTNING = new EnchantmentLightning();
   public static final Enchantment TRANSPOSITION = new EnchantmentTransposition();
@@ -88,6 +89,8 @@ public class ModEnchantment {
   @SubscribeEvent
   public static void registerEnchantments(Register<Enchantment> event) {
 
+    enchants.put(REFLECT,weapons.enableReflect);//
+    enchants.put(FAST_PLACING,weapons.enableFastPlacing);
     enchants.put(SWIFT,weapons.enableSwift);
     enchants.put(MAGNETIC,tools.enableMagnetic);
     enchants.put(HARVEST,weapons.enableHarvesting);
