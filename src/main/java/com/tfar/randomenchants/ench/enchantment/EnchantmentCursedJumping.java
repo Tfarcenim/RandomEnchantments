@@ -1,30 +1,29 @@
 package com.tfar.randomenchants.ench.enchantment;
 
-import com.tfar.randomenchants.util.GlobalVars;
+import com.tfar.randomenchants.RandomEnchants;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.MobEffects;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.potion.Effects;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.EffectInstance;
 import net.minecraftforge.fml.common.Mod;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.weapons;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.CURSED_JUMP;
 import static com.tfar.randomenchants.RandomEnchants.WEAPONS;
-import static com.tfar.randomenchants.init.ModEnchantment.CURSED_JUMP;
 
-@Mod.EventBusSubscriber(modid= GlobalVars.MOD_ID)
+@Mod.EventBusSubscriber(modid= RandomEnchants.MOD_ID)
 public class EnchantmentCursedJumping extends Enchantment {
     public EnchantmentCursedJumping() {
 
-        super(Rarity.RARE, WEAPONS, new EntityEquipmentSlot[]{
-                EntityEquipmentSlot.MAINHAND
+        super(Rarity.RARE, WEAPONS, new EquipmentSlotType[]{
+                EquipmentSlotType.MAINHAND
         });
         this.setRegistryName("cursed_jump");
-        this.setName("cursed_jump");
     }
 
     @Override
@@ -32,10 +31,6 @@ public class EnchantmentCursedJumping extends Enchantment {
         return 15;
     }
 
-    @Override
-    public int getMaxEnchantability(int level) {
-        return 100;
-    }
 
     @Override
     public int getMaxLevel() {
@@ -63,11 +58,11 @@ public class EnchantmentCursedJumping extends Enchantment {
     }
 
     @Override
-    public void onEntityDamaged(EntityLivingBase user, Entity target, int level)  {
+    public void onEntityDamaged(LivingEntity user, Entity target, int level)  {
 
-        if ((EnchantmentHelper.getMaxEnchantmentLevel(CURSED_JUMP, user) > 0 && target instanceof EntityLivingBase)){
-            ((EntityLivingBase)target).
-                    addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 40, 127));
+        if ((EnchantmentHelper.getMaxEnchantmentLevel(CURSED_JUMP, user) > 0 && target instanceof LivingEntity)){
+            ((LivingEntity)target).
+                    addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, 40, 127));
         }
         }
     }

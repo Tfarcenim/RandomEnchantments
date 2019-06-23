@@ -1,46 +1,40 @@
 package com.tfar.randomenchants.ench.enchantment;
 
 import com.tfar.randomenchants.RandomEnchants;
-import com.tfar.randomenchants.network.PacketHandler;
-import com.tfar.randomenchants.util.EnchantmentUtils;
-import com.tfar.randomenchants.util.GlobalVars;
+import com.tfar.randomenchants.network.Message;
+import com.tfar.randomenchants.network.PacketComboReset;
+import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.*;
-import static com.tfar.randomenchants.init.ModEnchantment.COMBO;
-import static net.minecraft.enchantment.EnumEnchantmentType.WEAPON;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.COMBO;
+import static net.minecraft.enchantment.EnchantmentType.WEAPON;
 
-@Mod.EventBusSubscriber(modid = GlobalVars.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
 public class EnchantmentCombo extends Enchantment {
   public EnchantmentCombo() {
 
-    super(Rarity.RARE, WEAPON, new EntityEquipmentSlot[]{
-            EntityEquipmentSlot.MAINHAND
+    super(Rarity.RARE, WEAPON, new EquipmentSlotType[]{
+            EquipmentSlotType.MAINHAND
     });
     this.setRegistryName("combo");
-    this.setName("combo");
   }
 
   @Override
   public int getMinEnchantability(int level) {
     return 15;
-  }
-
-  @Override
-  public int getMaxEnchantability(int level) {
-    return 100;
   }
 
   @Override
@@ -70,29 +64,29 @@ public class EnchantmentCombo extends Enchantment {
 
   @SubscribeEvent
   public static void onEntityDamaged(LivingDamageEvent e) {
-    EntityLivingBase target = e.getEntityLiving();
-    if (!(e.getSource().getTrueSource() instanceof EntityPlayer)) return;
-    EntityPlayer p = (EntityPlayer) e.getSource().getTrueSource();
+    LivingEntity target = e.getEntityLiving();
+    if (!(e.getSource().getTrueSource() instanceof PlayerEntity)) return;
+    PlayerEntity p = (PlayerEntity) e.getSource().getTrueSource();
     if (!p.world.isRemote && EnchantmentHelper.getMaxEnchantmentLevel(COMBO, p) > 0) {
       ItemStack stack = p.getHeldItemMainhand();
-      NBTTagCompound compound = stack.getTagCompound();
-      target.attackEntityFrom(DamageSource.GENERIC, compound.getInteger("combo") * .5f);
-      compound.setInteger("combo", compound.getInteger("combo") + 1);
+      CompoundNBT compound = stack.getOrCreateTag();
+      target.attackEntityFrom(DamageSource.GENERIC, compound.getInt("combo") * .5f);
+      compound.putInt("combo", compound.getInt("combo") + 1);
     }
   }
 
   @SubscribeEvent
   public static void onMiss(PlayerInteractEvent.LeftClickEmpty e) {
-    EntityPlayer p = e.getEntityPlayer();
-    if (!EnchantmentUtils.stackHasEnch(e.getItemStack(),COMBO)) return;
-    RandomEnchants.NETWORK_WRAPPER.sendToServer(new PacketHandler());
+    PlayerEntity p = e.getEntityPlayer();
+    if (!EnchantUtils.hasEnch(e.getItemStack(),COMBO)) return;
+    Message.INSTANCE.sendToServer(new PacketComboReset());
   }
 
   @SubscribeEvent
   public static void onHitBlock(PlayerInteractEvent.LeftClickBlock e) {
-    EntityPlayer p = e.getEntityPlayer();
-    if (!EnchantmentUtils.stackHasEnch(e.getItemStack(),COMBO)) return;
-    RandomEnchants.NETWORK_WRAPPER.sendToServer(new PacketHandler());
+    PlayerEntity p = e.getEntityPlayer();
+    if (!EnchantUtils.hasEnch(e.getItemStack(),COMBO)) return;
+    Message.INSTANCE.sendToServer(new PacketComboReset());
   }
 }
 

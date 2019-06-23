@@ -1,43 +1,38 @@
 package com.tfar.randomenchants.ench.enchantment;
 
-import com.tfar.randomenchants.util.GlobalVars;
+import com.tfar.randomenchants.RandomEnchants;
+import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nonnull;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.tools;
-import static com.tfar.randomenchants.init.ModEnchantment.*;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.RESISTANT;
 
-@Mod.EventBusSubscriber(modid = GlobalVars.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
 
 public class EnchantmentResistant extends Enchantment {
   public EnchantmentResistant() {
-    super(Rarity.RARE, EnumEnchantmentType.ALL, new EntityEquipmentSlot[]{
-            EntityEquipmentSlot.MAINHAND
+    super(Rarity.RARE, EnchantmentType.ALL, new EquipmentSlotType[]{
+            EquipmentSlotType.MAINHAND
     });
-    this.setRegistryName("resistance");
-    this.setName("resistance");
+    this.setRegistryName("resistant");
   }
 
   @Override
   public int getMinEnchantability(int level) {
     return 15;
-  }
-
-  @Override
-  public int getMaxEnchantability(int level) {
-    return 100;
   }
 
   @Override
@@ -67,10 +62,10 @@ public class EnchantmentResistant extends Enchantment {
 
 
   @SubscribeEvent
-  public static void itemDamaged(ItemTossEvent event) {
-    EntityItem entityItem = event.getEntityItem();
+  public static void itemSpawn(ItemTossEvent event) {
+    ItemEntity entityItem = event.getEntityItem();
     ItemStack stack = entityItem.getItem();
-    if (EnchantmentHelper.getEnchantmentLevel(RESISTANCE, stack) > 0) {
+    if (EnchantUtils.hasEnch(stack,RESISTANT)) {
       ObfuscationReflectionHelper.setPrivateValue(Entity.class,entityItem,true,"field_83001_bt");
     }
   }

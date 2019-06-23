@@ -1,46 +1,39 @@
 package com.tfar.randomenchants.ench.enchantment;
 
 import com.tfar.randomenchants.RandomEnchants;
-import com.tfar.randomenchants.util.GlobalVars;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnumEnchantmentType;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemBow;
+import net.minecraft.enchantment.EnchantmentType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.BowItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.lang.reflect.Method;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.weapons;
-import static com.tfar.randomenchants.init.ModEnchantment.*;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.QUICKDRAW;
 import static net.minecraft.enchantment.EnchantmentHelper.*;
 
-@Mod.EventBusSubscriber(modid = GlobalVars.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
 
 public class EnchantmentQuickdraw extends Enchantment {
   public EnchantmentQuickdraw() {
-    super(Rarity.RARE, EnumEnchantmentType.BOW, new EntityEquipmentSlot[]{
-            EntityEquipmentSlot.MAINHAND
+    super(Rarity.RARE, EnchantmentType.BOW, new EquipmentSlotType[]{
+            EquipmentSlotType.MAINHAND
     });
     setRegistryName("quickdraw");
-    setName("quickdraw");
   }
 
   @Override
   public int getMinEnchantability(int level) {
     return 5 + 10 * (level - 1);
-  }
-
-  @Override
-  public int getMaxEnchantability(int level) {
-    return super.getMinEnchantability(level) + 25;
   }
 
   @Override
@@ -68,15 +61,13 @@ public class EnchantmentQuickdraw extends Enchantment {
     return weapons.enableQuickdraw == NORMAL;
   }
 
-  private static Method m = ObfuscationReflectionHelper.findMethod(EntityLivingBase.class,"func_184608_ct",Void.TYPE);
-
   @SubscribeEvent
   public static void onPlayerUpdate(LivingEvent.LivingUpdateEvent event) {
-    if (event.getEntity() instanceof EntityPlayer) {
-      EntityPlayer player = (EntityPlayer) event.getEntity();
-      ItemStack heldItem = player.getHeldItem(EnumHand.MAIN_HAND);
-      if (!(heldItem.getItem() instanceof ItemBow)) heldItem = player.getHeldItem(EnumHand.OFF_HAND);
-      if (!(heldItem.getItem() instanceof ItemBow) || getMaxEnchantmentLevel(QUICKDRAW, player) <= 0)
+    if (event.getEntity() instanceof PlayerEntity) {
+      PlayerEntity player = (PlayerEntity) event.getEntity();
+      ItemStack heldItem = player.getHeldItem(Hand.MAIN_HAND);
+      if (!(heldItem.getItem() instanceof BowItem)) heldItem = player.getHeldItem(Hand.OFF_HAND);
+      if (!(heldItem.getItem() instanceof BowItem) || getMaxEnchantmentLevel(QUICKDRAW, player) <= 0)
         return;
       if (player.isHandActive()) {
         for (int i = 0; i < getMaxEnchantmentLevel(QUICKDRAW, player); i++) {
@@ -87,8 +78,9 @@ public class EnchantmentQuickdraw extends Enchantment {
   }
   //borrowed from cyclic
   //player.updateActiveHand();//BUT its protected bahhhh
-  private static void tickHeldBow(EntityPlayer player) {
+  private static void tickHeldBow(PlayerEntity player) {
     try {
+      Method m = ObfuscationReflectionHelper.findMethod(LivingEntity.class,"func_184608_ct");
       m.invoke(player);
     }
     catch (Exception e) {

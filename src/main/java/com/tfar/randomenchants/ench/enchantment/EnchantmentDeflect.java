@@ -1,18 +1,18 @@
 package com.tfar.randomenchants.ench.enchantment;
 
-import com.tfar.randomenchants.util.GlobalVars;
+import com.tfar.randomenchants.RandomEnchants;
+import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.ArrayList;
@@ -20,17 +20,16 @@ import java.util.List;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.weapons;
-import static com.tfar.randomenchants.init.ModEnchantment.DEFLECT;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.DEFLECT;
 
-@Mod.EventBusSubscriber(modid = GlobalVars.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
 
 public class EnchantmentDeflect extends Enchantment {
   public EnchantmentDeflect() {
-    super(Rarity.RARE, EnumEnchantmentType.ARMOR_CHEST, new EntityEquipmentSlot[]{
-            EntityEquipmentSlot.CHEST
+    super(Rarity.RARE, EnchantmentType.ARMOR_CHEST, new EquipmentSlotType[]{
+            EquipmentSlotType.CHEST
     });
     this.setRegistryName("deflect");
-    this.setName("deflect");
   }
 
   @Override
@@ -38,10 +37,6 @@ public class EnchantmentDeflect extends Enchantment {
     return 30;
   }
 
-  @Override
-  public int getMaxEnchantability(int level) {
-    return 100;
-  }
 
   @Override
   public int getMaxLevel() {
@@ -70,21 +65,21 @@ public class EnchantmentDeflect extends Enchantment {
 
   @SubscribeEvent
   public static void playerTick(TickEvent.PlayerTickEvent event) {
-    EntityPlayer player = event.player;
+    PlayerEntity player = event.player;
     if (player == null) return;
-    if (EnchantmentHelper.getMaxEnchantmentLevel(DEFLECT, player) == 0) return;
+    if (!EnchantUtils.hasEnch(player,DEFLECT)) return;
     World world = player.world;
     double r = 2.7;
-    List<Entity> arrows = world.getEntitiesWithinAABB(EntityArrow.class, new AxisAlignedBB(player.posX - r, player.posY - r, player.posZ - r, player.posX + r, player.posY + r, player.posZ + r));
+    List<Entity> arrows = world.getEntitiesWithinAABB(AbstractArrowEntity.class, new AxisAlignedBB(player.posX - r, player.posY - r, player.posZ - r, player.posX + r, player.posY + r, player.posZ + r));
     if (arrows.size() == 0) return;
     ArrayList<Entity> playerArrows = new ArrayList<>();
     for (Entity arrow : arrows) {
-      if (((EntityArrow) arrow).shootingEntity instanceof EntityPlayer) playerArrows.add(arrow);
+      if (((AbstractArrowEntity) arrow).getShooter() instanceof PlayerEntity) playerArrows.add(arrow);
     }
     if (playerArrows.size() > 0) arrows.removeAll(playerArrows);
     if (arrows.size() == 0) return;
     for (Entity arrow : arrows) {
-      arrow.setDead();
+      arrow.remove();
     }
   }
 }

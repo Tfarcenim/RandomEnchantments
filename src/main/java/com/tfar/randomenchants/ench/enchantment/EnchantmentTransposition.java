@@ -1,42 +1,37 @@
 package com.tfar.randomenchants.ench.enchantment;
 
-import com.tfar.randomenchants.util.GlobalVars;
+import com.tfar.randomenchants.RandomEnchants;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.weapons;
-import static com.tfar.randomenchants.init.ModEnchantment.TRANSPOSITION;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.TRANSPOSITION;
 
-@Mod.EventBusSubscriber(modid = GlobalVars.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
 
 public class EnchantmentTransposition extends Enchantment {
     public EnchantmentTransposition() {
 
-        super(Rarity.RARE, EnumEnchantmentType.BOW, new EntityEquipmentSlot[]{
-                EntityEquipmentSlot.MAINHAND
+        super(Rarity.RARE, EnchantmentType.BOW, new EquipmentSlotType[]{
+                EquipmentSlotType.MAINHAND
         });
         this.setRegistryName("transposition");
-        this.setName("transposition");
     }
 
     @Override
     public int getMinEnchantability(int level) {
         return 15;
-    }
-
-    @Override
-    public int getMaxEnchantability(int level) {
-        return 100;
     }
 
     @Override
@@ -66,16 +61,17 @@ public class EnchantmentTransposition extends Enchantment {
 
     @SubscribeEvent
     public static void teleportArrow(ProjectileImpactEvent e) {
-        if(!(e.getRayTraceResult().entityHit instanceof EntityLivingBase))return;
-        if (!(e.getEntity() instanceof EntityArrow) || e.getEntity().world.isRemote) return;
-        EntityArrow arrow = (EntityArrow) e.getEntity();
-        Entity shooter = arrow.shootingEntity;
-        if (!(shooter instanceof EntityLivingBase)) return;
-        EntityLivingBase e1 = (EntityLivingBase) shooter;
+        if(!(e.getRayTraceResult() instanceof EntityRayTraceResult) || !(((EntityRayTraceResult) e.getRayTraceResult()).getEntity() instanceof LivingEntity))return;
+        if (!(e.getEntity() instanceof AbstractArrowEntity) || e.getEntity().world.isRemote) return;
+        AbstractArrowEntity arrow = (AbstractArrowEntity) e.getEntity();
+        Entity shooter = arrow.getShooter();
+        if (!(shooter instanceof LivingEntity)) return;
+        LivingEntity e1 = (LivingEntity) shooter;
         if (EnchantmentHelper.getMaxEnchantmentLevel(TRANSPOSITION, e1) == 0) return;
-        Float[] pos1 = new Float[]{(float)e1.posX,(float)e1.posY,(float)e1.posZ,e1.rotationYaw,e1.cameraPitch};
-        EntityLivingBase e2 = (EntityLivingBase) e.getRayTraceResult().entityHit;
-        Float[] pos2 = new Float[]{(float)e2.posX,(float)e2.posY,(float)e2.posZ,e2.rotationYaw,e2.cameraPitch};
+        float[] pos1 = new float[]{(float)e1.posX,(float)e1.posY,(float)e1.posZ,e1.rotationYaw,e1.rotationPitch
+        };
+        LivingEntity e2 = (LivingEntity) ((EntityRayTraceResult) e.getRayTraceResult()).getEntity();
+        float[] pos2 = new float[]{(float)e2.posX,(float)e2.posY,(float)e2.posZ,e2.rotationYaw,e2.rotationPitch};
         e1.setPositionAndRotationDirect(pos2[0],pos2[1],pos2[2],pos2[3],pos2[4], 1, true);
         e2.setPositionAndRotationDirect(pos1[0],pos1[1],pos1[2],pos1[3],pos1[4],1,true);
     }

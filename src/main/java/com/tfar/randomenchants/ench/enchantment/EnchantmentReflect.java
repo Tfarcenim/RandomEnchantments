@@ -1,45 +1,40 @@
 package com.tfar.randomenchants.ench.enchantment;
 
-import com.tfar.randomenchants.util.GlobalVars;
+import com.tfar.randomenchants.RandomEnchants;
+import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityFireball;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.DamagingProjectileEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nonnull;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.weapons;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.REFLECT;
 import static com.tfar.randomenchants.RandomEnchants.SHIELDS;
-import static com.tfar.randomenchants.init.ModEnchantment.REFLECT;
 
 
-@Mod.EventBusSubscriber(modid = GlobalVars.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
 public class EnchantmentReflect extends Enchantment {
   public EnchantmentReflect() {
 
-    super(Rarity.RARE, SHIELDS, new EntityEquipmentSlot[]{
-            EntityEquipmentSlot.MAINHAND, EntityEquipmentSlot.OFFHAND
+    super(Rarity.RARE, SHIELDS, new EquipmentSlotType[]{
+            EquipmentSlotType.MAINHAND, EquipmentSlotType.OFFHAND
     });
     this.setRegistryName("reflect");
-    this.setName("reflect");
   }
 
   @Override
   public int getMinEnchantability(int level) {
     return 15;
-  }
-
-  @Override
-  public int getMaxEnchantability(int level) {
-    return 100;
   }
 
   @Override
@@ -71,18 +66,17 @@ public class EnchantmentReflect extends Enchantment {
   @SubscribeEvent
   public static void reflect(ProjectileImpactEvent e) {
 
+    if (!(e.getRayTraceResult() instanceof EntityRayTraceResult))return;
     Entity projectile = e.getEntity();
-    Entity target = e.getRayTraceResult().entityHit;
-    if (!(target instanceof EntityPlayer)) return;
-    EntityPlayer player = (EntityPlayer) target;
-    if (EnchantmentHelper.getMaxEnchantmentLevel(REFLECT, player) > 0) {
-      projectile.motionX *= -1;
-      projectile.motionY *= -1;
-      projectile.motionZ *= -1;
-      if(projectile instanceof EntityFireball){
-        ((EntityFireball) projectile).accelerationX *= -1;
-        ((EntityFireball) projectile).accelerationY *= -1;
-        ((EntityFireball) projectile).accelerationZ *= -1;
+    Entity target = ((EntityRayTraceResult) e.getRayTraceResult()).getEntity();
+    if (!(target instanceof PlayerEntity)) return;
+    PlayerEntity player = (PlayerEntity) target;
+    if (EnchantUtils.hasEnch(player, REFLECT)) {
+      projectile.setMotion(projectile.getMotion().func_216371_e());
+      if(projectile instanceof DamagingProjectileEntity){
+        ((DamagingProjectileEntity) projectile).accelerationX *= -1;
+        ((DamagingProjectileEntity) projectile).accelerationY *= -1;
+        ((DamagingProjectileEntity) projectile).accelerationZ *= -1;
       }
 
       e.setCanceled(true);

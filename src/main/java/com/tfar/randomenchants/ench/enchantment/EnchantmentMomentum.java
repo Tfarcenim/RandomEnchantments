@@ -1,41 +1,36 @@
 package com.tfar.randomenchants.ench.enchantment;
 
-import com.tfar.randomenchants.util.GlobalVars;
+import com.tfar.randomenchants.RandomEnchants;
+import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnumEnchantmentType;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.enchantment.EnchantmentType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.tools;
-import static com.tfar.randomenchants.init.ModEnchantment.MOMENTUM;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.MOMENTUM;
 
-@Mod.EventBusSubscriber(modid = GlobalVars.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
 public class EnchantmentMomentum extends Enchantment {
   public EnchantmentMomentum() {
 
-    super(Rarity.RARE, EnumEnchantmentType.DIGGER, new EntityEquipmentSlot[]{
-            EntityEquipmentSlot.MAINHAND
+    super(Rarity.RARE, EnchantmentType.DIGGER, new EquipmentSlotType[]{
+            EquipmentSlotType.MAINHAND
     });
     this.setRegistryName("momentum");
-    this.setName("momentum");
   }
 
   @Override
   public int getMinEnchantability(int level) {
     return 15;
-  }
-
-  @Override
-  public int getMaxEnchantability(int level) {
-    return 100;
   }
 
   @Override
@@ -65,12 +60,12 @@ public class EnchantmentMomentum extends Enchantment {
 
   @SubscribeEvent
   public static void onBreakSpeed(PlayerEvent.BreakSpeed e) {
-    EntityPlayer p = e.getEntityPlayer();
+    PlayerEntity p = e.getEntityPlayer();
 
     if (EnchantmentHelper.getMaxEnchantmentLevel(MOMENTUM, p) > 0) {
       ItemStack stack = p.getHeldItemMainhand();
-      NBTTagCompound compound = stack.getTagCompound();
-      int momentum = compound.getInteger("momentum");
+      CompoundNBT compound = stack.getOrCreateTag();
+      int momentum = compound.getInt("momentum");
       float oldSpeed = e.getOriginalSpeed();
       float newSpeed = oldSpeed + .05f * momentum;
       e.setNewSpeed(newSpeed);
@@ -79,18 +74,18 @@ public class EnchantmentMomentum extends Enchantment {
 
   @SubscribeEvent
   public static void onBreak(BlockEvent.BreakEvent e) {
-    EntityPlayer p = e.getPlayer();
-    if (EnchantmentHelper.getMaxEnchantmentLevel(MOMENTUM, p) == 0) return;
+    PlayerEntity p = e.getPlayer();
+    if (!EnchantUtils.hasEnch(p,MOMENTUM)) return;
     ItemStack stack = p.getHeldItemMainhand();
-    NBTTagCompound compound = stack.getTagCompound();
-    int momentum = compound.getInteger("momentum");
+    CompoundNBT compound = stack.getOrCreateTag();
+    int momentum = compound.getInt("momentum");
     String cachedBlock = compound.getString("block");
     String currentBlock = e.getState().getBlock().toString();
     if (!cachedBlock.equals(currentBlock)) {
-      compound.setInteger("momentum", 0);
-      compound.setString("block", currentBlock);
+      compound.putInt("momentum", 0);
+      compound.putString("block", currentBlock);
     } else {
-      compound.setInteger("momentum", momentum + 1);
+      compound.putInt("momentum", momentum + 1);
     }
   }
 }

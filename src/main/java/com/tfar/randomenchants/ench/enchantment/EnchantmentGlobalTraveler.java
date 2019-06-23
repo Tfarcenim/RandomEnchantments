@@ -2,50 +2,43 @@ package com.tfar.randomenchants.ench.enchantment;
 
 import com.tfar.randomenchants.RandomEnchants;
 import com.tfar.randomenchants.util.Coord4D;
-import com.tfar.randomenchants.util.EnchantmentUtils;
+import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.Direction;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.fml.common.FMLLog;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.Collections;
-import java.util.ListIterator;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.tools;
-import static com.tfar.randomenchants.init.ModEnchantment.GLOBAL_TRAVELLER;
-import static com.tfar.randomenchants.util.EnchantmentUtils.getTagSafe;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.GLOBAL_TRAVELLER;
 
 public class EnchantmentGlobalTraveler extends Enchantment {
   public EnchantmentGlobalTraveler() {
 
-    super(Rarity.VERY_RARE, RandomEnchants.TOOLSANDWEAPONS, new EntityEquipmentSlot[]{
-            EntityEquipmentSlot.MAINHAND
+    super(Rarity.VERY_RARE, RandomEnchants.TOOLSANDWEAPONS, new EquipmentSlotType[]{
+            EquipmentSlotType.MAINHAND
     });
     this.setRegistryName("global_traveler");
-    this.setName("global_traveler");
   }
 
   public static String KEY;
@@ -53,11 +46,6 @@ public class EnchantmentGlobalTraveler extends Enchantment {
   @Override
   public int getMinEnchantability(int level) {
     return 15;
-  }
-
-  @Override
-  public int getMaxEnchantability(int level) {
-    return 100;
   }
 
   @Override
@@ -89,19 +77,19 @@ public class EnchantmentGlobalTraveler extends Enchantment {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void blockDrops(BlockEvent.HarvestDropsEvent event) {
-      if (event.getWorld().isRemote
+      if (event.getWorld().isRemote()
               || event.getHarvester() == null) return;
       ItemStack tool = getItemstackToUse(event.getHarvester(), event.getState());
-      if (!EnchantmentUtils.stackHasEnch(tool,GLOBAL_TRAVELLER)) return;
+      if (!EnchantUtils.hasEnch(tool,GLOBAL_TRAVELLER)) return;
       __blockHarvestDrops(tool, event);
     }
 
     private void __blockHarvestDrops(ItemStack tool, BlockEvent.HarvestDropsEvent event) {
       if (!getToggleState(tool)) return;
-      NBTTagCompound nbt0 = getTagSafe(tool);
-      if (EnchantmentUtils.stackHasEnch(tool,GLOBAL_TRAVELLER) && tool.canHarvestBlock(event.getState())) {
+      CompoundNBT nbt0 = tool.getOrCreateTag();
+      if (EnchantUtils.hasEnch(tool,GLOBAL_TRAVELLER) && tool.canHarvestBlock(event.getState())) {
 
-        NBTTagCompound nbt = nbt0.getCompoundTag(KEY);
+        CompoundNBT nbt = nbt0.getCompound(KEY);
         Coord4D coord = Coord4D.fromNBT(nbt);
         if (coord.pos().equals(event.getPos())) {
           return; // prevent self-linking
@@ -109,7 +97,7 @@ public class EnchantmentGlobalTraveler extends Enchantment {
         TileEntity te = coord.TE();
         if (te == null) return;
         IItemHandler ih = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
-                EnumFacing.VALUES[nbt.getByte("facing")]);
+                Direction.values()[nbt.getByte("facing")]).orElse(null);
         if (ih == null) return;
 
         // *cough* Extra Utilities *cough*
@@ -122,7 +110,7 @@ public class EnchantmentGlobalTraveler extends Enchantment {
           }
         } catch (UnsupportedOperationException e) {
           if (!warnedBlocks.contains(event.getState().getBlock())) {
-            FMLLog.bigWarning("Block " + event.getState().getBlock() + " implements block drops incorrectly. "
+            RandomEnchants.logger.fatal("Block " + event.getState().getBlock() + " implements block drops incorrectly. "
                     + "It appears that it overrides the OFFICIALLY DEPRECATED method "
                     + "getDrops(IBlockAccess, BlockPos, IBlockState, int) instead of the correct method "
                     + "getDrops(NonNullList, IBlockAccess, BlockPos, IBlockState, int). This prevents "
@@ -138,7 +126,7 @@ public class EnchantmentGlobalTraveler extends Enchantment {
         ItemStack keptSeed = ItemStack.EMPTY;
         while (it.hasNext()) {
           it.next();
-          if (event.getWorld().rand.nextFloat() > event.getDropChance()) {
+          if (event.getWorld().getRandom().nextFloat() > event.getDropChance()) {
             it.remove();
           } else {
             tool.getItem();
@@ -174,20 +162,20 @@ public class EnchantmentGlobalTraveler extends Enchantment {
       if (world0.isRemote
               || event.getEntityLiving().getHealth() > 0) return;
       ItemStack weapon = getWeapon(event.getSource());
-      NBTTagCompound nbt0 = getTagSafe(weapon);
-      if (EnchantmentUtils.stackHasEnch(weapon,GLOBAL_TRAVELLER)) {
+      CompoundNBT nbt0 = weapon.getOrCreateTag();
+      if (EnchantUtils.hasEnch(weapon,GLOBAL_TRAVELLER)) {
         if (!getToggleState(weapon)) return;
-        if (nbt0.hasKey(KEY)) {
-          NBTTagCompound nbt = nbt0.getCompoundTag(KEY);
+        if (nbt0.contains(KEY)) {
+          CompoundNBT nbt = nbt0.getCompound(KEY);
           Coord4D coord = Coord4D.fromNBT(nbt);
           TileEntity te = coord.TE();
           if (te == null) return;
           IItemHandler ih = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
-                  EnumFacing.VALUES[nbt.getByte("facing")]);
+                  Direction.values()[nbt.getByte("facing")]).orElse(null);
           if (ih == null) return;
-          ListIterator<EntityItem> it = event.getDrops().listIterator();
+          Iterator<ItemEntity> it = event.getDrops().iterator();
           while (it.hasNext()) {
-            EntityItem enti = it.next();
+            ItemEntity enti = it.next();
             ItemStack stk = enti.getItem();
             for (int j = 0; j < ih.getSlots(); ++j) {
               ItemStack res = ih.insertItem(j, stk, false);
@@ -207,45 +195,45 @@ public class EnchantmentGlobalTraveler extends Enchantment {
 
     @SubscribeEvent
     public void onPlayerUse(PlayerInteractEvent.RightClickBlock event) {
-      NBTTagCompound nbt = getTagSafe(event.getItemStack());
+      CompoundNBT nbt = event.getItemStack().getOrCreateTag();
       if (event.getWorld().isRemote
               || event.isCanceled()
               || !event.getEntityPlayer().isSneaking()
               || event.getItemStack().isEmpty()
               || event.getFace() == null
-              || !EnchantmentUtils.stackHasEnch(event.getItemStack(), GLOBAL_TRAVELLER))
+              || !EnchantUtils.hasEnch(event.getItemStack(), GLOBAL_TRAVELLER))
         return;
       TileEntity te = event.getWorld().getTileEntity(event.getPos());
       if (te == null || te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
               event.getFace()) == null) return;
-      NBTTagCompound global = new NBTTagCompound();
+      CompoundNBT global = new CompoundNBT();
       Coord4D coord = new Coord4D(event.getPos(), event.getWorld());
       coord.toNBT(global);
-      global.setByte("facing", (byte) event.getFace().ordinal());
-      nbt.setTag(KEY, global);
-      event.getItemStack().setTagCompound(nbt);
-      event.getEntityPlayer().sendMessage(new TextComponentTranslation(
+      global.putByte("facing", (byte) event.getFace().ordinal());
+      nbt.put(KEY, global);
+      event.getItemStack().setTag(nbt);
+      event.getEntityPlayer().sendMessage(new TranslationTextComponent(
               "tooltip.globalmodifier.info",
               coord.xCoord,
               coord.yCoord,
               coord.zCoord,
-              EnchantmentUtils.getWorldNameFromid(coord.dimensionId)));
+              coord.dimensionId));
     }
 
     private ItemStack getWeapon(DamageSource source) {
       if (source instanceof EntityDamageSource) {
         Entity entity = source.getTrueSource();
-        if (entity instanceof EntityLivingBase)
-          return ((EntityLivingBase) entity).getHeldItemMainhand();
+        if (entity instanceof LivingEntity)
+          return ((LivingEntity) entity).getHeldItemMainhand();
       }
       return ItemStack.EMPTY;
     }
 
     public static boolean getToggleState(ItemStack stack){
-    return EnchantmentUtils.stackHasEnch(stack,GLOBAL_TRAVELLER) && getTagSafe(stack).getBoolean("toggle");
+    return EnchantUtils.hasEnch(stack,GLOBAL_TRAVELLER) && stack.getOrCreateTag().getBoolean("toggle");
     }
 
-  public static ItemStack getItemstackToUse(EntityLivingBase player, IBlockState blockState) {
+  public static ItemStack getItemstackToUse(LivingEntity player, BlockState blockState) {
     ItemStack mainhand = player.getHeldItemMainhand();
     if(mainhand.isEmpty() && shouldUseOffhand(player, blockState, mainhand)) {
       return player.getHeldItemOffhand();
@@ -253,7 +241,7 @@ public class EnchantmentGlobalTraveler extends Enchantment {
     return mainhand;
   }
 
-  public static boolean shouldUseOffhand(EntityLivingBase player, IBlockState blockState, ItemStack tool) {
+  public static boolean shouldUseOffhand(LivingEntity player, BlockState blockState, ItemStack tool) {
     ItemStack offhand = player.getHeldItemOffhand();
 
     return !tool.isEmpty()

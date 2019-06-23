@@ -1,44 +1,38 @@
 package com.tfar.randomenchants.ench.enchantment;
 
-import com.tfar.randomenchants.util.GlobalVars;
-import net.minecraft.block.state.IBlockState;
+import com.tfar.randomenchants.RandomEnchants;
+import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnumEnchantmentType;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.enchantment.EnchantmentType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nonnull;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.tools;
-import static com.tfar.randomenchants.init.ModEnchantment.EQUAL_MINE;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.EQUAL_MINE;
 
-@Mod.EventBusSubscriber(modid= GlobalVars.MOD_ID)
+@Mod.EventBusSubscriber(modid= RandomEnchants.MOD_ID)
 public class EnchantmentEqualMine extends Enchantment {
     public EnchantmentEqualMine() {
 
-        super(Rarity.RARE, EnumEnchantmentType.DIGGER, new EntityEquipmentSlot[]{
-                EntityEquipmentSlot.MAINHAND
+        super(Rarity.RARE, EnchantmentType.DIGGER, new EquipmentSlotType[]{
+                EquipmentSlotType.MAINHAND
         });
         this.setRegistryName("equal_mine");
-        this.setName("equal_mine");
     }
 
     @Override
     public int getMinEnchantability(int level) {
         return 15;
-    }
-
-    @Override
-    public int getMaxEnchantability(int level) {
-        return 100;
     }
 
     @Override
@@ -68,8 +62,8 @@ public class EnchantmentEqualMine extends Enchantment {
 
 @SubscribeEvent
 public static void onBreakSpeed(PlayerEvent.BreakSpeed e) {
-        EntityPlayer p = e.getEntityPlayer();
-        IBlockState state = e.getState();
+        PlayerEntity p = e.getEntityPlayer();
+        BlockState state = e.getState();
         World world = p.getEntityWorld();
     BlockPos pos = e.getPos();
         float hardness = state.getBlockHardness(world,pos);

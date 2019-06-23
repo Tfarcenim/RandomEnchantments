@@ -1,47 +1,41 @@
 package com.tfar.randomenchants.ench.enchantment;
 
 import com.tfar.randomenchants.RandomEnchants;
-import com.tfar.randomenchants.util.EnchantmentUtils;
-import com.tfar.randomenchants.util.GlobalVars;
 import net.minecraft.block.*;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nonnull;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.weapons;
-import static com.tfar.randomenchants.init.ModEnchantment.HARVEST;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.HARVEST;
 
-@Mod.EventBusSubscriber(modid = GlobalVars.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
 
 public class EnchantmentHarvesting extends Enchantment {
   public EnchantmentHarvesting() {
-    super(Rarity.RARE, EnumEnchantmentType.BOW, new EntityEquipmentSlot[]{
-            EntityEquipmentSlot.MAINHAND
+    super(Rarity.RARE, EnchantmentType.BOW, new EquipmentSlotType[]{
+            EquipmentSlotType.MAINHAND
     });
     this.setRegistryName("harvesting");
-    this.setName("harvesting");
   }
 
   @Override
   public int getMinEnchantability(int level) {
     return 25;
-  }
-
-  @Override
-  public int getMaxEnchantability(int level) {
-    return 100;
   }
 
   @Override
@@ -72,30 +66,32 @@ public class EnchantmentHarvesting extends Enchantment {
 
   @SubscribeEvent
   public static void arrowHit(ProjectileImpactEvent event) {
-    Entity arrow = event.getEntity();
-    Entity block = event.getRayTraceResult().entityHit;
-    if(EnchantmentUtils.isArrowinBlock(arrow, block))return;
-    EntityPlayer player = (EntityPlayer)((EntityArrow)arrow).shootingEntity;
+    Entity proj = event.getEntity();
+    if (!(proj instanceof AbstractArrowEntity))return;
+    RayTraceResult result = event.getRayTraceResult();
+    AbstractArrowEntity arrow = (AbstractArrowEntity)proj;
+    if (!(result instanceof BlockRayTraceResult))return;
+    BlockPos pos = ((BlockRayTraceResult)result).getPos();
+    Entity shooter = arrow.getShooter();
+    if (!(shooter instanceof PlayerEntity))return;
+    PlayerEntity player = (PlayerEntity)shooter;
     int level = EnchantmentHelper.getMaxEnchantmentLevel(HARVEST, player);
     if (level <= 0)return;
-    BlockPos pos = event.getRayTraceResult().getBlockPos();
+    Block plant = proj.world.getBlockState(pos).getBlock();
+    if (!(isPlant(plant)))return;
 
-    Block plant = arrow.world.getBlockState(pos).getBlock();
-
-    if (!(checkBlock(plant)))return;
-
-    if (player.canHarvestBlock(arrow.world.getBlockState(pos)))
-      arrow.world.destroyBlock(pos,true);
+    if (player.canHarvestBlock(proj.world.getBlockState(pos)))
+      proj.world.destroyBlock(pos,true);
       event.setCanceled(true);
     }
 
-  private static boolean checkBlock(Block plant){
-    return plant instanceof BlockMelon ||
-            plant instanceof BlockChorusFlower ||
-            plant instanceof BlockChorusPlant ||
-            plant instanceof BlockCocoa ||
-            plant instanceof BlockPumpkin ||
-            plant instanceof BlockCactus;
+  private static boolean isPlant(Block plant){
+    return plant instanceof MelonBlock ||
+            plant instanceof ChorusFlowerBlock ||
+            plant instanceof ChorusPlantBlock ||
+            plant instanceof CocoaBlock ||
+            plant instanceof PumpkinBlock ||
+            plant instanceof CactusBlock;
     }
   }
 

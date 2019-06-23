@@ -1,10 +1,10 @@
 package com.tfar.randomenchants.ench.enchantment;
 
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnumEnchantmentType;
-import net.minecraft.init.Items;
-import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.ItemArmor;
+import net.minecraft.enchantment.EnchantmentType;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.Items;
 import net.minecraft.item.ItemStack;
 
 
@@ -12,21 +12,15 @@ import net.minecraft.item.ItemStack;
 public class EnchantmentFlight extends Enchantment {
     public EnchantmentFlight() {
 
-        super(Rarity.RARE, EnumEnchantmentType.ARMOR_CHEST, new EntityEquipmentSlot[]{
-                EntityEquipmentSlot.CHEST
+        super(Rarity.RARE, EnchantmentType.ARMOR_CHEST, new EquipmentSlotType[]{
+                EquipmentSlotType.CHEST
         });
         this.setRegistryName("flight");
-        this.setName("flight");
     }
 
     @Override
     public int getMinEnchantability(int level) {
         return 15;
-    }
-
-    @Override
-    public int getMaxEnchantability(int level) {
-        return 100;
     }
 
     @Override
@@ -38,8 +32,8 @@ public class EnchantmentFlight extends Enchantment {
     public boolean canApply(ItemStack stack) {
         return stack.getItem() == Items.BOOK ||
                 stack.getItem() == Items.ELYTRA ||
-                (stack.getItem() instanceof ItemArmor)
-                        && ((ItemArmor) stack.getItem()).armorType == EntityEquipmentSlot.CHEST;
+                (stack.getItem() instanceof ArmorItem)
+                        && ((ArmorItem) stack.getItem()).getEquipmentSlot() == EquipmentSlotType.CHEST;
     }
 
   /*  @SubscribeEvent

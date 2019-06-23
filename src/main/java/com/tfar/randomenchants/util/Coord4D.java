@@ -1,14 +1,15 @@
 package com.tfar.randomenchants.util;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraft.world.ServerWorld;
+import net.minecraft.world.dimension.Dimension;
 import net.minecraftforge.common.DimensionManager;
 
 import java.util.Locale;
@@ -18,36 +19,42 @@ public class Coord4D {
   public int yCoord;
   public int zCoord;
   public int dimensionId;
+  public Dimension dimension;
 
   public Coord4D(Entity ent) {
     xCoord = (int)ent.posX;
     yCoord = (int)ent.posY;
     zCoord = (int)ent.posZ;
 
-    dimensionId = ent.dimension;
+    dimensionId = ent.dimension.getId();
   }
 
-  public Coord4D(double x, double y, double z, int dimension) {
+  public Coord4D(double x, double y, double z,Dimension dimension, int dimensionId) {
+    this(x,y,z,dimensionId);
+    this.dimension = dimension;
+  }
+
+  public Coord4D(double x, double y, double z, int dimensionId) {
     xCoord = MathHelper.floor(x);
     yCoord = MathHelper.floor(y);
     zCoord = MathHelper.floor(z);
-    dimensionId = dimension;
+    this.dimensionId = dimensionId;
   }
 
   public Coord4D(BlockPos pos, World world) {
-    this(pos.getX(), pos.getY(), pos.getZ(), world.provider.getDimension());
+    this(pos.getX(), pos.getY(), pos.getZ(),world.dimension, world.dimension.getType().getId());
   }
 
-  public static Coord4D fromNBT(NBTTagCompound nbt) {
-    if (nbt.getSize() == 0) return null;
-    return new Coord4D(nbt.getInteger("x"), nbt.getInteger("y"), nbt.getInteger("z"), nbt.getInteger("dim"));
+  public static Coord4D fromNBT(CompoundNBT nbt) {
+    if (nbt.size() == 0) return null;
+    return new Coord4D(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"), nbt.getInt("dim"));
   }
 
-  public NBTTagCompound toNBT(NBTTagCompound nbt) {
-    nbt.setInteger("x", xCoord);
-    nbt.setInteger("y", yCoord);
-    nbt.setInteger("z", zCoord);
-    nbt.setInteger("dim", dimensionId);
+  public CompoundNBT toNBT(CompoundNBT nbt) {
+    nbt.putInt("x", xCoord);
+    nbt.putInt("y", yCoord);
+    nbt.putInt("z", zCoord);
+    nbt.putInt("dim", dimensionId);
     return nbt;
   }
 
@@ -63,24 +70,23 @@ public class Coord4D {
     return new Coord4D(xCoord+x, yCoord+y, zCoord+z, dimensionId);
   }
 
-  public IBlockState blockState() {
-    WorldServer world = world();
+  public BlockState blockState() {
+    ServerWorld world = world();
     if (world == null) return null;
     return world.getBlockState(pos());
   }
 
   public TileEntity TE() {
-    WorldServer world = world();
-    if (world == null) return null;
-    return world.getTileEntity(pos());
+    ServerWorld world = world();
+    return world == null ? null : world.getTileEntity(pos());
   }
 
   public BlockPos pos() {
     return new BlockPos(xCoord, yCoord, zCoord);
   }
 
-  public WorldServer world() {
-    return DimensionManager.getWorld(dimensionId);
+  public ServerWorld world() {
+    return (ServerWorld) dimension.getWorld();
   }
 
   @Override

@@ -1,44 +1,39 @@
 package com.tfar.randomenchants.ench.enchantment;
 
-import com.tfar.randomenchants.util.GlobalVars;
+import com.tfar.randomenchants.RandomEnchants;
+import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.tools;
 import static com.tfar.randomenchants.RandomEnchants.AXE;
-import static com.tfar.randomenchants.init.ModEnchantment.LUMBERJACK;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.LUMBERJACK;
 
 
-@Mod.EventBusSubscriber(modid= GlobalVars.MOD_ID)
+@Mod.EventBusSubscriber(modid= RandomEnchants.MOD_ID)
 public class EnchantmentLumberjack extends Enchantment {
     public EnchantmentLumberjack() {
 
-        super(Rarity.RARE, AXE, new EntityEquipmentSlot[]{
-                EntityEquipmentSlot.MAINHAND
+        super(Rarity.RARE, AXE, new EquipmentSlotType[]{
+                EquipmentSlotType.MAINHAND
         });
         this.setRegistryName("lumberjack");
-        this.setName("lumberjack");
     }
 
     @Override
     public int getMinEnchantability(int level) {
         return 15;
-    }
-
-    @Override
-    public int getMaxEnchantability(int level) {
-        return 100;
     }
 
     @Override
@@ -68,19 +63,19 @@ public class EnchantmentLumberjack extends Enchantment {
 
     @SubscribeEvent
     public static void onWoodBreak(BlockEvent.BreakEvent e){
-        EntityPlayer p = e.getPlayer();
-        if(EnchantmentHelper.getMaxEnchantmentLevel(LUMBERJACK, p)<1)return;
+        PlayerEntity p = e.getPlayer();
+        if(!EnchantUtils.hasEnch(p,LUMBERJACK))return;
         ItemStack stack = p.getHeldItemMainhand();
-        IBlockState state = e.getState();
+        BlockState state = e.getState();
         BlockPos pos = e.getPos();
         Block block = state.getBlock();
-        if (!block.isWood(p.world,pos))return;
-        while(block.isWood(p.world,pos)){
+        if (!block.isIn(BlockTags.LOGS))return;
+        while(block.isIn(BlockTags.LOGS)){
             pos = pos.up();
             state = p.world.getBlockState(pos);
             block = state.getBlock();
-            if (block.isWood(p.world,pos)){
-                stack.damageItem(1,p);
+            if (block.isIn(BlockTags.LOGS)){
+                stack.damageItem(1,p, playerEntity -> playerEntity.sendBreakAnimation(p.getActiveHand()));
                 p.world.destroyBlock(pos,true);
             }
         }

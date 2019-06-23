@@ -1,44 +1,38 @@
 package com.tfar.randomenchants.ench.enchantment;
 
-import com.tfar.randomenchants.util.EnchantmentUtils;
-import com.tfar.randomenchants.util.GlobalVars;
+import com.tfar.randomenchants.RandomEnchants;
+import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.weapons;
-import static com.tfar.randomenchants.init.ModEnchantment.RICOCHET;
-import static com.tfar.randomenchants.util.EnchantmentUtils.*;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.RICOCHET;
 
-@Mod.EventBusSubscriber(modid = GlobalVars.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
 
 public class EnchantmentRicochet extends Enchantment {
   public EnchantmentRicochet() {
-    super(Rarity.RARE, EnumEnchantmentType.BOW, new EntityEquipmentSlot[]{
-            EntityEquipmentSlot.MAINHAND
+    super(Rarity.RARE, EnchantmentType.BOW, new EquipmentSlotType[]{
+            EquipmentSlotType.MAINHAND
     });
     this.setRegistryName("ricochet");
-    this.setName("ricochet");
   }
 
   @Override
   public int getMinEnchantability(int level) {
     return 25;
-  }
-
-  @Override
-  public int getMaxEnchantability(int level) {
-    return 100;
   }
 
   @Override
@@ -69,33 +63,38 @@ public class EnchantmentRicochet extends Enchantment {
 
   @SubscribeEvent
   public static void arrowHit(ProjectileImpactEvent event) {
-    if (event.getRayTraceResult().entityHit != null) return;
+    RayTraceResult result = event.getRayTraceResult();
+    if (!(result instanceof BlockRayTraceResult)) return;
     Entity entity = event.getEntity();
-    if (!(entity instanceof EntityArrow)) return;
-    EntityArrow arrow = (EntityArrow) entity;
-    Entity shooter = arrow.shootingEntity;
-    if (!(shooter instanceof EntityPlayer)) return;
-    EntityPlayer player = (EntityPlayer) shooter;
-    int level = EnchantmentHelper.getMaxEnchantmentLevel(RICOCHET, player);
-    if (level <= 0)return;
-    EnumFacing facing = event.getRayTraceResult().sideHit;
+    if (!(entity instanceof AbstractArrowEntity)) return;
+    AbstractArrowEntity arrow = (AbstractArrowEntity) entity;
+    Entity shooter = arrow.getShooter();
+    if (!(shooter instanceof PlayerEntity)) return;
+    PlayerEntity player = (PlayerEntity) shooter;
+    if (!EnchantUtils.hasEnch(player,RICOCHET))return;
+    Direction facing = ((BlockRayTraceResult)event.getRayTraceResult()).getFace();
+    double x = arrow.getMotion().x;
+    double y = arrow.getMotion().y;
+    double z = arrow.getMotion().z;
+
     switch (facing){
-      case UP:{  serverSafeSetVelocity(entity.motionX,-entity.motionY, entity.motionZ,arrow);break;
+      case UP:{
+        arrow.setMotion(x,-y, z);break;
       }
       case DOWN:{
-        serverSafeSetVelocity(entity.motionX,-entity.motionY, entity.motionZ,arrow);break;
+        arrow.setMotion(x,-y,z);break;
       }
       case EAST:{
-        serverSafeSetVelocity(-entity.motionX,entity.motionY, entity.motionZ,arrow);break;
+        arrow.setMotion(-x,y,z);break;
       }
       case WEST:{
-        serverSafeSetVelocity(-entity.motionX,entity.motionY, entity.motionZ,arrow);break;
+        arrow.setMotion(-x,y,z);break;
       }
       case NORTH:{
-        serverSafeSetVelocity(entity.motionX,entity.motionY, -entity.motionZ,arrow);break;
+        arrow.setMotion(x,y,-z);break;
       }
       case SOUTH:{
-        serverSafeSetVelocity(entity.motionX,entity.motionY, -entity.motionZ,arrow);break;
+        arrow.setMotion(x,y,-z);break;
       }
       default:{
         throw new IllegalStateException("INVALID ENUM DETECTED: "+facing);

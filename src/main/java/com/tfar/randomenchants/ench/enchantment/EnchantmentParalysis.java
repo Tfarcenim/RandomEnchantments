@@ -1,41 +1,35 @@
 package com.tfar.randomenchants.ench.enchantment;
 
-import com.tfar.randomenchants.util.GlobalVars;
+import com.tfar.randomenchants.RandomEnchants;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.fml.common.Mod;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.weapons;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.PARALYSIS;
 import static com.tfar.randomenchants.RandomEnchants.WEAPONS;
-import static com.tfar.randomenchants.init.ModEnchantment.PARALYSIS;
 
-@Mod.EventBusSubscriber(modid= GlobalVars.MOD_ID)
+@Mod.EventBusSubscriber(modid= RandomEnchants.MOD_ID)
 public class EnchantmentParalysis extends Enchantment {
     public EnchantmentParalysis() {
 
-        super(Rarity.RARE, WEAPONS, new EntityEquipmentSlot[]{
-                EntityEquipmentSlot.MAINHAND
+        super(Rarity.RARE, WEAPONS, new EquipmentSlotType[]{
+                EquipmentSlotType.MAINHAND
         });
         this.setRegistryName("paralysis");
-        this.setName("paralysis");
     }
 
     @Override
     public int getMinEnchantability(int level) {
         return 15;
-    }
-
-    @Override
-    public int getMaxEnchantability(int level) {
-        return 100;
     }
 
     @Override
@@ -64,17 +58,17 @@ public class EnchantmentParalysis extends Enchantment {
     }
 
     @Override
-    public void onEntityDamaged(EntityLivingBase player, Entity target, int level)  {
+    public void onEntityDamaged(LivingEntity player, Entity target, int level)  {
 
-        if (EnchantmentHelper.getMaxEnchantmentLevel(PARALYSIS, player) > 0 && target instanceof EntityLivingBase && player instanceof EntityPlayer){
-            ((EntityLivingBase)target).
-                    addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 200, 128));
-            ((EntityLivingBase)target).
-                    addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 5));
-            ((EntityLivingBase)target).
-                    addPotionEffect(new PotionEffect(MobEffects.MINING_FATIGUE, 200, 4));
-            ((EntityLivingBase)target).
-                    addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 200, 20));
+        if (EnchantmentHelper.getMaxEnchantmentLevel(PARALYSIS, player) > 0 && target instanceof LivingEntity && player instanceof PlayerEntity){
+            ((LivingEntity)target).
+                    addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, 200, 128));
+            ((LivingEntity)target).
+                    addPotionEffect(new EffectInstance(Effects.SLOWNESS, 200, 5));
+            ((LivingEntity)target).
+                    addPotionEffect(new EffectInstance(Effects.MINING_FATIGUE, 200, 4));
+            ((LivingEntity)target).
+                    addPotionEffect(new EffectInstance(Effects.WEAKNESS, 200, 20));
 
         }
     }

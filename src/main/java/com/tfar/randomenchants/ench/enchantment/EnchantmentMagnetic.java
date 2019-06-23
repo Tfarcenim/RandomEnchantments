@@ -1,48 +1,39 @@
 package com.tfar.randomenchants.ench.enchantment;
 
 import com.tfar.randomenchants.RandomEnchants;
-import com.tfar.randomenchants.util.EnchantmentUtils;
-import com.tfar.randomenchants.util.GlobalVars;
+import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.tools;
-import static com.tfar.randomenchants.init.ModEnchantment.MAGNETIC;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.MAGNETIC;
 
-@Mod.EventBusSubscriber(modid = GlobalVars.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
 public class EnchantmentMagnetic extends Enchantment {
   public EnchantmentMagnetic() {
 
-    super(Rarity.RARE, RandomEnchants.TOOLSANDWEAPONS, new EntityEquipmentSlot[]{
-            EntityEquipmentSlot.MAINHAND
+    super(Rarity.RARE, RandomEnchants.TOOLSANDWEAPONS, new EquipmentSlotType[]{
+            EquipmentSlotType.MAINHAND
     });
     this.setRegistryName("magnetic");
-    this.setName("magnetic");
   }
 
   @Override
   public int getMinEnchantability(int level) {
     return 15;
-  }
-
-  @Override
-  public int getMaxEnchantability(int level) {
-    return 100;
   }
 
   @Override
@@ -72,8 +63,8 @@ public class EnchantmentMagnetic extends Enchantment {
 
   @SubscribeEvent
   public static void onHarvestDrops(BlockEvent.HarvestDropsEvent e) {
-    EntityPlayer player = e.getHarvester();
-    if (player != null && EnchantmentUtils.stackHasEnch(player.getHeldItemMainhand(),MAGNETIC))
+    PlayerEntity player = e.getHarvester();
+    if (player != null && EnchantUtils.hasEnch(player.getHeldItemMainhand(),MAGNETIC))
       e.getDrops().removeIf(player::addItemStackToInventory);
   }
 
@@ -81,22 +72,22 @@ public class EnchantmentMagnetic extends Enchantment {
   public static void onEnemyKilled(LivingDropsEvent e) {
     Entity attacker = e.getSource().getTrueSource();
 
-    if (attacker instanceof EntityPlayer) {
-      EntityPlayer player = (EntityPlayer)attacker;
-      if (EnchantmentUtils.stackHasEnch(player.getHeldItemMainhand(),MAGNETIC)) {
+    if (attacker instanceof PlayerEntity) {
+      PlayerEntity player = (PlayerEntity)attacker;
+      if (EnchantUtils.hasEnch(player.getHeldItemMainhand(),MAGNETIC)) {
         List<ItemStack> stacks = getStacksFromEntityItems(e.getDrops());
 
-        for (EntityItem entityItem : e.getDrops()){
+        for (ItemEntity entityItem : e.getDrops()){
           if (player.addItemStackToInventory(entityItem.getItem())) stacks.remove(entityItem.getItem());
         }
       }
     }
   }
 
-  public static List<ItemStack> getStacksFromEntityItems(List<EntityItem> l){
+  public static List<ItemStack> getStacksFromEntityItems(Collection<ItemEntity> l){
 
     List<ItemStack> stacks = new ArrayList<>();
-    for (EntityItem item : l){
+    for (ItemEntity item : l){
       stacks.add(item.getItem());
     }
     return stacks;

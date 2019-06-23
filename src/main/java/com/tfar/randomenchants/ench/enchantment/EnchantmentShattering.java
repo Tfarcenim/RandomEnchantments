@@ -1,45 +1,40 @@
 package com.tfar.randomenchants.ench.enchantment;
 
-import com.tfar.randomenchants.util.EnchantmentUtils;
-import com.tfar.randomenchants.util.GlobalVars;
+import com.tfar.randomenchants.RandomEnchants;
+import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockGlass;
+import net.minecraft.block.GlassBlock;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.weapons;
-import static com.tfar.randomenchants.init.ModEnchantment.SHATTERING;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.SHATTERING;
 
-@Mod.EventBusSubscriber(modid = GlobalVars.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
 
 public class EnchantmentShattering extends Enchantment {
   public EnchantmentShattering() {
-    super(Rarity.RARE, EnumEnchantmentType.BOW, new EntityEquipmentSlot[]{
-            EntityEquipmentSlot.MAINHAND
+    super(Rarity.RARE, EnchantmentType.BOW, new EquipmentSlotType[]{
+            EquipmentSlotType.MAINHAND
     });
     this.setRegistryName("shattering");
-    this.setName("shattering");
   }
 
   @Override
   public int getMinEnchantability(int level) {
     return 25;
-  }
-
-  @Override
-  public int getMaxEnchantability(int level) {
-    return 100;
   }
 
   @Override
@@ -70,17 +65,15 @@ public class EnchantmentShattering extends Enchantment {
 
   @SubscribeEvent
   public static void arrowHit(ProjectileImpactEvent event) {
+    RayTraceResult result = event.getRayTraceResult();
+    if (!(result instanceof BlockRayTraceResult))return;
     Entity arrow = event.getEntity();
-    Entity block = event.getRayTraceResult().entityHit;
-    if(EnchantmentUtils.isArrowinBlock(arrow, block))return;
-    EntityPlayer player = (EntityPlayer)((EntityArrow)arrow).shootingEntity;
-    if (!EnchantmentUtils.stackHasEnch(player.getHeldItemMainhand(),SHATTERING))return;
-    BlockPos pos = event.getRayTraceResult().getBlockPos();
-
+    PlayerEntity player = (PlayerEntity)((AbstractArrowEntity)arrow).getShooter();
+    if (player == null)return;
+    if (!EnchantUtils.hasEnch(player.getHeldItemMainhand(),SHATTERING))return;
+    BlockPos pos = ((BlockRayTraceResult) result).getPos();
     Block glass = arrow.world.getBlockState(pos).getBlock();
-
-    if (!(glass instanceof BlockGlass))return;
-
+    if (!(glass instanceof GlassBlock))return;
     if (player.canHarvestBlock(arrow.world.getBlockState(pos)))
       arrow.world.destroyBlock(pos,true);
       event.setCanceled(true);

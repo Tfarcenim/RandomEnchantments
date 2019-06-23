@@ -1,20 +1,20 @@
 package com.tfar.randomenchants.util;
 
-import com.tfar.randomenchants.init.ModEnchantment;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.monster.EndermanEntity;
+import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.ArrayList;
@@ -22,15 +22,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.GLOBAL_TRAVELLER;
 import static com.tfar.randomenchants.ench.enchantment.EnchantmentGlobalTraveler.KEY;
-import static com.tfar.randomenchants.util.EnchantmentUtils.getTagSafe;
-import static com.tfar.randomenchants.util.EnchantmentUtils.serverSafeSetVelocity;
 import static net.minecraft.util.math.Vec3d.ZERO;
 
 public class EventHandler {
 
-  public static Map<EntityArrow, Double> homingarrows = new HashMap<>();
-  public static List<EntityArrow> trueshotarrows = new ArrayList<>();
+  public static Map<AbstractArrowEntity, Double> homingarrows = new HashMap<>();
+  public static List<AbstractArrowEntity> trueshotarrows = new ArrayList<>();
 
   public static double absValue(Vec3d vec) {
     return Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2) + Math.pow(vec.z, 2));
@@ -43,56 +42,56 @@ public class EventHandler {
 
   @SubscribeEvent
   public void arrowInBlock(ProjectileImpactEvent event) {
-    if (!(event.getEntity() instanceof EntityArrow)) return;
-    if (event.getRayTraceResult().entityHit != null) return;
-    EntityArrow arrow = (EntityArrow) event.getEntity();
-    if (arrow.pickupStatus == EntityArrow.PickupStatus.ALLOWED) return;
-    if (arrow.getEntityData().getInteger("homing") != 1) return;
-    arrow.setDead();
+    if (!(event.getEntity() instanceof AbstractArrowEntity)) return;
+    if (event.getRayTraceResult() instanceof EntityRayTraceResult) return;
+    AbstractArrowEntity arrow = (AbstractArrowEntity) event.getEntity();
+    if (arrow.pickupStatus == AbstractArrowEntity.PickupStatus.ALLOWED) return;
+    if (arrow.getEntityData().getInt("homing") != 1) return;
+    arrow.remove();
   }
 
   @SubscribeEvent
   public void serverTick(TickEvent.ServerTickEvent e) {
     if (e.phase != TickEvent.Phase.END) return;
-    List<EntityArrow> removeHoming = new ArrayList<>();
-    for (Map.Entry<EntityArrow, Double> entry : homingarrows.entrySet()) {
-      EntityArrow arrow = entry.getKey();
+    List<AbstractArrowEntity> removeHoming = new ArrayList<>();
+    for (Map.Entry<AbstractArrowEntity, Double> entry : homingarrows.entrySet()) {
+      AbstractArrowEntity arrow = entry.getKey();
       if (arrow.ticksExisted > 600) {
-        arrow.setDead();
+        arrow.remove();
         removeHoming.add(arrow);
       }
-      if (arrow.isDead) continue;
+      if (!arrow.isAlive()) continue;
       World world = arrow.world;
       int r = 8;
       double x = arrow.posX;
       double y = arrow.posY;
       double z = arrow.posZ;
-      List<Entity> targets = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(x - r, y - r, z - r, x + r, y + r, z + r));
+      List<Entity> targets = world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(x - r, y - r, z - r, x + r, y + r, z + r));
       if (targets.size() == 0) continue;
       for (Entity target : targets) {
-        if (target instanceof EntityPlayer || target instanceof EntityEnderman || target instanceof EntityAnimal)
+        if (target instanceof PlayerEntity || target instanceof EndermanEntity || target instanceof AnimalEntity)
           continue;
         double speed = entry.getValue();
-        AxisAlignedBB box = target.getEntityBoundingBox();
+        AxisAlignedBB box = target.getBoundingBox();
         double diff = box.maxY - box.minY;
         Vec3d arrowDirection = new Vec3d(target.posX - arrow.posX, target.posY + diff / 2 - arrow.posY, target.posZ - arrow.posZ);
         arrowDirection = normalize(arrowDirection);
-        serverSafeSetVelocity(speed * arrowDirection.x, speed * arrowDirection.y, speed * arrowDirection.z, arrow);
+        arrow.setMotion(speed * arrowDirection.x, speed * arrowDirection.y, speed * arrowDirection.z);
         arrow.velocityChanged = true;
         break;
       }
     }
-    for (EntityArrow arrow : removeHoming) {
+    for (AbstractArrowEntity arrow : removeHoming) {
       homingarrows.remove(arrow);
     }
-    List<EntityArrow> removeTrueShot = new ArrayList<>();
-    for (EntityArrow arrow : trueshotarrows) {
+    List<AbstractArrowEntity> removeTrueShot = new ArrayList<>();
+    for (AbstractArrowEntity arrow : trueshotarrows) {
       if (arrow.ticksExisted > 600) {
-        arrow.setDead();
+        arrow.remove();
         removeTrueShot.add(arrow);
       }
-      if (arrow.isDead) continue;
-      serverSafeSetVelocity(arrow.motionX / .99, arrow.motionY / .99, arrow.motionZ / .99, arrow);
+      if (!arrow.isAlive()) continue;
+      arrow.setMotion(arrow.getMotion().scale(1/.99));
       arrow.velocityChanged = true;
     }
     trueshotarrows.removeAll(removeTrueShot);
@@ -104,16 +103,16 @@ public class EventHandler {
     // if (e.getWorld().getTileEntity(e.getPos()) != null)return;
 
     ItemStack stack = e.getItemStack();
-    if (EnchantmentUtils.stackHasEnch(stack, ModEnchantment.GLOBAL_TRAVELLER) && e.getEntityPlayer().isSneaking()) {
+    if (EnchantUtils.hasEnch(stack, GLOBAL_TRAVELLER) && e.getEntityPlayer().isSneaking()) {
       toggle(stack);
     }
   }
 
   public static void toggle(ItemStack stack) {
-    NBTTagCompound nbt = getTagSafe(stack);
-    if (nbt.hasKey(KEY)) {
-      boolean toggle = stack.getTagCompound().getBoolean("toggle");
-      stack.getTagCompound().setBoolean("toggle", !toggle);
+    CompoundNBT nbt = stack.getOrCreateTag();
+    if (nbt.contains(KEY)) {
+      boolean toggle = stack.getOrCreateTag().getBoolean("toggle");
+      stack.getOrCreateTag().putBoolean("toggle", !toggle);
     }
   }
 

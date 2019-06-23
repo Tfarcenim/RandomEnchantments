@@ -1,28 +1,27 @@
 package com.tfar.randomenchants.ench.enchantment;
 
-import com.tfar.randomenchants.util.GlobalVars;
+import com.tfar.randomenchants.RandomEnchants;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnumEnchantmentType;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.enchantment.EnchantmentType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.weapons;
-import static com.tfar.randomenchants.init.ModEnchantment.SOLAR;
-import static com.tfar.randomenchants.util.EnchantmentUtils.isDark;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.SOLAR;
+import static com.tfar.randomenchants.util.EnchantUtils.isDark;
 
-@Mod.EventBusSubscriber(modid= GlobalVars.MOD_ID)
+@Mod.EventBusSubscriber(modid= RandomEnchants.MOD_ID)
 public class EnchantmentSolar extends Enchantment {
     public EnchantmentSolar() {
 
-        super(Rarity.RARE, EnumEnchantmentType.BREAKABLE, list);
+        super(Rarity.RARE, EnchantmentType.BREAKABLE, list);
         this.setRegistryName("solar");
-        this.setName("solar");
     }
 
     @Override
@@ -31,19 +30,14 @@ public class EnchantmentSolar extends Enchantment {
     }
 
     @Override
-    public int getMaxEnchantability(int level) {
-        return super.getMinEnchantability(level) + 25;
-    }
-
-    @Override
     public int getMaxLevel() {
         return 5;
     }
 
 
-    private static EntityEquipmentSlot[] list = new EntityEquipmentSlot[]{EntityEquipmentSlot.HEAD,
-            EntityEquipmentSlot.CHEST,EntityEquipmentSlot.LEGS,EntityEquipmentSlot.FEET,
-            EntityEquipmentSlot.MAINHAND,EntityEquipmentSlot.OFFHAND};
+    private static EquipmentSlotType[] list = new EquipmentSlotType[]{EquipmentSlotType.HEAD,
+            EquipmentSlotType.CHEST, EquipmentSlotType.LEGS, EquipmentSlotType.FEET,
+            EquipmentSlotType.MAINHAND, EquipmentSlotType.OFFHAND};
 
     @Override
     public boolean canApply(ItemStack stack){
@@ -67,13 +61,13 @@ public class EnchantmentSolar extends Enchantment {
 
     @SubscribeEvent
 public static void applySolar(TickEvent.PlayerTickEvent e) {
-        EntityPlayer p = e.player;
+        PlayerEntity p = e.player;
         if (p.world.isRemote) return;
-        for (EntityEquipmentSlot slot : list) {
+        for (EquipmentSlotType slot : list) {
             ItemStack stack = p.getItemStackFromSlot(slot);
             int level = EnchantmentHelper.getEnchantmentLevel(SOLAR, stack);
             if (level == 0 || Math.random()/level > 0.004) continue;
-            if (!isDark(p))stack.damageItem(-1,p);
+            if (!isDark(p))stack.damageItem(-1,p,playerEntity -> playerEntity.sendBreakAnimation(p.getActiveHand()));
         }
     }
 }

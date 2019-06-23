@@ -1,37 +1,31 @@
 package com.tfar.randomenchants.ench.curse;
 
-import com.tfar.randomenchants.util.GlobalVars;
+import com.tfar.randomenchants.RandomEnchants;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.curses;
 
-@Mod.EventBusSubscriber(modid= GlobalVars.MOD_ID)
+@Mod.EventBusSubscriber(modid= RandomEnchants.MOD_ID)
 public class EnchantmentButterfingersCurse extends Enchantment {
     public EnchantmentButterfingersCurse() {
 
-        super(Rarity.RARE, EnumEnchantmentType.ALL, new EntityEquipmentSlot[]{
-                EntityEquipmentSlot.MAINHAND
+        super(Rarity.RARE, EnchantmentType.ALL, new EquipmentSlotType[]{
+                EquipmentSlotType.MAINHAND
         });
         this.setRegistryName("butterfingers");
-        this.setName("butterfingers");
     }
 
     @Override
     public int getMinEnchantability(int level) {
         return 25;
-    }
-
-    @Override
-    public int getMaxEnchantability(int level) {
-        return 50;
     }
 
     @Override
@@ -55,12 +49,12 @@ public class EnchantmentButterfingersCurse extends Enchantment {
     }
 
     @Override
-    public void onEntityDamaged(EntityLivingBase user, Entity target, int level) {
-        if (!(user instanceof EntityPlayer))return;
-        EntityPlayer player = (EntityPlayer)user;
+    public void onEntityDamaged(LivingEntity user, Entity target, int level) {
+        if (!(user instanceof PlayerEntity))return;
+        PlayerEntity player = (PlayerEntity)user;
         if (Math.random()>.50)return;
-        player.dropItem(player.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND),true);
-        player.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, ItemStack.EMPTY);
+        player.dropItem(player.getItemStackFromSlot(EquipmentSlotType.MAINHAND),true);
+        player.setItemStackToSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
         //EntityItem itemStack = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack);
         //world.spawnEntity(itemStack);
     }
