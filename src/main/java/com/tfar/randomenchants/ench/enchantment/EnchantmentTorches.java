@@ -6,6 +6,7 @@ import net.minecraft.block.*;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.block.Blocks;
@@ -69,7 +70,9 @@ public class EnchantmentTorches extends Enchantment {
     Entity arrow = e.getEntity();
     RayTraceResult result = e.getRayTraceResult();
     if (!(result instanceof BlockRayTraceResult))return;
-    PlayerEntity user = (PlayerEntity) ((AbstractArrowEntity) arrow).getShooter();
+    Entity shooter = ((AbstractArrowEntity) arrow).getShooter();
+    if (!(shooter instanceof LivingEntity))return;
+    LivingEntity user = (LivingEntity)((AbstractArrowEntity) arrow).getShooter();
     if (user == null)return;
     if (!EnchantUtils.hasEnch(user,LIGHTING)) return;
     World world = arrow.world;

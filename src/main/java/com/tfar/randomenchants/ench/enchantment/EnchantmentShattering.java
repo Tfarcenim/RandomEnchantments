@@ -7,6 +7,7 @@ import net.minecraft.block.GlassBlock;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -68,7 +69,9 @@ public class EnchantmentShattering extends Enchantment {
     RayTraceResult result = event.getRayTraceResult();
     if (!(result instanceof BlockRayTraceResult))return;
     Entity arrow = event.getEntity();
-    PlayerEntity player = (PlayerEntity)((AbstractArrowEntity)arrow).getShooter();
+    Entity shooter = ((AbstractArrowEntity) arrow).getShooter();
+    if (!(shooter instanceof PlayerEntity))return;
+    PlayerEntity player = (PlayerEntity) ((AbstractArrowEntity) arrow).getShooter();
     if (player == null)return;
     if (!EnchantUtils.hasEnch(player.getHeldItemMainhand(),SHATTERING))return;
     BlockPos pos = ((BlockRayTraceResult) result).getPos();
