@@ -4,8 +4,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.ANVIL;
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.NORMAL;
+import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.RandomEnchants.MOD_ID;
 
 @Mod.EventBusSubscriber(modid = MOD_ID)

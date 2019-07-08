@@ -69,6 +69,7 @@ public class EnchantmentShattering extends Enchantment {
     RayTraceResult result = event.getRayTraceResult();
     if (!(result instanceof BlockRayTraceResult))return;
     Entity arrow = event.getEntity();
+    if (!(arrow instanceof  AbstractArrowEntity))return;
     Entity shooter = ((AbstractArrowEntity) arrow).getShooter();
     if (!(shooter instanceof PlayerEntity))return;
     PlayerEntity player = (PlayerEntity) ((AbstractArrowEntity) arrow).getShooter();

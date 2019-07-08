@@ -68,6 +68,7 @@ public class EnchantmentTorches extends Enchantment {
   @SubscribeEvent
   public static void onBlockHit(ProjectileImpactEvent e) {
     Entity arrow = e.getEntity();
+    if (!(arrow instanceof  AbstractArrowEntity))return;
     RayTraceResult result = e.getRayTraceResult();
     if (!(result instanceof BlockRayTraceResult))return;
     Entity shooter = ((AbstractArrowEntity) arrow).getShooter();
