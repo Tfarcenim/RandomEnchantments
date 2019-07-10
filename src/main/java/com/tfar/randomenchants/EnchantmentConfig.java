@@ -98,6 +98,9 @@ public class EnchantmentConfig {
     @Config.Name(f+"Swift")
     public EnumAccessLevel enableSwift = NORMAL;
 
+    @Config.Name("Max Swiftness level")
+    public int maxSwiftLevel = 5;
+
     @Config.Name(f+"Ricochet")
     public EnumAccessLevel enableRicochet = NORMAL;
 

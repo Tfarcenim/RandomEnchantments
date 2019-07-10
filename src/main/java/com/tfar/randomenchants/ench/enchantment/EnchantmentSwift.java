@@ -1,5 +1,6 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.EnchantmentConfig;
 import com.tfar.randomenchants.util.GlobalVars;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
@@ -41,7 +42,7 @@ public class EnchantmentSwift extends Enchantment {
 
   @Override
   public int getMaxLevel() {
-    return 5;
+    return weapons.maxSwiftLevel;
   }
 
   @Override
