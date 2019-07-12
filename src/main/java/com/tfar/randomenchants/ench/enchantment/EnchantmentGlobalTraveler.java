@@ -87,7 +87,7 @@ public class EnchantmentGlobalTraveler extends Enchantment {
     private void __blockHarvestDrops(ItemStack tool, BlockEvent.HarvestDropsEvent event) {
       if (!getToggleState(tool)) return;
       CompoundNBT nbt0 = tool.getOrCreateTag();
-      if (EnchantUtils.hasEnch(tool,GLOBAL_TRAVELLER) && tool.canHarvestBlock(event.getState())) {
+      if (tool.canHarvestBlock(event.getState())) {
 
         CompoundNBT nbt = nbt0.getCompound(KEY);
         Coord4D coord = Coord4D.fromNBT(nbt);
@@ -162,8 +162,8 @@ public class EnchantmentGlobalTraveler extends Enchantment {
       if (world0.isRemote
               || event.getEntityLiving().getHealth() > 0) return;
       ItemStack weapon = getWeapon(event.getSource());
-      CompoundNBT nbt0 = weapon.getOrCreateTag();
       if (EnchantUtils.hasEnch(weapon,GLOBAL_TRAVELLER)) {
+        CompoundNBT nbt0 = weapon.getOrCreateTag();
         if (!getToggleState(weapon)) return;
         if (nbt0.contains(KEY)) {
           CompoundNBT nbt = nbt0.getCompound(KEY);
@@ -195,7 +195,6 @@ public class EnchantmentGlobalTraveler extends Enchantment {
 
     @SubscribeEvent
     public void onPlayerUse(PlayerInteractEvent.RightClickBlock event) {
-      CompoundNBT nbt = event.getItemStack().getOrCreateTag();
       if (event.getWorld().isRemote
               || event.isCanceled()
               || !event.getEntityPlayer().isSneaking()
@@ -203,6 +202,7 @@ public class EnchantmentGlobalTraveler extends Enchantment {
               || event.getFace() == null
               || !EnchantUtils.hasEnch(event.getItemStack(), GLOBAL_TRAVELLER))
         return;
+      CompoundNBT nbt = event.getItemStack().getOrCreateTag();
       TileEntity te = event.getWorld().getTileEntity(event.getPos());
       if (te == null || te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
               event.getFace()) == null) return;

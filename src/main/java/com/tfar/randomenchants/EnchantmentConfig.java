@@ -32,8 +32,6 @@ public class EnchantmentConfig {
 
     public EnumAccessLevel enableExploding = NORMAL;
 
-    public EnumAccessLevel enablePiercing = NORMAL;
-
     public EnumAccessLevel enableCombo = NORMAL;
 
     public EnumAccessLevel enableCursedJumping = NORMAL;

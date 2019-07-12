@@ -1,5 +1,6 @@
 package com.tfar.randomenchants.util;
 
+import com.tfar.randomenchants.RandomEnchants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -12,9 +13,11 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
@@ -23,9 +26,10 @@ import java.util.List;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.*;
 import static com.tfar.randomenchants.ench.enchantment.EnchantmentGlobalTraveler.KEY;
 
+@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID,value = Dist.CLIENT)
 public class ClientEventHandler {
   @SubscribeEvent(priority = EventPriority.HIGHEST)
-  public void onTooltip(ItemTooltipEvent e) {
+  public static void onTooltip(ItemTooltipEvent e) {
     PlayerEntity p = e.getEntityPlayer();
     if (p == null) return;
     List<ITextComponent> tooltip = e.getToolTip();
@@ -60,10 +64,10 @@ public class ClientEventHandler {
   }
 
   @SubscribeEvent
-  public void tooltip(ItemTooltipEvent event) {
-    CompoundNBT nbt0 = event.getItemStack().getOrCreateTag();
+  public static void tooltip(ItemTooltipEvent event) {
+    CompoundNBT nbt0 = event.getItemStack().getTag();
+    if (nbt0 == null)return;
     if (event.isCanceled()
-            || event.getItemStack().isEmpty()
             || !EnchantUtils.hasEnch(event.getItemStack(),GLOBAL_TRAVELLER)) return;
 
     event.getToolTip().add(new StringTextComponent("Toggle: "+nbt0.getBoolean("toggle")));

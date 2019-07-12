@@ -62,7 +62,7 @@ public class EnchantmentMomentum extends Enchantment {
   public static void onBreakSpeed(PlayerEvent.BreakSpeed e) {
     PlayerEntity p = e.getEntityPlayer();
 
-    if (EnchantmentHelper.getMaxEnchantmentLevel(MOMENTUM, p) > 0) {
+    if (EnchantUtils.hasEnch(p, MOMENTUM)) {
       ItemStack stack = p.getHeldItemMainhand();
       CompoundNBT compound = stack.getOrCreateTag();
       int momentum = compound.getInt("momentum");
