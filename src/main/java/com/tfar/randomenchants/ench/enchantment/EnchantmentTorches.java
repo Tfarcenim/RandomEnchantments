@@ -11,7 +11,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -68,39 +70,30 @@ public class EnchantmentTorches extends Enchantment {
   @SubscribeEvent
   public static void onBlockHit(ProjectileImpactEvent e) {
     Entity arrow = e.getEntity();
-    if (!(arrow instanceof  AbstractArrowEntity))return;
+    if (!(arrow instanceof AbstractArrowEntity)) return;
     RayTraceResult result = e.getRayTraceResult();
-    if (!(result instanceof BlockRayTraceResult))return;
+    if (!(result instanceof BlockRayTraceResult)) return;
     Entity shooter = ((AbstractArrowEntity) arrow).getShooter();
-    if (!(shooter instanceof LivingEntity))return;
-    LivingEntity user = (LivingEntity)((AbstractArrowEntity) arrow).getShooter();
-    if (user == null)return;
-    if (!EnchantUtils.hasEnch(user,LIGHTING)) return;
+    if (!(shooter instanceof LivingEntity)) return;
+    if (result.getType() == RayTraceResult.Type.MISS) return;
+    LivingEntity user = (LivingEntity) ((AbstractArrowEntity) arrow).getShooter();
+    if (user == null) return;
+    if (!EnchantUtils.hasEnch(user, LIGHTING)) return;
     World world = arrow.world;
+    //BlockItem torchitem = Items.TORCH;
     if (!world.isRemote) {
       BlockPos pos = arrow.getPosition();
-      if (world.getBlockState(pos).getBlock().isAir(world.getBlockState(pos),null,null))return;
-      Block torch = Blocks.TORCH;
-      BlockState blockState = torch.getDefaultState();
-      switch (((BlockRayTraceResult) result).getFace()) {
-        case UP : case DOWN: {
-          world.setBlockState(pos, blockState.updatePostPlacement(Direction.DOWN,blockState,world,pos,pos.down()));break;
-        }
-        case EAST:{
-          world.setBlockState(pos,blockState.updatePostPlacement(Direction.DOWN,blockState,world,pos,pos.down()));
-        }
-        case WEST:{
-          world.setBlockState(pos,blockState.updatePostPlacement(Direction.DOWN,blockState,world,pos,pos.down()));
-        }
-        case SOUTH:{
-          world.setBlockState(pos,blockState.updatePostPlacement(Direction.DOWN,blockState,world,pos,pos.down()));
-        }
-        case NORTH:{
-          world.setBlockState(pos,blockState.updatePostPlacement(Direction.DOWN,blockState,world,pos,pos.down()));
-        }
-      }
+      if (!world.isAirBlock(pos))return;
+      Direction dir = ((BlockRayTraceResult) result).getFace();
+      BlockState blockState;
+      if (dir == Direction.UP) blockState = Blocks.TORCH.getDefaultState();
+      else if (dir != Direction.DOWN)
+        blockState = Blocks.WALL_TORCH.getDefaultState().with(WallTorchBlock.HORIZONTAL_FACING, dir);
+      else return;
+      world.setBlockState(pos, blockState);
       arrow.remove();
     }
   }
 }
+
 
