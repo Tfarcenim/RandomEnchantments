@@ -1,11 +1,11 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
 import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -15,13 +15,12 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.tools;
+import static com.tfar.randomenchants.Config.Restriction.*;
 import static com.tfar.randomenchants.RandomEnchants.AXE;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.LUMBERJACK;
 
 
-@Mod.EventBusSubscriber(modid= RandomEnchants.MOD_ID)
+@Mod.EventBusSubscriber(modid= RandomEnchants.MODID)
 public class EnchantmentLumberjack extends Enchantment {
     public EnchantmentLumberjack() {
 
@@ -43,22 +42,22 @@ public class EnchantmentLumberjack extends Enchantment {
 
     @Override
     public boolean canApply(ItemStack stack){
-        return tools.enableLumberjack != DISABLED && super.canApply(stack);
+        return Config.ServerConfig.lumberjack.get() != DISABLED && super.canApply(stack);
     }
 
     @Override
     public boolean isTreasureEnchantment() {
-        return tools.enableLumberjack == ANVIL;
+        return Config.ServerConfig.lumberjack.get() == ANVIL;
     }
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return tools.enableLumberjack != DISABLED && super.canApplyAtEnchantingTable(stack);
+        return Config.ServerConfig.lumberjack.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
     }
 
     @Override
     public boolean isAllowedOnBooks() {
-        return tools.enableLumberjack == NORMAL;
+        return Config.ServerConfig.lumberjack.get() == NORMAL;
     }
 
     @SubscribeEvent

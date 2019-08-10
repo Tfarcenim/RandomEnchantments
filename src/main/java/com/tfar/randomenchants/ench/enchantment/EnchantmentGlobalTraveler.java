@@ -28,11 +28,11 @@ import net.minecraftforge.items.IItemHandler;
 
 import java.util.*;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.tools;
-import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.GLOBAL_TRAVELLER;
+import static com.tfar.randomenchants.Config.Restriction.*;
+//import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.GLOBAL_TRAVELLER;
 
-public class EnchantmentGlobalTraveler extends Enchantment {
+/*public class EnchantmentGlobalTraveler extends Enchantment {
+  //works like plustic version
   public EnchantmentGlobalTraveler() {
 
     super(Rarity.VERY_RARE, RandomEnchants.TOOLSANDWEAPONS, new EquipmentSlotType[]{
@@ -249,5 +249,5 @@ public class EnchantmentGlobalTraveler extends Enchantment {
             && !tool.canHarvestBlock(blockState)
             && offhand.canHarvestBlock(blockState);
   }
-}
+}*/
 

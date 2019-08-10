@@ -1,5 +1,6 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
 import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
@@ -13,12 +14,11 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.weapons;
+import static com.tfar.randomenchants.Config.Restriction.*;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.TRUE_SHOT;
 import static com.tfar.randomenchants.util.EventHandler.trueshotarrows;
 
-@Mod.EventBusSubscriber(modid= RandomEnchants.MOD_ID)
+@Mod.EventBusSubscriber(modid= RandomEnchants.MODID)
 
 public class EnchantmentTrueShot extends Enchantment {
   public EnchantmentTrueShot() {
@@ -40,22 +40,22 @@ public class EnchantmentTrueShot extends Enchantment {
 
   @Override
   public boolean canApply(ItemStack stack){
-    return weapons.enableTrueShot != DISABLED && super.canApply(stack);
+    return Config.ServerConfig.true_shot.get() != DISABLED && super.canApply(stack);
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return weapons.enableTrueShot == ANVIL;
+    return Config.ServerConfig.true_shot.get() == ANVIL;
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return weapons.enableTrueShot != DISABLED && super.canApplyAtEnchantingTable(stack);
+    return Config.ServerConfig.true_shot.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
   }
 
   @Override
   public boolean isAllowedOnBooks() {
-    return weapons.enableTrueShot == NORMAL;
+    return Config.ServerConfig.true_shot.get() == NORMAL;
   }
 
   @SubscribeEvent

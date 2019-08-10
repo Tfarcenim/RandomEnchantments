@@ -8,9 +8,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.ServerWorld;
 import net.minecraft.world.dimension.Dimension;
-import net.minecraftforge.common.DimensionManager;
+import net.minecraft.world.server.ServerWorld;
 
 import java.util.Locale;
 

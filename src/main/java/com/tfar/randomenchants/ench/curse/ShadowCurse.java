@@ -1,5 +1,6 @@
 package com.tfar.randomenchants.ench.curse;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -13,15 +14,14 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import javax.annotation.Nonnull;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.ANVIL;
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.DISABLED;
-import static com.tfar.randomenchants.EnchantmentConfig.curses;
+import static com.tfar.randomenchants.Config.Restriction.ANVIL;
+import static com.tfar.randomenchants.Config.Restriction.DISABLED;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.SHADOW;
 import static com.tfar.randomenchants.util.EnchantUtils.isDark;
 
-@Mod.EventBusSubscriber(modid= RandomEnchants.MOD_ID)
-public class EnchantmentShadowCurse extends Enchantment {
-    public EnchantmentShadowCurse() {
+@Mod.EventBusSubscriber(modid= RandomEnchants.MODID)
+public class ShadowCurse extends Enchantment {
+    public ShadowCurse() {
 
         super(Rarity.RARE, EnchantmentType.BREAKABLE, list);
         this.setRegistryName("shadow");
@@ -39,7 +39,7 @@ public class EnchantmentShadowCurse extends Enchantment {
     @Override
     public boolean canApply(@Nonnull ItemStack stack)
     {
-        return curses.enableShadow != DISABLED && super.canApply(stack);
+        return Config.ServerConfig.shadow.get() != DISABLED && super.canApply(stack);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class EnchantmentShadowCurse extends Enchantment {
 
     @Override
     public boolean isTreasureEnchantment() {
-        return curses.enableShadow == ANVIL;
+        return Config.ServerConfig.shadow.get() == ANVIL;
     }
 
     private static EquipmentSlotType[] list = new EquipmentSlotType[]{EquipmentSlotType.HEAD,

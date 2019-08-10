@@ -1,6 +1,8 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
+import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.LivingEntity;
@@ -16,12 +18,11 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import java.lang.reflect.Method;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.weapons;
+import static com.tfar.randomenchants.Config.Restriction.*;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.QUICKDRAW;
 import static net.minecraft.enchantment.EnchantmentHelper.*;
 
-@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MODID)
 
 public class EnchantmentQuickdraw extends Enchantment {
   public EnchantmentQuickdraw() {
@@ -43,22 +44,22 @@ public class EnchantmentQuickdraw extends Enchantment {
 
   @Override
   public boolean canApply(ItemStack stack){
-    return weapons.enableQuickdraw != DISABLED && super.canApply(stack);
+    return Config.ServerConfig.quickdraw.get() != DISABLED && super.canApply(stack);
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return weapons.enableQuickdraw == ANVIL;
+    return Config.ServerConfig.quickdraw.get() == ANVIL;
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return weapons.enableQuickdraw != DISABLED && super.canApplyAtEnchantingTable(stack);
+    return Config.ServerConfig.quickdraw.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
   }
 
   @Override
   public boolean isAllowedOnBooks() {
-    return weapons.enableQuickdraw == NORMAL;
+    return Config.ServerConfig.quickdraw.get() == NORMAL;
   }
 
   @SubscribeEvent
@@ -67,7 +68,7 @@ public class EnchantmentQuickdraw extends Enchantment {
       PlayerEntity player = (PlayerEntity) event.getEntity();
       ItemStack heldItem = player.getHeldItem(Hand.MAIN_HAND);
       if (!(heldItem.getItem() instanceof BowItem)) heldItem = player.getHeldItem(Hand.OFF_HAND);
-      if (!(heldItem.getItem() instanceof BowItem) || getMaxEnchantmentLevel(QUICKDRAW, player) <= 0)
+      if (!(heldItem.getItem() instanceof BowItem) || !EnchantUtils.hasEnch(player, QUICKDRAW))
         return;
       if (player.isHandActive()) {
         for (int i = 0; i < getMaxEnchantmentLevel(QUICKDRAW, player); i++) {

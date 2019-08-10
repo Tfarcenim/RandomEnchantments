@@ -1,5 +1,6 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
 import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
@@ -16,13 +17,12 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.tools;
+import static com.tfar.randomenchants.Config.Restriction.*;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.RANDOMNESS;
 import static com.tfar.randomenchants.RandomEnchants.itemList;
 
 
-@Mod.EventBusSubscriber(modid= RandomEnchants.MOD_ID)
+@Mod.EventBusSubscriber(modid= RandomEnchants.MODID)
 public class EnchantmentRandomness extends Enchantment {
     public EnchantmentRandomness() {
 
@@ -44,22 +44,22 @@ public class EnchantmentRandomness extends Enchantment {
 
     @Override
     public boolean canApply(ItemStack stack){
-        return tools.enableRandomness != DISABLED && super.canApply(stack);
+        return Config.ServerConfig.randomness.get() != DISABLED && super.canApply(stack);
     }
 
     @Override
     public boolean isTreasureEnchantment() {
-        return tools.enableRandomness == ANVIL;
+        return Config.ServerConfig.randomness.get() == ANVIL;
     }
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return tools.enableRandomness != DISABLED && super.canApplyAtEnchantingTable(stack);
+        return Config.ServerConfig.randomness.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
     }
 
     @Override
     public boolean isAllowedOnBooks() {
-        return tools.enableRandomness == NORMAL;
+        return Config.ServerConfig.randomness.get() == NORMAL;
     }
 
     @SubscribeEvent
@@ -77,6 +77,7 @@ public class EnchantmentRandomness extends Enchantment {
             }
         }
     }
+    //doesn't work
     @SubscribeEvent
     public static void removeDefaultDrops(BlockEvent.HarvestDropsEvent e){
         PlayerEntity p = e.getHarvester();

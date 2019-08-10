@@ -1,9 +1,9 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
 import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
@@ -16,11 +16,10 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import javax.annotation.Nonnull;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.tools;
+import static com.tfar.randomenchants.Config.Restriction.*;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.RESISTANT;
 
-@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MODID)
 
 public class EnchantmentResistant extends Enchantment {
   public EnchantmentResistant() {
@@ -42,22 +41,22 @@ public class EnchantmentResistant extends Enchantment {
 
   @Override
   public boolean canApply(@Nonnull ItemStack stack) {
-    return tools.enableResistance != DISABLED;
+    return Config.ServerConfig.resistant.get() != DISABLED;
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return tools.enableResistance == ANVIL;
+    return Config.ServerConfig.resistant.get() == ANVIL;
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return tools.enableResistance != DISABLED && super.canApplyAtEnchantingTable(stack);
+    return Config.ServerConfig.resistant.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
   }
 
   @Override
   public boolean isAllowedOnBooks() {
-    return tools.enableResistance == NORMAL;
+    return Config.ServerConfig.resistant.get() == NORMAL;
   }
 
 

@@ -1,5 +1,6 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
 import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
@@ -16,11 +17,10 @@ import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.weapons;
+import static com.tfar.randomenchants.Config.Restriction.*;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.RICOCHET;
 
-@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MODID)
 
 public class EnchantmentRicochet extends Enchantment {
   public EnchantmentRicochet() {
@@ -42,22 +42,22 @@ public class EnchantmentRicochet extends Enchantment {
 
   @Override
   public boolean canApply(ItemStack stack){
-    return weapons.enableRicochet != DISABLED && super.canApply(stack);
+    return Config.ServerConfig.ricochet.get() != DISABLED && super.canApply(stack);
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return weapons.enableRicochet == ANVIL;
+    return Config.ServerConfig.ricochet.get() == ANVIL;
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return weapons.enableRicochet != DISABLED && super.canApplyAtEnchantingTable(stack);
+    return Config.ServerConfig.ricochet.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
   }
 
   @Override
   public boolean isAllowedOnBooks() {
-      return weapons.enableRicochet == NORMAL;
+      return Config.ServerConfig.ricochet.get() == NORMAL;
     }
 
 

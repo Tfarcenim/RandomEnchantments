@@ -1,5 +1,6 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
 import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
@@ -15,12 +16,11 @@ import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nonnull;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.weapons;
+import static com.tfar.randomenchants.Config.Restriction.*;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.HOMING;
 import static com.tfar.randomenchants.util.EventHandler.homingarrows;
 
-@Mod.EventBusSubscriber(modid= RandomEnchants.MOD_ID)
+@Mod.EventBusSubscriber(modid= RandomEnchants.MODID)
 
 public class EnchantmentHoming extends Enchantment {
   public EnchantmentHoming() {
@@ -42,22 +42,22 @@ public class EnchantmentHoming extends Enchantment {
 
   @Override
   public boolean canApply(@Nonnull ItemStack stack){
-    return weapons.enableHoming != DISABLED && super.canApply(stack);
+    return Config.ServerConfig.homing.get() != DISABLED && super.canApply(stack);
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return weapons.enableHoming == ANVIL;
+    return Config.ServerConfig.homing.get() == ANVIL;
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return weapons.enableHoming != DISABLED && super.canApplyAtEnchantingTable(stack);
+    return Config.ServerConfig.homing.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
   }
 
   @Override
   public boolean isAllowedOnBooks() {
-    return weapons.enableHoming == NORMAL;
+    return Config.ServerConfig.homing.get() == NORMAL;
   }
 
   @SubscribeEvent

@@ -1,5 +1,6 @@
 package com.tfar.randomenchants.ench.curse;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -11,13 +12,12 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.curses;
+import static com.tfar.randomenchants.Config.Restriction.*;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.BREAKING;
 
-@Mod.EventBusSubscriber(modid= RandomEnchants.MOD_ID)
-public class EnchantmentBreakingCurse extends Enchantment {
-    public EnchantmentBreakingCurse() {
+@Mod.EventBusSubscriber(modid= RandomEnchants.MODID)
+public class BreakingCurse extends Enchantment {
+    public BreakingCurse() {
 
         super(Rarity.RARE, EnchantmentType.BREAKABLE, new EquipmentSlotType[]{
                 EquipmentSlotType.MAINHAND
@@ -37,7 +37,7 @@ public class EnchantmentBreakingCurse extends Enchantment {
     @Override
     public boolean canApply(ItemStack stack)
     {
-        return curses.enableBreaking != DISABLED && stack.isDamageable() || super.canApply(stack);
+        return Config.ServerConfig.breaking.get() != DISABLED && stack.isDamageable() || super.canApply(stack);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class EnchantmentBreakingCurse extends Enchantment {
 
     @Override
     public boolean isTreasureEnchantment() {
-        return curses.enableBreaking == ANVIL;
+        return Config.ServerConfig.breaking.get() == ANVIL;
     }
 
     @SubscribeEvent

@@ -1,5 +1,6 @@
 package com.tfar.randomenchants.ench.curse;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentType;
@@ -10,12 +11,11 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.curses;
+import static com.tfar.randomenchants.Config.Restriction.*;
 
-@Mod.EventBusSubscriber(modid= RandomEnchants.MOD_ID)
-public class EnchantmentButterfingersCurse extends Enchantment {
-    public EnchantmentButterfingersCurse() {
+@Mod.EventBusSubscriber(modid= RandomEnchants.MODID)
+public class ButterfingersCurse extends Enchantment {
+    public ButterfingersCurse() {
 
         super(Rarity.RARE, EnchantmentType.ALL, new EquipmentSlotType[]{
                 EquipmentSlotType.MAINHAND
@@ -40,12 +40,12 @@ public class EnchantmentButterfingersCurse extends Enchantment {
     @Override
     public boolean canApply(ItemStack stack)
     {
-        return curses.enableButterfingers != DISABLED && super.canApply(stack);
+        return Config.ServerConfig.butterfingers.get() != DISABLED && super.canApply(stack);
     }
 
     @Override
     public boolean isTreasureEnchantment() {
-        return curses.enableButterfingers == ANVIL;
+        return Config.ServerConfig.butterfingers.get() == ANVIL;
     }
 
     @Override

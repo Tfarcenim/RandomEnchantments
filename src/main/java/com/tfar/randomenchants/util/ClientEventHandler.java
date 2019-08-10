@@ -1,11 +1,8 @@
 package com.tfar.randomenchants.util;
 
 import com.tfar.randomenchants.RandomEnchants;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -18,15 +15,12 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.List;
 
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.*;
-import static com.tfar.randomenchants.ench.enchantment.EnchantmentGlobalTraveler.KEY;
 
-@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID,value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MODID,value = Dist.CLIENT)
 public class ClientEventHandler {
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void onTooltip(ItemTooltipEvent e) {
@@ -62,11 +56,11 @@ public class ClientEventHandler {
 
     }
   }
-
-  @SubscribeEvent
+//TODO reimplement global traveller
+  /*@SubscribeEvent
   public static void tooltip(ItemTooltipEvent event) {
     CompoundNBT nbt0 = event.getItemStack().getTag();
-    if (nbt0 == null)return;
+    if (true)return;
     if (event.isCanceled()
             || !EnchantUtils.hasEnch(event.getItemStack(),GLOBAL_TRAVELLER)) return;
 
@@ -81,16 +75,5 @@ public class ClientEventHandler {
          nbt.getInt("dim"))));
 
     }
-  }// cant be in common code or it will crash dedicated servers!
-  @SubscribeEvent
-  public void playerTick(TickEvent.PlayerTickEvent event) {
-    if (event.phase == TickEvent.Phase.END)return;
-    PlayerEntity player = Minecraft.getInstance().player;
-    if (player == null) return;
-    if (!EnchantUtils.hasEnch(player.getItemStackFromSlot(EquipmentSlotType.CHEST), FAST_PLACING)) return;
-    int delay = ObfuscationReflectionHelper.getPrivateValue(Minecraft.class,Minecraft.getInstance(),"field_71467_ac");
-    delay -= EnchantmentHelper.getEnchantmentLevel(FAST_PLACING,player.getItemStackFromSlot(EquipmentSlotType.CHEST));
-    if (delay<0) delay = 0;
-    ObfuscationReflectionHelper.setPrivateValue(Minecraft.class,Minecraft.getInstance(),delay,"field_71467_ac");
-  }
+  }*/
 }

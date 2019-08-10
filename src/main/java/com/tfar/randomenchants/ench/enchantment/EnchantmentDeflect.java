@@ -1,5 +1,6 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
 import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
@@ -18,11 +19,10 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.weapons;
+import static com.tfar.randomenchants.Config.Restriction.*;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.DEFLECT;
 
-@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MODID)
 
 public class EnchantmentDeflect extends Enchantment {
   public EnchantmentDeflect() {
@@ -45,22 +45,22 @@ public class EnchantmentDeflect extends Enchantment {
 
   @Override
   public boolean canApply(ItemStack stack){
-    return weapons.enableDeflect != DISABLED && super.canApply(stack);
+    return Config.ServerConfig.deflect.get() != DISABLED && super.canApply(stack);
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return weapons.enableDeflect == ANVIL;
+    return Config.ServerConfig.deflect.get() == ANVIL;
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return weapons.enableDeflect != DISABLED && super.canApplyAtEnchantingTable(stack);
+    return Config.ServerConfig.deflect.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
   }
 
   @Override
   public boolean isAllowedOnBooks() {
-    return weapons.enableDeflect == NORMAL;
+    return Config.ServerConfig.deflect.get() == NORMAL;
   }
 
   @SubscribeEvent

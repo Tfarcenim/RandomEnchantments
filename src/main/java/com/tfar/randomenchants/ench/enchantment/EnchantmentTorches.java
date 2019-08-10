@@ -1,5 +1,6 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
 import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.block.*;
@@ -7,13 +8,10 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -23,11 +21,10 @@ import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.weapons;
-import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.LIGHTING;
+import static com.tfar.randomenchants.Config.Restriction.*;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.TORCHES;
 
-@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MODID)
 public class EnchantmentTorches extends Enchantment {
   public EnchantmentTorches() {
 
@@ -49,22 +46,22 @@ public class EnchantmentTorches extends Enchantment {
 
   @Override
   public boolean canApply(ItemStack stack) {
-    return weapons.enableTorches != DISABLED && super.canApply(stack);
+    return Config.ServerConfig.torches.get() != DISABLED && super.canApply(stack);
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return weapons.enableTorches != DISABLED && super.canApplyAtEnchantingTable(stack);
+    return Config.ServerConfig.torches.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
   }
 
   @Override
   public boolean isAllowedOnBooks() {
-    return weapons.enableTorches == NORMAL;
+    return Config.ServerConfig.torches.get() == NORMAL;
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return weapons.enableTorches == ANVIL;
+    return Config.ServerConfig.torches.get() == ANVIL;
   }
 
   @SubscribeEvent
@@ -78,7 +75,7 @@ public class EnchantmentTorches extends Enchantment {
     if (result.getType() == RayTraceResult.Type.MISS) return;
     LivingEntity user = (LivingEntity) ((AbstractArrowEntity) arrow).getShooter();
     if (user == null) return;
-    if (!EnchantUtils.hasEnch(user, LIGHTING)) return;
+    if (!EnchantUtils.hasEnch(user, TORCHES)) return;
     World world = arrow.world;
     //BlockItem torchitem = Items.TORCH;
     if (!world.isRemote) {

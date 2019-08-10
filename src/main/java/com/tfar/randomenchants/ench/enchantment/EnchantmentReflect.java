@@ -1,9 +1,9 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
 import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.DamagingProjectileEntity;
@@ -16,13 +16,12 @@ import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nonnull;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.weapons;
+import static com.tfar.randomenchants.Config.Restriction.*;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.REFLECT;
 import static com.tfar.randomenchants.RandomEnchants.SHIELDS;
 
 
-@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MODID)
 public class EnchantmentReflect extends Enchantment {
   public EnchantmentReflect() {
 
@@ -44,22 +43,22 @@ public class EnchantmentReflect extends Enchantment {
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return weapons.enableReflect != DISABLED && stack.getItem().isShield(stack, null);
+    return Config.ServerConfig.reflect.get() != DISABLED && stack.getItem().isShield(stack, null);
   }
 
   @Override
   public boolean canApply(@Nonnull ItemStack stack){
-    return weapons.enableReflect != DISABLED && super.canApply(stack);
+    return Config.ServerConfig.reflect.get() != DISABLED && super.canApply(stack);
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return weapons.enableReflect == ANVIL;
+    return Config.ServerConfig.reflect.get() == ANVIL;
   }
 
   @Override
   public boolean isAllowedOnBooks() {
-    return weapons.enableReflect== NORMAL;
+    return Config.ServerConfig.reflect.get() == NORMAL;
   }
 
 

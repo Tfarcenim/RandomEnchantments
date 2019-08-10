@@ -1,8 +1,9 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
+import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -14,11 +15,10 @@ import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.weapons;
+import static com.tfar.randomenchants.Config.Restriction.*;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.TRANSPOSITION;
 
-@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MODID)
 
 public class EnchantmentTransposition extends Enchantment {
     public EnchantmentTransposition() {
@@ -41,22 +41,22 @@ public class EnchantmentTransposition extends Enchantment {
 
     @Override
     public boolean canApply(ItemStack stack){
-        return weapons.enableTransposition != DISABLED && super.canApply(stack);
+        return Config.ServerConfig.transposition.get() != DISABLED && super.canApply(stack);
     }
 
     @Override
     public boolean isTreasureEnchantment() {
-        return weapons.enableTransposition == ANVIL;
+        return Config.ServerConfig.transposition.get() == ANVIL;
     }
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return weapons.enableTransposition != DISABLED && super.canApplyAtEnchantingTable(stack);
+        return Config.ServerConfig.transposition.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
     }
 
     @Override
     public boolean isAllowedOnBooks() {
-        return weapons.enableTransposition == NORMAL;
+        return Config.ServerConfig.transposition.get() == NORMAL;
     }
 
     @SubscribeEvent
@@ -67,12 +67,13 @@ public class EnchantmentTransposition extends Enchantment {
         Entity shooter = arrow.getShooter();
         if (!(shooter instanceof LivingEntity)) return;
         LivingEntity e1 = (LivingEntity) shooter;
-        if (EnchantmentHelper.getMaxEnchantmentLevel(TRANSPOSITION, e1) == 0) return;
+        if (!EnchantUtils.hasEnch(e1, TRANSPOSITION)) return;
         float[] pos1 = new float[]{(float)e1.posX,(float)e1.posY,(float)e1.posZ,e1.rotationYaw,e1.rotationPitch
         };
         LivingEntity e2 = (LivingEntity) ((EntityRayTraceResult) e.getRayTraceResult()).getEntity();
         float[] pos2 = new float[]{(float)e2.posX,(float)e2.posY,(float)e2.posZ,e2.rotationYaw,e2.rotationPitch};
-        e1.setPositionAndRotationDirect(pos2[0],pos2[1],pos2[2],pos2[3],pos2[4], 1, true);
-        e2.setPositionAndRotationDirect(pos1[0],pos1[1],pos1[2],pos1[3],pos1[4],1,true);
+        e1.setPosition(pos2[0],pos2[1],pos2[2]);
+        e2.setPosition(pos1[0],pos1[1],pos1[2]);
+        arrow.remove();
     }
 }

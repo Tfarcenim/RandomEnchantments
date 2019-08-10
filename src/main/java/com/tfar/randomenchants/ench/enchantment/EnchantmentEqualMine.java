@@ -1,9 +1,10 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
+import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -16,11 +17,10 @@ import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nonnull;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.tools;
+import static com.tfar.randomenchants.Config.Restriction.*;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.EQUAL_MINE;
 
-@Mod.EventBusSubscriber(modid= RandomEnchants.MOD_ID)
+@Mod.EventBusSubscriber(modid= RandomEnchants.MODID)
 public class EnchantmentEqualMine extends Enchantment {
     public EnchantmentEqualMine() {
 
@@ -42,22 +42,22 @@ public class EnchantmentEqualMine extends Enchantment {
 
   @Override
   public boolean canApply(@Nonnull ItemStack stack){
-    return tools.enableEqualMine != DISABLED && super.canApply(stack);
+    return Config.ServerConfig.equalmine.get() != DISABLED && super.canApply(stack);
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return tools.enableEqualMine == ANVIL;
+    return Config.ServerConfig.equalmine.get() == ANVIL;
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return tools.enableEqualMine != DISABLED && super.canApplyAtEnchantingTable(stack);
+    return Config.ServerConfig.equalmine.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
   }
 
   @Override
   public boolean isAllowedOnBooks() {
-    return tools.enableEqualMine == NORMAL;
+    return Config.ServerConfig.equalmine.get() == NORMAL;
   }
 
 @SubscribeEvent
@@ -67,7 +67,7 @@ public static void onBreakSpeed(PlayerEvent.BreakSpeed e) {
         World world = p.getEntityWorld();
     BlockPos pos = e.getPos();
         float hardness = state.getBlockHardness(world,pos);
-    if (EnchantmentHelper.getMaxEnchantmentLevel(EQUAL_MINE, p) > 0) {
+    if (EnchantUtils.hasEnch(p, EQUAL_MINE)) {
 
             float oldSpeed = e.getOriginalSpeed();
             if (hardness<1) hardness =1;

@@ -1,121 +1,116 @@
 package com.tfar.randomenchants;
 
-import com.tfar.randomenchants.ench.curse.EnchantmentBreakingCurse;
-import com.tfar.randomenchants.ench.curse.EnchantmentButterfingersCurse;
-import com.tfar.randomenchants.ench.curse.EnchantmentFumblingCurse;
-import com.tfar.randomenchants.ench.curse.EnchantmentShadowCurse;
+import com.tfar.randomenchants.ench.curse.ButterfingersCurse;
+import com.tfar.randomenchants.ench.curse.BreakingCurse;
+import com.tfar.randomenchants.ench.curse.ShadowCurse;
+import com.tfar.randomenchants.ench.curse.FumblingCurse;
 import com.tfar.randomenchants.ench.enchantment.*;
 import com.tfar.randomenchants.util.EventHandler;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.item.*;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 
-import static com.tfar.randomenchants.EnchantmentConfig.*;
-import static com.tfar.randomenchants.RandomEnchants.MOD_ID;
-import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.*;
+import static com.tfar.randomenchants.Config.*;
+import static com.tfar.randomenchants.RandomEnchants.MODID;
 
-@Mod.EventBusSubscriber(modid = MOD_ID)
-@Mod(value = MOD_ID)
+@Mod.EventBusSubscriber(modid = MODID)
+@Mod(value = MODID)
 
 public class RandomEnchants {
 
   public static final ArrayList<Item> itemList = new ArrayList<>();
-  public static final String MOD_ID = "randomenchants";
-  public static final EnchantmentType WEAPONS = addEnchantment("weapons", item -> item instanceof SwordItem || item instanceof BowItem);
+  public static final String MODID = "randomenchants";
+  public static final EnchantmentType SWORDS_BOWS = addEnchantment("weapons", item -> item instanceof SwordItem || item instanceof BowItem);
   public static final EnchantmentType PICKAXE = addEnchantment("pickaxe", PickaxeItem.class::isInstance);
   public static final EnchantmentType SHIELDS = addEnchantment("shields", ShieldItem.class::isInstance);
   public static final EnchantmentType AXE = addEnchantment("axe", AxeItem.class::isInstance);
   public static final EnchantmentType TOOLSANDWEAPONS = addEnchantment("tools&weapons", item -> item instanceof SwordItem || item instanceof BowItem || item instanceof ToolItem);
 
-  public static Logger logger = LogManager.getLogger(MOD_ID);
+  public static Set<Enchantment> enchants = new HashSet<>();
+
+  public static Logger logger = LogManager.getLogger(MODID);
 
   public RandomEnchants(){
+    ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SERVER_SPEC);
     FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Enchantment.class,this::registerEnchantments);
-
   }
 
   @SubscribeEvent
   public void registerEnchantments(RegistryEvent.Register<Enchantment> event) {
 
-    enchants.put(REFLECT,weapons.enableReflect);//
-    enchants.put(FAST_PLACING,weapons.enableFastPlacing);
-    enchants.put(SWIFT,weapons.enableSwift);
-    enchants.put(MAGNETIC,tools.enableMagnetic);
-    enchants.put(HARVEST,weapons.enableHarvesting);
-    enchants.put(LIGHTING,weapons.enableTorches);
-    enchants.put(EXPLODING,weapons.enableExploding);
-    enchants.put(RICOCHET,weapons.enableRicochet);
-    enchants.put(SHATTERING,weapons.enableShattering);
-    enchants.put(FLOATING,weapons.enableFloating);
-    enchants.put(INSTANT_DEATH,weapons.enableInstantDeath);
-    enchants.put(CURSED_JUMP,weapons.enableCursedJumping);
-    enchants.put(PARALYSIS,weapons.enableParalysis);
-    enchants.put(TRUE_LIFESTEAL,weapons.enable2Lifesteal);
-    enchants.put(LIGHTNING,weapons.enableLightning);
-    enchants.put(DISARM,weapons.enableDisarm);
-    enchants.put(HOMING,weapons.enableHoming);
-    enchants.put(BACK_TO_THE_CHAMBER,weapons.enableBackToTheChamber);
-    enchants.put(DEFLECT,weapons.enableDeflect);
-    enchants.put(QUICKDRAW,weapons.enableQuickdraw);
-    enchants.put(COMBO,weapons.enableCombo);
-    enchants.put(SOLAR,weapons.enableSolar);
-    enchants.put(TRUE_SHOT,weapons.enableTrueShot);
-    enchants.put(TELEPORTATON,weapons.enableTeleportation);
-    enchants.put(TRANSPOSITION,weapons.enableTransposition);
-    enchants.put(LUMBERJACK,tools.enableLumberjack);
-    enchants.put(PHASING,weapons.enablePhasing);
-    enchants.put(OBSIDIAN_BUSTER,tools.enableObsidianBuster);
-    enchants.put(EQUAL_MINE,tools.enableEqualMine);
-    enchants.put(STONEBOUND,tools.enableStonebound);
-    enchants.put(STONELOVER,tools.enableStonelover);
-    enchants.put(RANDOMNESS,tools.enableRandomness);
-    enchants.put(MOMENTUM,tools.enableMomentum);
-    enchants.put(HOOKED,tools.enableHooked);
-    enchants.put(PULLING,tools.enableGrappling);
-    enchants.put(RESISTANT,tools.enableResistance);
-    enchants.put(ETERNAL,tools.enableEternal);
-    enchants.put(GLOBAL_TRAVELLER,tools.enableGlobalTraveler);
+    enchants.add(new EnchantmentReflect());
+    enchants.add(new EnchantmentDiscord());
+    enchants.add(new EnchantmentSwift());
+  //  enchants.add(new EnchantmentMagnetic());
+    enchants.add(new EnchantmentHarvest());
+    enchants.add(new EnchantmentTorches());
+    enchants.add(new EnchantmentBackToTheChamber());
+    enchants.add(new EnchantmentExploding());
+    enchants.add(new EnchantmentRicochet());
+    enchants.add(new EnchantmentShattering());
+    enchants.add(new EnchantmentFloating());
+    enchants.add(new EnchantmentInstantDeath());
+    enchants.add(new EnchantmentCursedJumping());
+    enchants.add(new EnchantmentParalysis());
+    enchants.add(new EnchantmentTrueLifesteal());
+    enchants.add(new EnchantmentLightning());
+    enchants.add(new EnchantmentDisarm());
+    enchants.add(new EnchantmentHoming());
+    enchants.add(new EnchantmentDeflect());
+    enchants.add(new EnchantmentQuickdraw());
+    enchants.add(new EnchantmentCombo());
+    enchants.add(new EnchantmentSolar());
+    enchants.add(new EnchantmentTrueShot());
+    enchants.add(new EnchantmentTeleportation());
+    enchants.add(new EnchantmentTransposition());
+    enchants.add(new EnchantmentLumberjack());
+    enchants.add(new EnchantmentPhasing());
+    enchants.add(new EnchantmentObsidianBuster());
+    enchants.add(new EnchantmentEqualMine());
+    enchants.add(new EnchantmentStonebound());
+    enchants.add(new EnchantmentStoneLover());
+    enchants.add(new EnchantmentRandomness());
+    enchants.add(new EnchantmentMomentum());
+    enchants.add(new EnchantmentSnatching());
+    enchants.add(new EnchantmentGrappling());
+    enchants.add(new EnchantmentResistant());
+    enchants.add(new EnchantmentEternal());
+//    enchants.add(new Gl);
 
-    enchants.put(BUTTERFINGERS,curses.enableButterfingers);
-    enchants.put(FUMBLING,curses.enableFumbling);
-    enchants.put(BREAKING,curses.enableBreaking);
-    enchants.put(SHADOW,curses.enableShadow);
+    enchants.add(new ButterfingersCurse());
+    enchants.add(new FumblingCurse());
+    enchants.add(new BreakingCurse());
+    enchants.add(new ShadowCurse());
 
 
     IForgeRegistry<Enchantment> r = event.getRegistry();
 
-    for (Map.Entry<Enchantment,EnumAccessLevel> enchant : enchants.entrySet())
-      //don't register the enchant if disabled and nuclear option is enabled
-      if (enchant.getValue() != EnumAccessLevel.DISABLED || !nuclearOption) {
-        r.register(enchant.getKey());
-      }
+    for (Enchantment enchant : enchants)
+        r.register(enchant);
     RandomEnchants.logger.info("Registered "+enchants.size()+" enchantments!");
 
     MinecraftForge.EVENT_BUS.register(new EventHandler());
-    if (tools.enableGlobalTraveler != EnumAccessLevel.DISABLED) {
-      MinecraftForge.EVENT_BUS.register(GLOBAL_TRAVELLER);
-      EnchantmentGlobalTraveler.KEY = GLOBAL_TRAVELLER.getRegistryName().toString();
+    if (false) {
+  //    MinecraftForge.EVENT_BUS.register(GLOBAL_TRAVELLER);
+    //  EnchantmentGlobalTraveler.KEY = GLOBAL_TRAVELLER.getRegistryName().toString();
     }
-    if (tools.enableRandomness != EnumAccessLevel.DISABLED){
-      setup();
-    }
+    setup();
   }
 
   @Nonnull
@@ -128,60 +123,54 @@ public class RandomEnchants {
       itemList.add(item);
     }
   }
+  @ObjectHolder(MODID)
   public static class ObjectHolders {
-    //public static final enchantment FLIGHT = new EnchantmentFlight();
-    public static Map<Enchantment, EnumAccessLevel> enchants = new HashMap<>();
 
-    public static final Enchantment FLOATING = new EnchantmentFloating();
-    public static final Enchantment INSTANT_DEATH = new EnchantmentInstantDeath();
-    public static final Enchantment CURSED_JUMP = new EnchantmentCursedJumping();
-    public static final Enchantment PARALYSIS = new EnchantmentParalysis();
-    public static final Enchantment TRUE_LIFESTEAL = new EnchantmentTrueLifesteal();
-    public static final Enchantment TRUE_SHOT = new EnchantmentTrueShot();
-    public static final Enchantment HOOKED = new EnchantmentHooked();
-    public static final Enchantment PHASING = new EnchantmentPhasing();
-    public static final Enchantment LIGHTING = new EnchantmentTorches();
+    public static final Enchantment FLOATING = null;
+    public static final Enchantment INSTANT_DEATH = null;
+    public static final Enchantment CURSED_JUMP = null;
+    public static final Enchantment PARALYSIS = null;
+    public static final Enchantment TRUE_LIFESTEAL = null;
+    public static final Enchantment TRUE_SHOT = null;
+    public static final Enchantment SNATCHING = null;
+    public static final Enchantment PHASING = null;
+    public static final Enchantment TORCHES = null;
+    public static final Enchantment HARVEST = null;
 
-    public static final Enchantment REFLECT = new EnchantmentReflect();
-    public static final Enchantment FAST_PLACING = new EnchantmentFastPlace();
-    public static final Enchantment EXPLODING = new EnchantmentExploding();
-    public static final Enchantment LIGHTNING = new EnchantmentLightning();
-    public static final Enchantment TRANSPOSITION = new EnchantmentTransposition();
-    public static final Enchantment RANDOMNESS = new EnchantmentRandomness();
-    public static final Enchantment DISARM = new EnchantmentDisarm();
-    public static final Enchantment HOMING = new EnchantmentHoming();
-    public static final Enchantment DEFLECT = new EnchantmentDeflect();
-    public static final Enchantment BACK_TO_THE_CHAMBER = new EnchantmentBackToTheChamber();
-    public static final Enchantment MOMENTUM = new EnchantmentMomentum();
-    public static final Enchantment COMBO = new EnchantmentCombo();
-    public static final Enchantment QUICKDRAW = new EnchantmentQuickdraw();
-    public static final Enchantment SWIFT = new EnchantmentSwift();
-    public static final Enchantment PULLING = new EnchantmentGrappling();
-    public static final Enchantment TELEPORTATON = new EnchantmentTeleportation();
-    public static final Enchantment SOLAR = new EnchantmentSolar();
-    public static final Enchantment LUMBERJACK = new EnchantmentLumberjack();
-    public static final Enchantment SHATTERING = new EnchantmentShattering();
-    public static final Enchantment MAGNETIC = new EnchantmentMagnetic();
-    public static final Enchantment RESISTANT = new EnchantmentResistant();
-    public static final Enchantment ETERNAL = new EnchantmentEternal();
-    public static final Enchantment GLOBAL_TRAVELLER = new EnchantmentGlobalTraveler();
+    public static final Enchantment REFLECT = null;
+    public static final Enchantment DISCORD = null;
+    public static final Enchantment LIGHTNING = null;
+    public static final Enchantment TRANSPOSITION = null;
+    public static final Enchantment RANDOMNESS = null;
+    public static final Enchantment DISARM = null;
+    public static final Enchantment HOMING = null;
+    public static final Enchantment DEFLECT = null;
+    public static final Enchantment MOMENTUM = null;
+    public static final Enchantment COMBO = null;
+    public static final Enchantment QUICKDRAW = null;
+    public static final Enchantment SWIFT = null;
+    public static final Enchantment GRAPPLING = null;
+    public static final Enchantment TELEPORTATON = null;
+    public static final Enchantment SOLAR = null;
+    public static final Enchantment LUMBERJACK = null;
+    public static final Enchantment SHATTERING = null;
+ //   public static final Enchantment MAGNETIC = null;
+    public static final Enchantment RESISTANT = null;
+    public static final Enchantment ETERNAL = null;
+  //  public static final Enchantment GLOBAL_TRAVELLER = null;
 
-
-    public static final Enchantment OBSIDIAN_BUSTER = new EnchantmentObsidianBuster();
-    public static final Enchantment EQUAL_MINE = new EnchantmentEqualMine();
-    public static final Enchantment STONEBOUND = new EnchantmentStonebound();
-    public static final Enchantment STONELOVER = new EnchantmentStoneLover();
-    public static final Enchantment RICOCHET = new EnchantmentRicochet();
-    public static final Enchantment HARVEST = new EnchantmentHarvesting();
-
-
+    public static final Enchantment OBSIDIAN_BUSTER = null;
+    public static final Enchantment EQUAL_MINE = null;
+    public static final Enchantment STONEBOUND = null;
+    public static final Enchantment STONELOVER = null;
+    public static final Enchantment RICOCHET = null;
 
     //register curses
 
-    public static final Enchantment BUTTERFINGERS = new EnchantmentButterfingersCurse();
-    public static final Enchantment FUMBLING = new EnchantmentFumblingCurse();
-    public static final Enchantment BREAKING = new EnchantmentBreakingCurse();
-    public static final Enchantment SHADOW = new EnchantmentShadowCurse();
+    public static final Enchantment BUTTERFINGERS = null;
+    public static final Enchantment FUMBLING = null;
+    public static final Enchantment BREAKING = null;
+    public static final Enchantment SHADOW = null;
   }
 }
 

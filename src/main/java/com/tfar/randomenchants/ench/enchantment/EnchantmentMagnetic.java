@@ -17,11 +17,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.tools;
-import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.MAGNETIC;
-
-@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
+import static com.tfar.randomenchants.Config.Restriction.*;
+//import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.MAGNETIC;
+//todo update
+/*@Mod.EventBusSubscriber(modid = RandomEnchants.MODID)
 public class EnchantmentMagnetic extends Enchantment {
   public EnchantmentMagnetic() {
 
@@ -92,5 +91,5 @@ public class EnchantmentMagnetic extends Enchantment {
     }
     return stacks;
   }
-}
+}*/
 

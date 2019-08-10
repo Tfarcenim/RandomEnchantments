@@ -1,30 +1,19 @@
 package com.tfar.randomenchants.ench.enchantment;
 
-import com.tfar.randomenchants.RandomEnchants;
-import com.tfar.randomenchants.util.EnchantUtils;
+import com.tfar.randomenchants.Config;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.InfinityEnchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentType;
+import net.minecraft.enchantment.InfinityEnchantment;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraft.item.Items;
 
 import java.util.List;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.weapons;
-import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.BACK_TO_THE_CHAMBER;
-
-@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
+import static com.tfar.randomenchants.Config.Restriction.*;
 
 public class EnchantmentBackToTheChamber extends Enchantment {
   public EnchantmentBackToTheChamber() {
@@ -46,17 +35,17 @@ public class EnchantmentBackToTheChamber extends Enchantment {
 
   @Override
   public boolean canApply(ItemStack stack){
-    return weapons.enableBackToTheChamber != DISABLED && super.canApply(stack);
+    return Config.ServerConfig.backtothechamber.get() != DISABLED && super.canApply(stack);
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return weapons.enableBackToTheChamber == ANVIL;
+    return Config.ServerConfig.backtothechamber.get() == ANVIL;
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return weapons.enableBackToTheChamber != DISABLED && super.canApplyAtEnchantingTable(stack);
+    return Config.ServerConfig.backtothechamber.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
   }
 
   @Override
@@ -66,27 +55,30 @@ public class EnchantmentBackToTheChamber extends Enchantment {
 
   @Override
   public boolean isAllowedOnBooks() {
-      return weapons.enableBackToTheChamber == NORMAL;
+      return Config.ServerConfig.backtothechamber.get() == NORMAL;
     }
 
+    private static boolean handled = false;
 
-  @SubscribeEvent
-  public static void arrowHit(ProjectileImpactEvent event) {
-    Entity arrow = event.getEntity();
-    if (event.getRayTraceResult() instanceof BlockRayTraceResult || EnchantUtils.isArrowAndIsLivingBase(arrow, ((EntityRayTraceResult)event.getRayTraceResult()).getEntity()))
+  @Override
+  public void onEntityDamaged(LivingEntity user, Entity target, int level) {
+    if (handled){
+      handled = false;
       return;
-    PlayerEntity player = (PlayerEntity)((AbstractArrowEntity)arrow).getShooter();
-    int level = EnchantmentHelper.getMaxEnchantmentLevel(BACK_TO_THE_CHAMBER, player);
+    }
+    if (!(user instanceof PlayerEntity) || !(target instanceof LivingEntity))return;
+    PlayerEntity player = (PlayerEntity)user;
     if (5 * Math.random() > level) return;
-    if (!player.world.isRemote) {
       List<ItemStack> inventory = player.inventory.mainInventory;
       for (ItemStack stack : inventory) {
         if (!(stack.getItem() == Items.ARROW || stack.getItem() == Items.TIPPED_ARROW))
           continue;
-        stack.grow(1);
+        ItemStack add = stack.copy();
+        add.setCount(1);
+        player.addItemStackToInventory(add);
         break;
-      }
     }
+      handled = true;
   }
 }
 

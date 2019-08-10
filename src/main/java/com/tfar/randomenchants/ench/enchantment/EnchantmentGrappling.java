@@ -1,5 +1,6 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -16,11 +17,10 @@ import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nonnull;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.tools;
-import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.PULLING;
+import static com.tfar.randomenchants.Config.Restriction.*;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.GRAPPLING;
 
-@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MODID)
 
 public class EnchantmentGrappling extends Enchantment {
   public EnchantmentGrappling() {
@@ -42,26 +42,26 @@ public class EnchantmentGrappling extends Enchantment {
 
   @Override
   public boolean canApply(@Nonnull ItemStack stack){
-    return tools.enableGrappling != DISABLED && super.canApply(stack);
+    return Config.ServerConfig.grappling.get() != DISABLED && super.canApply(stack);
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return tools.enableGrappling == ANVIL;
+    return Config.ServerConfig.grappling.get() == ANVIL;
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return tools.enableGrappling != DISABLED && super.canApplyAtEnchantingTable(stack);
+    return Config.ServerConfig.grappling.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
   }
 
   @Override
   public boolean isAllowedOnBooks() {
-    return tools.enableGrappling == NORMAL;
+    return Config.ServerConfig.grappling.get() == NORMAL;
   }
 
   @SubscribeEvent
-  public static void playerTick(PlayerInteractEvent e) {
+  public static void playerGrapple(PlayerInteractEvent e) {
     if (e instanceof PlayerInteractEvent.EntityInteract || e instanceof PlayerInteractEvent.EntityInteractSpecific)
       return;
     PlayerEntity player = e.getEntityPlayer();
@@ -69,7 +69,7 @@ public class EnchantmentGrappling extends Enchantment {
     if (e.getEntityPlayer().fishingBobber != null) {
       FishingBobberEntity hook = player.fishingBobber;
       Entity entity = hook.caughtEntity;
-      if (EnchantmentHelper.getMaxEnchantmentLevel(PULLING, player) == 0) return;
+      if (EnchantmentHelper.getMaxEnchantmentLevel(GRAPPLING, player) == 0) return;
       if (entity != null) {
         Vec3d veloctiyVector = new Vec3d(player.posX - entity.posX, player.posY - entity.posY, player.posZ - entity.posZ);
         entity.addVelocity(veloctiyVector.x,veloctiyVector.y,veloctiyVector.z);

@@ -1,5 +1,6 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
 import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
@@ -19,14 +20,13 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.tools;
-import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.HOOKED;
+import static com.tfar.randomenchants.Config.Restriction.*;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.SNATCHING;
 
-@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MODID)
 
-public class EnchantmentHooked extends Enchantment {
-  public EnchantmentHooked() {
+public class EnchantmentSnatching extends Enchantment {
+  public EnchantmentSnatching() {
     super(Rarity.RARE, EnchantmentType.FISHING_ROD, new EquipmentSlotType[]{
             EquipmentSlotType.MAINHAND
     });
@@ -45,22 +45,22 @@ public class EnchantmentHooked extends Enchantment {
 
   @Override
   public boolean canApply(ItemStack stack){
-    return tools.enableHooked != DISABLED && super.canApply(stack);
+    return Config.ServerConfig.snatching.get() != DISABLED && super.canApply(stack);
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return tools.enableHooked == ANVIL;
+    return Config.ServerConfig.snatching.get() == ANVIL;
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return tools.enableHooked != DISABLED && super.canApplyAtEnchantingTable(stack);
+    return Config.ServerConfig.snatching.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
   }
 
   @Override
   public boolean isAllowedOnBooks() {
-    return tools.enableHooked == NORMAL;
+    return Config.ServerConfig.snatching.get() == NORMAL;
   }
 
   private static ArrayList<EquipmentSlotType> list = new ArrayList<>();
@@ -73,13 +73,13 @@ public class EnchantmentHooked extends Enchantment {
   }
 
   @SubscribeEvent
-  public static void playerTick(PlayerInteractEvent e) {
+  public static void playerHook(PlayerInteractEvent e) {
     if (e instanceof PlayerInteractEvent.EntityInteract || e instanceof PlayerInteractEvent.EntityInteractSpecific)return;
     PlayerEntity player = e.getEntityPlayer();
     if (e.getEntityPlayer().fishingBobber == null || player.world.isRemote) return;
     FishingBobberEntity hook = player.fishingBobber;
     Entity entity = hook.caughtEntity;
-    if (!(entity instanceof LivingEntity) || !EnchantUtils.hasEnch(player,HOOKED)) return;
+    if (!(entity instanceof LivingEntity) || !EnchantUtils.hasEnch(player, SNATCHING)) return;
     LivingEntity victim = (LivingEntity)entity;
     ItemStack piece = removeArmor(victim);
     if (piece == null) return;

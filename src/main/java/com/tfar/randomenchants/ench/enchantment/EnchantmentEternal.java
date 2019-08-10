@@ -1,8 +1,9 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
+import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -11,11 +12,10 @@ import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.tools;
+import static com.tfar.randomenchants.Config.Restriction.*;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.ETERNAL;
 
-@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MODID)
 
 public class EnchantmentEternal extends Enchantment {
   public EnchantmentEternal() {
@@ -37,29 +37,29 @@ public class EnchantmentEternal extends Enchantment {
 
   @Override
   public boolean canApply(ItemStack stack) {
-    return tools.enableEternal != DISABLED;
+    return Config.ServerConfig.eternal.get() != DISABLED;
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return tools.enableEternal == ANVIL;
+    return Config.ServerConfig.eternal.get() == ANVIL;
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return tools.enableEternal != DISABLED && super.canApplyAtEnchantingTable(stack);
+    return Config.ServerConfig.eternal.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
   }
 
   @Override
   public boolean isAllowedOnBooks() {
-    return tools.enableEternal == NORMAL;
+    return Config.ServerConfig.eternal.get() == NORMAL;
   }
 
   @SubscribeEvent
   public static void itemDespawn(ItemExpireEvent event) {
     ItemEntity entityItem = event.getEntityItem();
     ItemStack stack = entityItem.getItem();
-    if (EnchantmentHelper.getEnchantmentLevel(ETERNAL, stack) > 0) {
+    if (EnchantUtils.hasEnch(stack, ETERNAL)) {
       event.setExtraLife(Integer.MAX_VALUE);
       event.setCanceled(true);
     }

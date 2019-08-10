@@ -1,26 +1,21 @@
 package com.tfar.randomenchants.ench.enchantment;
 
-import com.tfar.randomenchants.RandomEnchants;
+import com.tfar.randomenchants.Config;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.potion.Effects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraft.potion.Effects;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.weapons;
-import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.CURSED_JUMP;
-import static com.tfar.randomenchants.RandomEnchants.WEAPONS;
+import static com.tfar.randomenchants.Config.Restriction.*;
+import static com.tfar.randomenchants.RandomEnchants.SWORDS_BOWS;
 
-@Mod.EventBusSubscriber(modid= RandomEnchants.MOD_ID)
 public class EnchantmentCursedJumping extends Enchantment {
     public EnchantmentCursedJumping() {
 
-        super(Rarity.RARE, WEAPONS, new EquipmentSlotType[]{
+        super(Rarity.RARE, SWORDS_BOWS, new EquipmentSlotType[]{
                 EquipmentSlotType.MAINHAND
         });
         this.setRegistryName("cursed_jump");
@@ -39,31 +34,28 @@ public class EnchantmentCursedJumping extends Enchantment {
 
     @Override
     public boolean canApply(ItemStack stack){
-        return weapons.enableCursedJumping != DISABLED && super.canApply(stack);
+        return Config.ServerConfig.cursedjumping.get() != DISABLED && super.canApply(stack);
     }
 
     @Override
     public boolean isTreasureEnchantment() {
-        return weapons.enableCursedJumping == ANVIL;
+        return Config.ServerConfig.cursedjumping.get() == ANVIL;
     }
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return weapons.enableCursedJumping != DISABLED && super.canApplyAtEnchantingTable(stack);
+        return Config.ServerConfig.cursedjumping.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
     }
 
     @Override
     public boolean isAllowedOnBooks() {
-        return weapons.enableCursedJumping == NORMAL;
+        return Config.ServerConfig.cursedjumping.get() == NORMAL;
     }
 
     @Override
     public void onEntityDamaged(LivingEntity user, Entity target, int level)  {
-
-        if ((EnchantmentHelper.getMaxEnchantmentLevel(CURSED_JUMP, user) > 0 && target instanceof LivingEntity)){
-            ((LivingEntity)target).
-                    addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, 40, 127));
-        }
+        if (target instanceof LivingEntity) ((LivingEntity) target).
+                addPotionEffect(new EffectInstance(Effects.JUMP_BOOST, 40, 127));
         }
     }
 

@@ -1,9 +1,10 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
+import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.block.*;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,18 +20,16 @@ import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nonnull;
 
-import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
-import static com.tfar.randomenchants.EnchantmentConfig.weapons;
-import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.HARVEST;
+import static com.tfar.randomenchants.Config.Restriction.*;
 
-@Mod.EventBusSubscriber(modid = RandomEnchants.MOD_ID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MODID)
 
-public class EnchantmentHarvesting extends Enchantment {
-  public EnchantmentHarvesting() {
+public class EnchantmentHarvest extends Enchantment {
+  public EnchantmentHarvest() {
     super(Rarity.RARE, EnchantmentType.BOW, new EquipmentSlotType[]{
             EquipmentSlotType.MAINHAND
     });
-    this.setRegistryName("harvesting");
+    this.setRegistryName("harvest");
   }
 
   @Override
@@ -45,22 +44,22 @@ public class EnchantmentHarvesting extends Enchantment {
 
   @Override
   public boolean canApply(@Nonnull ItemStack stack){
-    return weapons.enableHarvesting != DISABLED && super.canApply(stack);
+    return Config.ServerConfig.harvest.get() != DISABLED && super.canApply(stack);
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return weapons.enableHarvesting == ANVIL;
+    return Config.ServerConfig.harvest.get() == ANVIL;
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return weapons.enableHarvesting != DISABLED && super.canApplyAtEnchantingTable(stack);
+    return Config.ServerConfig.harvest.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
   }
 
   @Override
   public boolean isAllowedOnBooks() {
-      return weapons.enableHarvesting == NORMAL;
+      return Config.ServerConfig.harvest.get() == NORMAL;
     }
 
 
@@ -75,8 +74,7 @@ public class EnchantmentHarvesting extends Enchantment {
     Entity shooter = arrow.getShooter();
     if (!(shooter instanceof PlayerEntity))return;
     PlayerEntity player = (PlayerEntity)shooter;
-    int level = EnchantmentHelper.getMaxEnchantmentLevel(HARVEST, player);
-    if (level <= 0)return;
+    if (!EnchantUtils.hasEnch(player, RandomEnchants.ObjectHolders.HARVEST))return;
     Block plant = proj.world.getBlockState(pos).getBlock();
     if (!(isPlant(plant)))return;
 
@@ -87,7 +85,6 @@ public class EnchantmentHarvesting extends Enchantment {
 
   private static boolean isPlant(Block plant){
     return plant instanceof MelonBlock ||
-            plant instanceof ChorusFlowerBlock ||
             plant instanceof ChorusPlantBlock ||
             plant instanceof CocoaBlock ||
             plant instanceof PumpkinBlock ||

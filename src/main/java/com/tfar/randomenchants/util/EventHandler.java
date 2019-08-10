@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.GLOBAL_TRAVELLER;
-import static com.tfar.randomenchants.ench.enchantment.EnchantmentGlobalTraveler.KEY;
+//import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.GLOBAL_TRAVELLER;
+//import static com.tfar.randomenchants.ench.enchantment.EnchantmentGlobalTraveler.KEY;
 import static net.minecraft.util.math.Vec3d.ZERO;
 
 public class EventHandler {
@@ -97,7 +97,7 @@ public class EventHandler {
     trueshotarrows.removeAll(removeTrueShot);
   }
 
-  @SubscribeEvent
+ /* @SubscribeEvent
   public void toggle(PlayerInteractEvent.RightClickItem e) {
     if (e.getWorld().isRemote) return;
     // if (e.getWorld().getTileEntity(e.getPos()) != null)return;
@@ -106,15 +106,15 @@ public class EventHandler {
     if (EnchantUtils.hasEnch(stack, GLOBAL_TRAVELLER) && e.getEntityPlayer().isSneaking()) {
       toggle(stack);
     }
-  }
+  }*/
 
-  public static void toggle(ItemStack stack) {
+/*  public static void toggle(ItemStack stack) {
     CompoundNBT nbt = stack.getOrCreateTag();
     if (nbt.contains(KEY)) {
       boolean toggle = stack.getOrCreateTag().getBoolean("toggle");
       stack.getOrCreateTag().putBoolean("toggle", !toggle);
     }
-  }
+  }*/
 
 
 }
