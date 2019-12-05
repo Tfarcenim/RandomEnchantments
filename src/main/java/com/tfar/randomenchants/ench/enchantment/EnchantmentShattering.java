@@ -26,7 +26,7 @@ import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.SHATTERING;
 
 public class EnchantmentShattering extends Enchantment {
   public EnchantmentShattering() {
-    super(Rarity.RARE, EnchantmentType.BOW, new EquipmentSlotType[]{
+    super(Rarity.RARE, RandomEnchants.SHOOTABLE, new EquipmentSlotType[]{
             EquipmentSlotType.MAINHAND
     });
     this.setRegistryName("shattering");

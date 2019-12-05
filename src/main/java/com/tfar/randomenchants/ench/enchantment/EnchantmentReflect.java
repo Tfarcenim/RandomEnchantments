@@ -71,7 +71,7 @@ public class EnchantmentReflect extends Enchantment {
     if (!(target instanceof PlayerEntity)) return;
     PlayerEntity player = (PlayerEntity) target;
     if (EnchantUtils.hasEnch(player, REFLECT)) {
-      projectile.setMotion(projectile.getMotion().func_216371_e());
+      projectile.setMotion(projectile.getMotion().inverse());
       if(projectile instanceof DamagingProjectileEntity){
         ((DamagingProjectileEntity) projectile).accelerationX *= -1;
         ((DamagingProjectileEntity) projectile).accelerationY *= -1;

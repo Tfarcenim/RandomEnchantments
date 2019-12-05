@@ -9,7 +9,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.Dimension;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import java.util.Locale;
 
@@ -18,7 +21,7 @@ public class Coord4D {
   public int yCoord;
   public int zCoord;
   public int dimensionId;
-  public Dimension dimension;
+  public DimensionType dimensionType;
 
   public Coord4D(Entity ent) {
     xCoord = (int)ent.posX;
@@ -26,11 +29,6 @@ public class Coord4D {
     zCoord = (int)ent.posZ;
 
     dimensionId = ent.dimension.getId();
-  }
-
-  public Coord4D(double x, double y, double z,Dimension dimension, int dimensionId) {
-    this(x,y,z,dimensionId);
-    this.dimension = dimension;
   }
 
   public Coord4D(double x, double y, double z, int dimensionId) {
@@ -41,7 +39,7 @@ public class Coord4D {
   }
 
   public Coord4D(BlockPos pos, World world) {
-    this(pos.getX(), pos.getY(), pos.getZ(),world.dimension, world.dimension.getType().getId());
+    this(pos.getX(), pos.getY(), pos.getZ(), world.dimension.getType().getId());
   }
 
   public static Coord4D fromNBT(CompoundNBT nbt) {
@@ -85,12 +83,12 @@ public class Coord4D {
   }
 
   public ServerWorld world() {
-    return (ServerWorld) dimension.getWorld();
+    return DimensionManager.getWorld(ServerLifecycleHooks.getCurrentServer(),DimensionType.getById(dimensionId),false,false);
   }
 
   @Override
   public String toString() {
-    return String.format(Locale.US, "[x=%d, y=%d, z=%d] @ dimension %d", xCoord, yCoord, zCoord, dimensionId);
+    return String.format(Locale.US, "[x=%d, y=%d, z=%d] @ dimensionType %d", xCoord, yCoord, zCoord, dimensionId);
   }
 
   @Override

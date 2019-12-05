@@ -1,5 +1,6 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
 import com.tfar.randomenchants.util.Coord4D;
 import com.tfar.randomenchants.util.EnchantUtils;
@@ -16,6 +17,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -23,15 +25,16 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.*;
 
 import static com.tfar.randomenchants.Config.Restriction.*;
-//import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.GLOBAL_TRAVELLER;
-
-/*public class EnchantmentGlobalTraveler extends Enchantment {
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.GLOBAL_TRAVELER;
+@Mod.EventBusSubscriber
+public class EnchantmentGlobalTraveler extends Enchantment {
   //works like plustic version
   public EnchantmentGlobalTraveler() {
 
@@ -41,7 +44,7 @@ import static com.tfar.randomenchants.Config.Restriction.*;
     this.setRegistryName("global_traveler");
   }
 
-  public static String KEY;
+  public static String KEY = "randomenchants:coords";
 
   @Override
   public int getMinEnchantability(int level) {
@@ -55,22 +58,22 @@ import static com.tfar.randomenchants.Config.Restriction.*;
 
   @Override
   public boolean canApply(ItemStack stack) {
-    return tools.enableGlobalTraveler != DISABLED && super.canApply(stack);
+    return Config.ServerConfig.global_traveller.get() != DISABLED && super.canApply(stack);
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return tools.enableGlobalTraveler == ANVIL;
+    return Config.ServerConfig.global_traveller.get() == ANVIL;
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return tools.enableGlobalTraveler != DISABLED && super.canApplyAtEnchantingTable(stack);
+    return Config.ServerConfig.global_traveller.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
   }
 
   @Override
   public boolean isAllowedOnBooks() {
-    return tools.enableGlobalTraveler == NORMAL;
+    return Config.ServerConfig.global_traveller.get() == NORMAL;
   }
 
     private static final Set<Block> warnedBlocks = Collections.newSetFromMap(new WeakHashMap<>());
@@ -80,7 +83,7 @@ import static com.tfar.randomenchants.Config.Restriction.*;
       if (event.getWorld().isRemote()
               || event.getHarvester() == null) return;
       ItemStack tool = getItemstackToUse(event.getHarvester(), event.getState());
-      if (!EnchantUtils.hasEnch(tool,GLOBAL_TRAVELLER)) return;
+      if (!EnchantUtils.hasEnch(tool, GLOBAL_TRAVELER)) return;
       __blockHarvestDrops(tool, event);
     }
 
@@ -99,28 +102,6 @@ import static com.tfar.randomenchants.Config.Restriction.*;
         IItemHandler ih = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
                 Direction.values()[nbt.getByte("facing")]).orElse(null);
         if (ih == null) return;
-
-        // *cough* Extra Utilities *cough*
-        try {
-          ListIterator<ItemStack> dummy = event.getDrops().listIterator();
-
-          if (dummy.hasNext()) {
-            ItemStack is = dummy.next();
-            dummy.set(is); // This simply sets the 1st element of the list to itself, leaving the list unchanged. If the list is immutable, then this will throw an UnsupportedOperationException.
-          }
-        } catch (UnsupportedOperationException e) {
-          if (!warnedBlocks.contains(event.getState().getBlock())) {
-            RandomEnchants.logger.fatal("Block " + event.getState().getBlock() + " implements block drops incorrectly. "
-                    + "It appears that it overrides the OFFICIALLY DEPRECATED method "
-                    + "getDrops(IBlockAccess, BlockPos, IBlockState, int) instead of the correct method "
-                    + "getDrops(NonNullList, IBlockAccess, BlockPos, IBlockState, int). This prevents "
-                    + "features such as Random Enchants's Global Traveler from working properly with these blocks.\n"
-                    + "USERS: This is a BUG in the mod " + event.getState().getBlock().getRegistryName().getNamespace() + "; report this to them!");
-            warnedBlocks.add(event.getState().getBlock());
-          }
-
-          return;
-        }
 
         ListIterator<ItemStack> it = event.getDrops().listIterator();
         ItemStack keptSeed = ItemStack.EMPTY;
@@ -162,7 +143,7 @@ import static com.tfar.randomenchants.Config.Restriction.*;
       if (world0.isRemote
               || event.getEntityLiving().getHealth() > 0) return;
       ItemStack weapon = getWeapon(event.getSource());
-      if (EnchantUtils.hasEnch(weapon,GLOBAL_TRAVELLER)) {
+      if (EnchantUtils.hasEnch(weapon, GLOBAL_TRAVELER)) {
         CompoundNBT nbt0 = weapon.getOrCreateTag();
         if (!getToggleState(weapon)) return;
         if (nbt0.contains(KEY)) {
@@ -194,13 +175,13 @@ import static com.tfar.randomenchants.Config.Restriction.*;
     }
 
     @SubscribeEvent
-    public void onPlayerUse(PlayerInteractEvent.RightClickBlock event) {
+    public static void onPlayerUse(PlayerInteractEvent.RightClickBlock event) {
       if (event.getWorld().isRemote
-              || event.isCanceled()
-              || !event.getEntityPlayer().isSneaking()
-              || event.getItemStack().isEmpty()
+              || !event.getPlayer().isSneaking()
               || event.getFace() == null
-              || !EnchantUtils.hasEnch(event.getItemStack(), GLOBAL_TRAVELLER))
+              || !EnchantUtils.hasEnch(event.getItemStack(), GLOBAL_TRAVELER)
+              || event.getHand() == Hand.OFF_HAND
+      )
         return;
       CompoundNBT nbt = event.getItemStack().getOrCreateTag();
       TileEntity te = event.getWorld().getTileEntity(event.getPos());
@@ -212,7 +193,7 @@ import static com.tfar.randomenchants.Config.Restriction.*;
       global.putByte("facing", (byte) event.getFace().ordinal());
       nbt.put(KEY, global);
       event.getItemStack().setTag(nbt);
-      event.getEntityPlayer().sendMessage(new TranslationTextComponent(
+      event.getPlayer().sendMessage(new TranslationTextComponent(
               "tooltip.globalmodifier.info",
               coord.xCoord,
               coord.yCoord,
@@ -230,7 +211,7 @@ import static com.tfar.randomenchants.Config.Restriction.*;
     }
 
     public static boolean getToggleState(ItemStack stack){
-    return EnchantUtils.hasEnch(stack,GLOBAL_TRAVELLER) && stack.getOrCreateTag().getBoolean("toggle");
+    return EnchantUtils.hasEnch(stack, GLOBAL_TRAVELER) && stack.getOrCreateTag().getBoolean("toggle");
     }
 
   public static ItemStack getItemstackToUse(LivingEntity player, BlockState blockState) {
@@ -249,5 +230,5 @@ import static com.tfar.randomenchants.Config.Restriction.*;
             && !tool.canHarvestBlock(blockState)
             && offhand.canHarvestBlock(blockState);
   }
-}*/
+}
 

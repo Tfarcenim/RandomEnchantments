@@ -36,11 +36,13 @@ public class RandomEnchants {
 
   public static final ArrayList<Item> itemList = new ArrayList<>();
   public static final String MODID = "randomenchants";
-  public static final EnchantmentType SWORDS_BOWS = addEnchantment("weapons", item -> item instanceof SwordItem || item instanceof BowItem);
+  public static final EnchantmentType SWORDS_BOWS = addEnchantment("weapons", item -> item instanceof SwordItem || item instanceof ShootableItem);
+
   public static final EnchantmentType PICKAXE = addEnchantment("pickaxe", PickaxeItem.class::isInstance);
+  public static final EnchantmentType SHOOTABLE = addEnchantment("shootable", ShootableItem.class::isInstance);
   public static final EnchantmentType SHIELDS = addEnchantment("shields", ShieldItem.class::isInstance);
   public static final EnchantmentType AXE = addEnchantment("axe", AxeItem.class::isInstance);
-  public static final EnchantmentType TOOLSANDWEAPONS = addEnchantment("tools&weapons", item -> item instanceof SwordItem || item instanceof BowItem || item instanceof ToolItem);
+  public static final EnchantmentType TOOLSANDWEAPONS = addEnchantment("tools&weapons", item -> item instanceof SwordItem || item instanceof ShootableItem || item instanceof ToolItem);
 
   public static Set<Enchantment> enchants = new HashSet<>();
 
@@ -57,7 +59,7 @@ public class RandomEnchants {
     enchants.add(new EnchantmentReflect());
     enchants.add(new EnchantmentDiscord());
     enchants.add(new EnchantmentSwift());
-  //  enchants.add(new EnchantmentMagnetic());
+    enchants.add(new EnchantmentMagnetic());
     enchants.add(new EnchantmentHarvest());
     enchants.add(new EnchantmentTorches());
     enchants.add(new EnchantmentBackToTheChamber());
@@ -74,7 +76,6 @@ public class RandomEnchants {
     enchants.add(new EnchantmentHoming());
     enchants.add(new EnchantmentDeflect());
     enchants.add(new EnchantmentQuickdraw());
-    enchants.add(new EnchantmentCombo());
     enchants.add(new EnchantmentSolar());
     enchants.add(new EnchantmentTrueShot());
     enchants.add(new EnchantmentTeleportation());
@@ -91,7 +92,7 @@ public class RandomEnchants {
     enchants.add(new EnchantmentGrappling());
     enchants.add(new EnchantmentResistant());
     enchants.add(new EnchantmentEternal());
-//    enchants.add(new Gl);
+    enchants.add(new EnchantmentGlobalTraveler());
 
     enchants.add(new ButterfingersCurse());
     enchants.add(new FumblingCurse());
@@ -107,8 +108,8 @@ public class RandomEnchants {
 
     MinecraftForge.EVENT_BUS.register(new EventHandler());
     if (false) {
-  //    MinecraftForge.EVENT_BUS.register(GLOBAL_TRAVELLER);
-    //  EnchantmentGlobalTraveler.KEY = GLOBAL_TRAVELLER.getRegistryName().toString();
+  //    MinecraftForge.EVENT_BUS.register(GLOBAL_TRAVELER);
+    //  EnchantmentGlobalTraveler.KEY = GLOBAL_TRAVELER.getRegistryName().toString();
     }
     setup();
   }
@@ -154,10 +155,10 @@ public class RandomEnchants {
     public static final Enchantment SOLAR = null;
     public static final Enchantment LUMBERJACK = null;
     public static final Enchantment SHATTERING = null;
- //   public static final Enchantment MAGNETIC = null;
+    public static final Enchantment MAGNETIC = null;
     public static final Enchantment RESISTANT = null;
     public static final Enchantment ETERNAL = null;
-  //  public static final Enchantment GLOBAL_TRAVELLER = null;
+    public static final Enchantment GLOBAL_TRAVELER = null;
 
     public static final Enchantment OBSIDIAN_BUSTER = null;
     public static final Enchantment EQUAL_MINE = null;

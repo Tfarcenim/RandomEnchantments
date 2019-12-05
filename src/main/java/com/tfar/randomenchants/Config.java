@@ -72,7 +72,8 @@ public class Config {
     public static ForgeConfigSpec.EnumValue<Restriction> butterfingers;
     public static ForgeConfigSpec.EnumValue<Restriction> fumbling;
     public static ForgeConfigSpec.EnumValue<Restriction> shadow;
-
+    public static ForgeConfigSpec.EnumValue<Restriction> magnetic;
+    public static ForgeConfigSpec.EnumValue<Restriction> global_traveller;
 
 
     ServerConfig(ForgeConfigSpec.Builder builder) {
@@ -238,6 +239,16 @@ public class Config {
               .comment(s1)
               .translation("text.randomenchants.config.shadow")
               .defineEnum("shadow", NORMAL);
+
+      magnetic = builder
+              .comment(s1)
+              .translation("text.randomenchants.config.magnetic")
+              .defineEnum("magnetic", NORMAL);
+
+      global_traveller = builder
+              .comment(s1)
+              .translation("text.randomenchants.config.global_traveller")
+              .defineEnum("golbal_traveller", NORMAL);
 
       builder.pop();
     }

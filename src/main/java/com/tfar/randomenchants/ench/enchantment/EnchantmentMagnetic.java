@@ -1,5 +1,6 @@
 package com.tfar.randomenchants.ench.enchantment;
 
+import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
 import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
@@ -18,9 +19,9 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.tfar.randomenchants.Config.Restriction.*;
-//import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.MAGNETIC;
+import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.MAGNETIC;
 //todo update
-/*@Mod.EventBusSubscriber(modid = RandomEnchants.MODID)
+@Mod.EventBusSubscriber(modid = RandomEnchants.MODID)
 public class EnchantmentMagnetic extends Enchantment {
   public EnchantmentMagnetic() {
 
@@ -42,22 +43,22 @@ public class EnchantmentMagnetic extends Enchantment {
 
   @Override
   public boolean canApply(ItemStack stack) {
-    return tools.enableMagnetic != DISABLED && super.canApply(stack);
+    return Config.ServerConfig.magnetic.get() != DISABLED && super.canApply(stack);
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return tools.enableMagnetic == ANVIL;
+    return Config.ServerConfig.magnetic.get() == ANVIL;
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return tools.enableMagnetic != DISABLED && super.canApplyAtEnchantingTable(stack);
+    return Config.ServerConfig.magnetic.get() != DISABLED && super.canApplyAtEnchantingTable(stack);
   }
 
   @Override
   public boolean isAllowedOnBooks() {
-    return tools.enableMagnetic == NORMAL;
+    return Config.ServerConfig.magnetic.get() == NORMAL;
   }
 
   @SubscribeEvent
@@ -91,5 +92,5 @@ public class EnchantmentMagnetic extends Enchantment {
     }
     return stacks;
   }
-}*/
+}
 

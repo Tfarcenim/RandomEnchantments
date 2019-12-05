@@ -24,7 +24,7 @@ import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.RICOCHET;
 
 public class EnchantmentRicochet extends Enchantment {
   public EnchantmentRicochet() {
-    super(Rarity.RARE, EnchantmentType.BOW, new EquipmentSlotType[]{
+    super(Rarity.RARE, RandomEnchants.SHOOTABLE, new EquipmentSlotType[]{
             EquipmentSlotType.MAINHAND
     });
     this.setRegistryName("ricochet");

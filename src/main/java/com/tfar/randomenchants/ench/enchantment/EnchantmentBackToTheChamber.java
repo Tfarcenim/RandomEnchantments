@@ -1,6 +1,7 @@
 package com.tfar.randomenchants.ench.enchantment;
 
 import com.tfar.randomenchants.Config;
+import com.tfar.randomenchants.RandomEnchants;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.enchantment.InfinityEnchantment;
@@ -17,7 +18,7 @@ import static com.tfar.randomenchants.Config.Restriction.*;
 
 public class EnchantmentBackToTheChamber extends Enchantment {
   public EnchantmentBackToTheChamber() {
-    super(Rarity.RARE, EnchantmentType.BOW, new EquipmentSlotType[]{
+    super(Rarity.RARE, RandomEnchants.SHOOTABLE, new EquipmentSlotType[]{
             EquipmentSlotType.MAINHAND
     });
     this.setRegistryName("back_to_the_chamber");

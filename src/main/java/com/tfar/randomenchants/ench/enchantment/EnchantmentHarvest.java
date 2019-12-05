@@ -26,7 +26,7 @@ import static com.tfar.randomenchants.Config.Restriction.*;
 
 public class EnchantmentHarvest extends Enchantment {
   public EnchantmentHarvest() {
-    super(Rarity.RARE, EnchantmentType.BOW, new EquipmentSlotType[]{
+    super(Rarity.RARE, RandomEnchants.SHOOTABLE, new EquipmentSlotType[]{
             EquipmentSlotType.MAINHAND
     });
     this.setRegistryName("harvest");

@@ -1,6 +1,7 @@
 package com.tfar.randomenchants.ench.enchantment;
 
 import com.tfar.randomenchants.Config;
+import com.tfar.randomenchants.RandomEnchants;
 import com.tfar.randomenchants.util.EnchantUtils;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentType;
@@ -15,7 +16,7 @@ import static com.tfar.randomenchants.Config.Restriction.*;
 
 public class EnchantmentExploding extends Enchantment {
   public EnchantmentExploding() {
-    super(Rarity.RARE, EnchantmentType.BOW, new EquipmentSlotType[]{
+    super(Rarity.RARE, RandomEnchants.SHOOTABLE, new EquipmentSlotType[]{
             EquipmentSlotType.MAINHAND
     });
     this.setRegistryName("exploding");

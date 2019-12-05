@@ -62,7 +62,7 @@ public class ClientEventHandler {
     CompoundNBT nbt0 = event.getItemStack().getTag();
     if (true)return;
     if (event.isCanceled()
-            || !EnchantUtils.hasEnch(event.getItemStack(),GLOBAL_TRAVELLER)) return;
+            || !EnchantUtils.hasEnch(event.getItemStack(),GLOBAL_TRAVELER)) return;
 
     event.getToolTip().add(new StringTextComponent("Toggle: "+nbt0.getBoolean("toggle")));
 

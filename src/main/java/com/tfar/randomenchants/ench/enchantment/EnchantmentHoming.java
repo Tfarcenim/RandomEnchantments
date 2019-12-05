@@ -18,13 +18,12 @@ import javax.annotation.Nonnull;
 
 import static com.tfar.randomenchants.Config.Restriction.*;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.HOMING;
-import static com.tfar.randomenchants.util.EventHandler.homingarrows;
 
 @Mod.EventBusSubscriber(modid= RandomEnchants.MODID)
 
 public class EnchantmentHoming extends Enchantment {
   public EnchantmentHoming() {
-    super(Rarity.RARE, EnchantmentType.BOW, new EquipmentSlotType[]{
+    super(Rarity.RARE, RandomEnchants.SHOOTABLE, new EquipmentSlotType[]{
             EquipmentSlotType.MAINHAND
     });
     this.setRegistryName("homing");
@@ -69,7 +68,6 @@ public class EnchantmentHoming extends Enchantment {
     PlayerEntity player = (PlayerEntity) shooter;
       if (!EnchantUtils.hasEnch(player,HOMING))return;
     entity.setNoGravity(true);
-    homingarrows.put((AbstractArrowEntity)entity,entity.getMotion().length());
   }
 }
 

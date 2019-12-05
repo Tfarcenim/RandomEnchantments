@@ -28,7 +28,7 @@ import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.TORCHES;
 public class EnchantmentTorches extends Enchantment {
   public EnchantmentTorches() {
 
-    super(Rarity.RARE, EnchantmentType.BOW, new EquipmentSlotType[]{
+    super(Rarity.RARE, RandomEnchants.SHOOTABLE, new EquipmentSlotType[]{
             EquipmentSlotType.MAINHAND
     });
     setRegistryName("torches");

@@ -16,13 +16,12 @@ import net.minecraftforge.fml.common.Mod;
 
 import static com.tfar.randomenchants.Config.Restriction.*;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.TRUE_SHOT;
-import static com.tfar.randomenchants.util.EventHandler.trueshotarrows;
 
 @Mod.EventBusSubscriber(modid= RandomEnchants.MODID)
 
 public class EnchantmentTrueShot extends Enchantment {
   public EnchantmentTrueShot() {
-    super(Rarity.RARE, EnchantmentType.BOW, new EquipmentSlotType[]{
+    super(Rarity.RARE, RandomEnchants.SHOOTABLE, new EquipmentSlotType[]{
             EquipmentSlotType.MAINHAND
     });
     this.setRegistryName("true_shot");
@@ -67,7 +66,6 @@ public class EnchantmentTrueShot extends Enchantment {
     PlayerEntity player = (PlayerEntity) shooter;
       if (!EnchantUtils.hasEnch(player.getHeldItemMainhand(),TRUE_SHOT))return;
     entity.setNoGravity(true);
-    trueshotarrows.add((AbstractArrowEntity)entity);
     }
   }
 
