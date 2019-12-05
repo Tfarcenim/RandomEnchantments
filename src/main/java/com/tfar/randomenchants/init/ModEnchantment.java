@@ -45,7 +45,6 @@ public class ModEnchantment {
   public static Enchantment MULTISHOT = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation("cofhcore","multishot"));
 
   public static final Enchantment REFLECT = new EnchantmentReflect();
-  public static final Enchantment FAST_PLACING = new EnchantmentFastPlace();
   public static final Enchantment EXPLODING = new EnchantmentExploding();
   public static final Enchantment LIGHTNING = new EnchantmentLightning();
   public static final Enchantment TRANSPOSITION = new EnchantmentTransposition();
@@ -55,7 +54,6 @@ public class ModEnchantment {
   public static final Enchantment DEFLECT = new EnchantmentDeflect();
   public static final Enchantment BACK_TO_THE_CHAMBER = new EnchantmentBackToTheChamber();
   public static final Enchantment MOMENTUM = new EnchantmentMomentum();
-  public static final Enchantment COMBO = new EnchantmentCombo();
   public static final Enchantment QUICKDRAW = new EnchantmentQuickdraw();
   public static final Enchantment SWIFT = new EnchantmentSwift();
   public static final Enchantment PULLING = new EnchantmentGrappling();
@@ -90,7 +88,6 @@ public class ModEnchantment {
   public static void registerEnchantments(Register<Enchantment> event) {
 
     enchants.put(REFLECT,weapons.enableReflect);//
-    enchants.put(FAST_PLACING,weapons.enableFastPlacing);
     enchants.put(SWIFT,weapons.enableSwift);
     enchants.put(MAGNETIC,tools.enableMagnetic);
     enchants.put(HARVEST,weapons.enableHarvesting);
@@ -110,7 +107,6 @@ public class ModEnchantment {
     enchants.put(BACK_TO_THE_CHAMBER,weapons.enableBackToTheChamber);
     enchants.put(DEFLECT,weapons.enableDeflect);
     enchants.put(QUICKDRAW,weapons.enableQuickdraw);
-    enchants.put(COMBO,weapons.enableCombo);
     enchants.put(SOLAR,weapons.enableSolar);
     enchants.put(TRUE_SHOT,weapons.enableTrueShot);
     enchants.put(TELEPORTATON,weapons.enableTeleportation);

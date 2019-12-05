@@ -42,7 +42,6 @@ public class RandomEnchants {
 
   public static final SimpleNetworkWrapper NETWORK_WRAPPER = new SimpleNetworkWrapper(MOD_ID);
   @SidedProxy(clientSide = GlobalVars.CLIENT_PROXY_CLASS, serverSide = GlobalVars.COMMON_PROXY_CLASS)
-  public static CommonProxy proxy;
 
   public static Logger logger = LogManager.getLogger(MOD_ID);
 
@@ -50,7 +49,6 @@ public class RandomEnchants {
   public void init(FMLInitializationEvent event) {
     ModEnchantment.registerEvents();
     NETWORK_WRAPPER.registerMessage(PacketHandler.Handler.class, PacketHandler.class, 0, Side.SERVER);
-    proxy.init(event);
   }
 
   @SuppressWarnings("ConstantConditions")
