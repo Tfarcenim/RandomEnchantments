@@ -10,7 +10,5 @@ public class GlobalVars {
     public static final String VERSION = "@VERSION@";
     public static final String MC_VERSION = "1.12.2,";
     public static final ArrayList<Item> itemList = new ArrayList<>();
-    public static final String CLIENT_PROXY_CLASS = "com.tfar.randomenchants.ClientProxy";
-    public static final String COMMON_PROXY_CLASS = "com.tfar.randomenchants.CommonProxy";
     public static int size = 0;
 }
