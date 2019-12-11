@@ -10,7 +10,7 @@ function initializeCoreMod() {
                 'methodDesc': '(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/storage/loot/LootContext$Builder;)Ljava/util/List;'
             },
             'transformer': function(method) {
-              print('[RandomEnchants]: Patching Minecraft\' Block#getDrops');
+              print('[UnstableTools]: Patching Minecraft\' Block#getDrops');
 
                 var ASM = Java.type('net.minecraftforge.coremod.api.ASMAPI');
                 var Opcodes = Java.type('org.objectweb.asm.Opcodes');
@@ -18,19 +18,25 @@ function initializeCoreMod() {
                 var InsnList = Java.type('org.objectweb.asm.tree.InsnList');
                 var InsnNode = Java.type('org.objectweb.asm.tree.InsnNode');
 
+                var instructions = method.instructions;
+                var lastInstruction = instructions.get(42);
+
                 var newInstructions = new InsnList();
-                newInstructions.add(new VarInsnNode(Opcodes.ALOAD, 1));
-                newInstructions.add(new VarInsnNode(Opcodes.ALOAD, 2));
+
+                newInstructions.add(new VarInsnNode(Opcodes.ALOAD, 6));
+                newInstructions.add(new VarInsnNode(Opcodes.ALOAD, 4));
 
                 newInstructions.add(ASM.buildMethodCall(
                     "com/tfar/randomenchants/util/CoremodHooks",
-                    "drops",
-                    "(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/storage/loot/LootContext$Builder;)Ljava/util/List;",
+                    "getdrops",
+                    "(Lnet/minecraft/world/storage/loot/LootTable;Lnet/minecraft/world/storage/loot/LootContext;)Ljava/util/List;",
                     ASM.MethodType.STATIC
                 ));
 
-                newInstructions.add(new InsnNode(Opcodes.ARETURN));
-                method.instructions.insertBefore(method.instructions.getFirst(), newInstructions);
+                newInstructions.add(new VarInsnNode(Opcodes.ASTORE, 7));
+                newInstructions.add(new VarInsnNode(Opcodes.ALOAD, 7));
+
+                method.instructions.insertBefore(lastInstruction, newInstructions);
 
                 return method;
             }

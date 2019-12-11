@@ -93,11 +93,15 @@ public class RandomEnchants {
     enchants.add(new EnchantmentResistant());
     enchants.add(new EnchantmentEternal());
     enchants.add(new EnchantmentGlobalTraveler());
+    enchants.add(new EnchantmentAutoSmelt());
+    enchants.add(new EnchantmentAssimilation());
 
     enchants.add(new ButterfingersCurse());
     enchants.add(new FumblingCurse());
     enchants.add(new BreakingCurse());
     enchants.add(new ShadowCurse());
+    enchants.add(new EnchantmentSilverfish());
+
 
 
     IForgeRegistry<Enchantment> r = event.getRegistry();
@@ -165,6 +169,8 @@ public class RandomEnchants {
     public static final Enchantment STONEBOUND = null;
     public static final Enchantment STONELOVER = null;
     public static final Enchantment RICOCHET = null;
+    public static final Enchantment AUTOSMELT = null;
+    public static final Enchantment Assimilation = null;
 
     //register curses
 
@@ -172,6 +178,7 @@ public class RandomEnchants {
     public static final Enchantment FUMBLING = null;
     public static final Enchantment BREAKING = null;
     public static final Enchantment SHADOW = null;
+    public static final Enchantment SILVERFISH = null;
   }
 }
 
