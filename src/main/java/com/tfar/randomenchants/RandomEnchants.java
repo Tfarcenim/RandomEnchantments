@@ -3,7 +3,6 @@ package com.tfar.randomenchants;
 import com.tfar.randomenchants.entity.EntitySpecialArrow;
 import com.tfar.randomenchants.entity.RenderPiercingArrow;
 import com.tfar.randomenchants.init.ModEnchantment;
-import com.tfar.randomenchants.network.PacketHandler;
 import com.tfar.randomenchants.util.GlobalVars;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.item.*;
@@ -15,11 +14,9 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -39,14 +36,11 @@ public class RandomEnchants {
   public static final EnumEnchantmentType TOOLSANDWEAPONS = addEnchantment("tools&weapons",item -> item instanceof ItemSword || item instanceof ItemBow || item instanceof ItemTool);
 
 
-  public static final SimpleNetworkWrapper NETWORK_WRAPPER = new SimpleNetworkWrapper(MOD_ID);
-
   public static Logger logger = LogManager.getLogger(MOD_ID);
 
   @Mod.EventHandler
   public void init(FMLInitializationEvent event) {
     ModEnchantment.registerEvents();
-    NETWORK_WRAPPER.registerMessage(PacketHandler.Handler.class, PacketHandler.class, 0, Side.SERVER);
   }
 
   @SuppressWarnings("ConstantConditions")

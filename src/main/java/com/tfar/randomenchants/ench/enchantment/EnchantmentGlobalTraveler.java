@@ -3,10 +3,8 @@ package com.tfar.randomenchants.ench.enchantment;
 import com.tfar.randomenchants.RandomEnchants;
 import com.tfar.randomenchants.util.Coord4D;
 import com.tfar.randomenchants.util.EnchantmentUtils;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -22,16 +20,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.Collections;
 import java.util.ListIterator;
-import java.util.Set;
-import java.util.WeakHashMap;
 
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.tools;
@@ -85,8 +79,6 @@ public class EnchantmentGlobalTraveler extends Enchantment {
     return tools.enableGlobalTraveler == NORMAL;
   }
 
-    private static final Set<Block> warnedBlocks = Collections.newSetFromMap(new WeakHashMap<>());
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void blockDrops(BlockEvent.HarvestDropsEvent event) {
       if (event.getWorld().isRemote
@@ -99,7 +91,7 @@ public class EnchantmentGlobalTraveler extends Enchantment {
     private void __blockHarvestDrops(ItemStack tool, BlockEvent.HarvestDropsEvent event) {
       if (!getToggleState(tool)) return;
       NBTTagCompound nbt0 = getTagSafe(tool);
-      if (EnchantmentUtils.stackHasEnch(tool,GLOBAL_TRAVELLER) && tool.canHarvestBlock(event.getState())) {
+      if (EnchantmentUtils.stackHasEnch(tool,GLOBAL_TRAVELLER)) {
 
         NBTTagCompound nbt = nbt0.getCompoundTag(KEY);
         Coord4D coord = Coord4D.fromNBT(nbt);
@@ -111,28 +103,6 @@ public class EnchantmentGlobalTraveler extends Enchantment {
         IItemHandler ih = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
                 EnumFacing.VALUES[nbt.getByte("facing")]);
         if (ih == null) return;
-
-        // *cough* Extra Utilities *cough*
-        try {
-          ListIterator<ItemStack> dummy = event.getDrops().listIterator();
-
-          if (dummy.hasNext()) {
-            ItemStack is = dummy.next();
-            dummy.set(is); // This simply sets the 1st element of the list to itself, leaving the list unchanged. If the list is immutable, then this will throw an UnsupportedOperationException.
-          }
-        } catch (UnsupportedOperationException e) {
-          if (!warnedBlocks.contains(event.getState().getBlock())) {
-            FMLLog.bigWarning("Block " + event.getState().getBlock() + " implements block drops incorrectly. "
-                    + "It appears that it overrides the OFFICIALLY DEPRECATED method "
-                    + "getDrops(IBlockAccess, BlockPos, IBlockState, int) instead of the correct method "
-                    + "getDrops(NonNullList, IBlockAccess, BlockPos, IBlockState, int). This prevents "
-                    + "features such as Random Enchants's Global Traveler from working properly with these blocks.\n"
-                    + "USERS: This is a BUG in the mod " + event.getState().getBlock().getRegistryName().getNamespace() + "; report this to them!");
-            warnedBlocks.add(event.getState().getBlock());
-          }
-
-          return;
-        }
 
         ListIterator<ItemStack> it = event.getDrops().listIterator();
         ItemStack keptSeed = ItemStack.EMPTY;
