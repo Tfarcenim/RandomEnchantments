@@ -30,13 +30,6 @@ public class EventHandler {
     }
   }
 
-  @SubscribeEvent
-  public static void tooltip(ItemTooltipEvent e){
-    if (EnchantUtils.hasEnch(e.getItemStack(), GLOBAL_TRAVELER)){
-      e.getToolTip().add(new StringTextComponent("toggled: "+e.getItemStack().getTag().getBoolean("toggle")));
-    }
-  }
-
   public static void toggle(ItemStack stack) {
       boolean toggle = stack.getTag().getBoolean("toggle");
       stack.getTag().putBoolean("toggle", !toggle);

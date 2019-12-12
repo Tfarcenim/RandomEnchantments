@@ -10,7 +10,7 @@ function initializeCoreMod() {
                 'methodDesc': '(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/storage/loot/LootContext$Builder;)Ljava/util/List;'
             },
             'transformer': function(method) {
-              print('[UnstableTools]: Patching Minecraft\' Block#getDrops');
+              print('[RandomEnchants]: Patching Minecraft\' Block#getDrops');
 
                 var ASM = Java.type('net.minecraftforge.coremod.api.ASMAPI');
                 var Opcodes = Java.type('org.objectweb.asm.Opcodes');

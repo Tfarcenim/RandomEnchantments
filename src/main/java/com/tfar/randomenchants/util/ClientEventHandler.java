@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.List;
 
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.*;
+import static com.tfar.randomenchants.ench.enchantment.EnchantmentGlobalTraveler.KEY;
 
 @Mod.EventBusSubscriber(modid = RandomEnchants.MODID,value = Dist.CLIENT)
 public class ClientEventHandler {
@@ -56,8 +57,8 @@ public class ClientEventHandler {
 
     }
   }
-//TODO reimplement global traveller
-  /*@SubscribeEvent
+
+  @SubscribeEvent
   public static void tooltip(ItemTooltipEvent event) {
     CompoundNBT nbt0 = event.getItemStack().getTag();
     if (true)return;
@@ -75,5 +76,5 @@ public class ClientEventHandler {
          nbt.getInt("dim"))));
 
     }
-  }*/
+  }
 }

@@ -7,6 +7,7 @@ import com.tfar.randomenchants.ench.enchantment.EnchantmentGlobalTraveler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -45,8 +46,9 @@ public class CoremodHooks {
     if (entity instanceof LivingEntity) {
 
       if (EnchantUtils.hasEnch((LivingEntity)entity, RandomEnchants.ObjectHolders.SILVERFISH)) {
-        if (block == Blocks.STONE || block == Blocks.COBBLESTONE){
-          contents.removeIf(stack -> stack.getItem() == Items.COBBLESTONE);
+        if (block == Blocks.STONE || block == Blocks.COBBLESTONE || block == Blocks.STONE_BRICKS){
+          if (!EnchantUtils.hasEnch(tool, Enchantments.SILK_TOUCH))
+          contents.removeIf(stack -> stack.getItem() == Items.COBBLESTONE ||stack.getItem() == Items.STONE || stack.getItem() == Items.STONE_BRICKS);
           World world = entity.world;
           Entity pest = EntityType.SILVERFISH.create(world);
           pest.setLocationAndAngles((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, 0.0F, 0.0F);
