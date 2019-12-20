@@ -14,6 +14,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
+import javax.annotation.Nullable;
 import java.util.Locale;
 
 public class Coord4D {
@@ -42,9 +43,9 @@ public class Coord4D {
     this(pos.getX(), pos.getY(), pos.getZ(), world.dimension.getType().getId());
   }
 
+  @Nullable
   public static Coord4D fromNBT(CompoundNBT nbt) {
-    if (nbt.size() == 0) return null;
-    return new Coord4D(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"), nbt.getInt("dim"));
+    return nbt.isEmpty() ? null : new Coord4D(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"), nbt.getInt("dim"));
   }
 
   public CompoundNBT toNBT(CompoundNBT nbt) {

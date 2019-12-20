@@ -62,12 +62,13 @@ public class EnchantmentSolar extends Enchantment {
   @SubscribeEvent
   public static void applySolar(TickEvent.PlayerTickEvent e) {
     PlayerEntity p = e.player;
-    if (p.world.isRemote) return;
+    if (p.world.isRemote || p.world.getWorldInfo().getGameTime() % 20 != 0)return;
     for (EquipmentSlotType slot : list) {
       ItemStack stack = p.getItemStackFromSlot(slot);
       int level = EnchantmentHelper.getEnchantmentLevel(SOLAR, stack);
-      if (level == 0 || Math.random()/level > 0.004) continue;
-      if (!isDark(p))stack.damageItem(-1,p,playerEntity -> playerEntity.sendBreakAnimation(p.getActiveHand()));
+      if (level == 0) continue;
+      if (!isDark(p) && stack.isDamaged())
+        stack.setDamage(stack.getDamage()-level);
     }
   }
 }

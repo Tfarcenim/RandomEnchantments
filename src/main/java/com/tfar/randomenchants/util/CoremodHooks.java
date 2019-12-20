@@ -11,12 +11,10 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.SilverfishEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -28,11 +26,10 @@ import net.minecraftforge.items.IItemHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Random;
 
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.GLOBAL_TRAVELER;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.MAGNETIC;
-import static com.tfar.randomenchants.ench.enchantment.EnchantmentGlobalTraveler.KEY;
+import static com.tfar.randomenchants.ench.enchantment.EnchantmentGlobalTraveler.GLOBAL_TRAVELER_KEY;
 
 public class CoremodHooks {
   public static List<ItemStack> getdrops(LootTable table, LootContext context) {
@@ -80,18 +77,14 @@ public class CoremodHooks {
         }
 
         if (EnchantUtils.hasEnch(player.getHeldItemMainhand(), GLOBAL_TRAVELER)) {
-          if (EnchantmentGlobalTraveler.getToggleState(tool)) {
-
-            CompoundNBT nbt0 = tool.getOrCreateTag();
-
-            CompoundNBT nbt = nbt0.getCompound(KEY);
-            Coord4D coord = Coord4D.fromNBT(nbt);
-
+          CompoundNBT global = tool.getOrCreateTag().getCompound(GLOBAL_TRAVELER_KEY);
+          if (EnchantmentGlobalTraveler.getToggleState(global)) {
+            Coord4D coord = Coord4D.fromNBT(global);
             BlockPos tePos = coord.pos();
             TileEntity te = coord.TE();
             if (!tePos.equals(pos) && te != null) {
               IItemHandler ih = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
-                      Direction.values()[nbt.getByte("facing")]).orElse(null);
+                      Direction.values()[global.getByte("facing")]).orElse(null);
               if (ih != null) {
                 ListIterator<ItemStack> it = contents.listIterator();
                 ItemStack keptSeed = ItemStack.EMPTY;

@@ -113,7 +113,7 @@ public class RandomEnchants {
     MinecraftForge.EVENT_BUS.register(new EventHandler());
     if (false) {
   //    MinecraftForge.EVENT_BUS.register(GLOBAL_TRAVELER);
-    //  EnchantmentGlobalTraveler.KEY = GLOBAL_TRAVELER.getRegistryName().toString();
+    //  EnchantmentGlobalTraveler.GLOBAL_TRAVELER_KEY = GLOBAL_TRAVELER.getRegistryName().toString();
     }
     setup();
   }

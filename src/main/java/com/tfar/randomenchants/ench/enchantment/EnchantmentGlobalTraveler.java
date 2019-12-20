@@ -4,7 +4,6 @@ import com.tfar.randomenchants.Config;
 import com.tfar.randomenchants.RandomEnchants;
 import com.tfar.randomenchants.util.Coord4D;
 import com.tfar.randomenchants.util.EnchantUtils;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
@@ -22,7 +21,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -33,7 +31,8 @@ import java.util.*;
 
 import static com.tfar.randomenchants.Config.Restriction.*;
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.GLOBAL_TRAVELER;
-@Mod.EventBusSubscriber
+
+@Mod.EventBusSubscriber(modid = RandomEnchants.MODID)
 public class EnchantmentGlobalTraveler extends Enchantment {
   //works like plustic version
   public EnchantmentGlobalTraveler() {
@@ -44,7 +43,7 @@ public class EnchantmentGlobalTraveler extends Enchantment {
     this.setRegistryName("global_traveler");
   }
 
-  public static String KEY = "randomenchants:coords";
+  public static String GLOBAL_TRAVELER_KEY = "randomenchants:coords";
 
   @Override
   public int getMinEnchantability(int level) {
@@ -76,9 +75,7 @@ public class EnchantmentGlobalTraveler extends Enchantment {
     return Config.ServerConfig.global_traveller.get() == NORMAL;
   }
 
-    private static final Set<Block> warnedBlocks = Collections.newSetFromMap(new WeakHashMap<>());
-
-    @SubscribeEvent(priority = EventPriority.LOWEST)
+    /*@SubscribeEvent(priority = EventPriority.LOWEST)
     public void blockDrops(BlockEvent.HarvestDropsEvent event) {
       if (event.getWorld().isRemote()
               || event.getHarvester() == null) return;
@@ -92,7 +89,7 @@ public class EnchantmentGlobalTraveler extends Enchantment {
       CompoundNBT nbt0 = tool.getOrCreateTag();
       if (tool.canHarvestBlock(event.getState())) {
 
-        CompoundNBT nbt = nbt0.getCompound(KEY);
+        CompoundNBT nbt = nbt0.getCompound(GLOBAL_TRAVELER_KEY);
         Coord4D coord = Coord4D.fromNBT(nbt);
         if (coord.pos().equals(event.getPos())) {
           return; // prevent self-linking
@@ -135,88 +132,88 @@ public class EnchantmentGlobalTraveler extends Enchantment {
 
         te.markDirty();
       }
-    }
+    }*/
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void dropEvent(LivingDropsEvent event) {
-      World world0 = event.getEntity().getEntityWorld();
-      if (world0.isRemote
-              || event.getEntityLiving().getHealth() > 0) return;
-      ItemStack weapon = getWeapon(event.getSource());
-      if (EnchantUtils.hasEnch(weapon, GLOBAL_TRAVELER)) {
-        CompoundNBT nbt0 = weapon.getOrCreateTag();
-        if (!getToggleState(weapon)) return;
-        if (nbt0.contains(KEY)) {
-          CompoundNBT nbt = nbt0.getCompound(KEY);
-          Coord4D coord = Coord4D.fromNBT(nbt);
-          TileEntity te = coord.TE();
-          if (te == null) return;
-          IItemHandler ih = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
-                  Direction.values()[nbt.getByte("facing")]).orElse(null);
-          if (ih == null) return;
-          Iterator<ItemEntity> it = event.getDrops().iterator();
-          while (it.hasNext()) {
-            ItemEntity enti = it.next();
-            ItemStack stk = enti.getItem();
-            for (int j = 0; j < ih.getSlots(); ++j) {
-              ItemStack res = ih.insertItem(j, stk, false);
-              if (!res.isEmpty()) {
-                enti.setItem(res);
-                stk = res;
-              } else {
-                it.remove();
-                break;
-              }
+  @SubscribeEvent(priority = EventPriority.LOWEST)
+  public void dropEvent(LivingDropsEvent event) {
+    World world0 = event.getEntity().getEntityWorld();
+    if (world0.isRemote
+            || event.getEntityLiving().getHealth() > 0) return;
+    ItemStack weapon = getWeapon(event.getSource());
+    if (EnchantUtils.hasEnch(weapon, GLOBAL_TRAVELER)) {
+      CompoundNBT globalTravellerNBT = weapon.getTag().getCompound(GLOBAL_TRAVELER_KEY);
+      if (!getToggleState(globalTravellerNBT)) return;
+      if (globalTravellerNBT.contains(GLOBAL_TRAVELER_KEY)) {
+        CompoundNBT nbt = globalTravellerNBT.getCompound(GLOBAL_TRAVELER_KEY);
+        Coord4D coord = Coord4D.fromNBT(nbt);
+        TileEntity te = coord.TE();
+        if (te == null) return;
+        IItemHandler ih = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
+                Direction.values()[nbt.getByte("facing")]).orElse(null);
+        if (ih == null) return;
+        Iterator<ItemEntity> it = event.getDrops().iterator();
+        while (it.hasNext()) {
+          ItemEntity enti = it.next();
+          ItemStack stk = enti.getItem();
+          for (int j = 0; j < ih.getSlots(); ++j) {
+            ItemStack res = ih.insertItem(j, stk, false);
+            if (!res.isEmpty()) {
+              enti.setItem(res);
+              stk = res;
+            } else {
+              it.remove();
+              break;
             }
           }
-          te.markDirty();
         }
+        te.markDirty();
       }
     }
+  }
 
-    @SubscribeEvent
-    public static void onPlayerUse(PlayerInteractEvent.RightClickBlock event) {
-      if (event.getWorld().isRemote
-              || !event.getPlayer().isSneaking()
-              || event.getFace() == null
-              || !EnchantUtils.hasEnch(event.getItemStack(), GLOBAL_TRAVELER)
-              || event.getHand() == Hand.OFF_HAND
-      )
-        return;
-      CompoundNBT nbt = event.getItemStack().getOrCreateTag();
-      TileEntity te = event.getWorld().getTileEntity(event.getPos());
-      if (te == null || te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
-              event.getFace()) == null) return;
-      CompoundNBT global = new CompoundNBT();
-      Coord4D coord = new Coord4D(event.getPos(), event.getWorld());
-      coord.toNBT(global);
-      global.putByte("facing", (byte) event.getFace().ordinal());
-      nbt.put(KEY, global);
-      event.getItemStack().setTag(nbt);
-      event.getPlayer().sendMessage(new TranslationTextComponent(
-              "tooltip.globalmodifier.info",
-              coord.xCoord,
-              coord.yCoord,
-              coord.zCoord,
-              coord.dimensionId));
-    }
+  @SubscribeEvent
+  public static void onPlayerUse(PlayerInteractEvent.RightClickBlock event) {
+    if (event.getWorld().isRemote
+            || !event.getPlayer().isSneaking()
+            || event.getFace() == null
+            || !EnchantUtils.hasEnch(event.getItemStack(), GLOBAL_TRAVELER)
+            || event.getHand() == Hand.OFF_HAND
+    )
+      return;
+    TileEntity te = event.getWorld().getTileEntity(event.getPos());
+    if (te == null || !te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
+            event.getFace()).isPresent()) return;
+    CompoundNBT nbt = event.getItemStack().getTag();
+    CompoundNBT global = nbt.getCompound(GLOBAL_TRAVELER_KEY);
+    Coord4D coord = new Coord4D(event.getPos(), event.getWorld());
+    coord.toNBT(global);
+    global.putByte("facing", (byte) event.getFace().ordinal());
+    nbt.put(GLOBAL_TRAVELER_KEY, global);
+    event.getItemStack().setTag(nbt);
+    event.getPlayer().sendMessage(new TranslationTextComponent(
+            "tooltip.globalmodifier.info",
+            coord.xCoord,
+            coord.yCoord,
+            coord.zCoord,
+            coord.dimensionId));
+  }
 
-    private ItemStack getWeapon(DamageSource source) {
-      if (source instanceof EntityDamageSource) {
-        Entity entity = source.getTrueSource();
-        if (entity instanceof LivingEntity)
-          return ((LivingEntity) entity).getHeldItemMainhand();
-      }
-      return ItemStack.EMPTY;
+  private ItemStack getWeapon(DamageSource source) {
+    if (source instanceof EntityDamageSource) {
+      Entity entity = source.getTrueSource();
+      if (entity instanceof LivingEntity)
+        return ((LivingEntity) entity).getHeldItemMainhand();
     }
+    return ItemStack.EMPTY;
+  }
 
-    public static boolean getToggleState(ItemStack stack){
-    return EnchantUtils.hasEnch(stack, GLOBAL_TRAVELER) && stack.getOrCreateTag().getBoolean("toggle");
-    }
+  public static boolean getToggleState(CompoundNBT nbt) {
+    return !nbt.isEmpty() && nbt.getBoolean("toggle");
+  }
 
   public static ItemStack getItemstackToUse(LivingEntity player, BlockState blockState) {
     ItemStack mainhand = player.getHeldItemMainhand();
-    if(mainhand.isEmpty() && shouldUseOffhand(player, blockState, mainhand)) {
+    if (mainhand.isEmpty() && shouldUseOffhand(player, blockState, mainhand)) {
       return player.getHeldItemOffhand();
     }
     return mainhand;

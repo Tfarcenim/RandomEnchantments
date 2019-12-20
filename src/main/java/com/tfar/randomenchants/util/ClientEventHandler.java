@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.List;
 
 import static com.tfar.randomenchants.RandomEnchants.ObjectHolders.*;
-import static com.tfar.randomenchants.ench.enchantment.EnchantmentGlobalTraveler.KEY;
+import static com.tfar.randomenchants.ench.enchantment.EnchantmentGlobalTraveler.GLOBAL_TRAVELER_KEY;
 
 @Mod.EventBusSubscriber(modid = RandomEnchants.MODID,value = Dist.CLIENT)
 public class ClientEventHandler {
@@ -59,22 +59,19 @@ public class ClientEventHandler {
   }
 
   @SubscribeEvent
-  public static void tooltip(ItemTooltipEvent event) {
-    CompoundNBT nbt0 = event.getItemStack().getTag();
-    if (true)return;
-    if (event.isCanceled()
-            || !EnchantUtils.hasEnch(event.getItemStack(),GLOBAL_TRAVELER)) return;
+  public static void globaltravellertooltip(ItemTooltipEvent event) {
+    CompoundNBT nbt = event.getItemStack().getTag();
+    if (!EnchantUtils.hasEnch(event.getItemStack(),GLOBAL_TRAVELER)) return;
 
-    event.getToolTip().add(new StringTextComponent("Toggle: "+nbt0.getBoolean("toggle")));
 
-    if (nbt0.contains(KEY, 10)) {
-      CompoundNBT nbt = nbt0.getCompound(KEY);
+    if (nbt.contains(GLOBAL_TRAVELER_KEY, 10)) {
+      CompoundNBT global = nbt.getCompound(GLOBAL_TRAVELER_KEY);
       event.getToolTip().add(new StringTextComponent(I18n.format("tooltip.globalmodifier.info",
-              nbt.getInt("x"),
-              nbt.getInt("y"),
-              nbt.getInt("z"),
-         nbt.getInt("dim"))));
-
-    }
+              global.getInt("x"),
+              global.getInt("y"),
+              global.getInt("z"),
+         global.getInt("dim"))));
+      event.getToolTip().add(new StringTextComponent("Toggle: "+ global.getBoolean("toggle")));
+    } else event.getToolTip().add(new StringTextComponent("Unbound").applyTextStyle(TextFormatting.RED));
   }
 }
