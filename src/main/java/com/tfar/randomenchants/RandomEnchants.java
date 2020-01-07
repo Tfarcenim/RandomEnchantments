@@ -74,7 +74,6 @@ public class RandomEnchants {
     enchants.add(new EnchantmentLightning());
     enchants.add(new EnchantmentDisarm());
     enchants.add(new EnchantmentHoming());
-    enchants.add(new EnchantmentDeflect());
     enchants.add(new EnchantmentQuickdraw());
     enchants.add(new EnchantmentSolar());
     enchants.add(new EnchantmentTrueShot());
@@ -87,7 +86,6 @@ public class RandomEnchants {
     enchants.add(new EnchantmentStonebound());
     enchants.add(new EnchantmentStoneLover());
     enchants.add(new EnchantmentRandomness());
-    enchants.add(new EnchantmentMomentum());
     enchants.add(new EnchantmentSnatching());
     enchants.add(new EnchantmentGrappling());
     enchants.add(new EnchantmentResistant());
@@ -149,9 +147,6 @@ public class RandomEnchants {
     public static final Enchantment RANDOMNESS = null;
     public static final Enchantment DISARM = null;
     public static final Enchantment HOMING = null;
-    public static final Enchantment DEFLECT = null;
-    public static final Enchantment MOMENTUM = null;
-    public static final Enchantment COMBO = null;
     public static final Enchantment QUICKDRAW = null;
     public static final Enchantment SWIFT = null;
     public static final Enchantment GRAPPLING = null;

@@ -75,8 +75,8 @@ public class EnchantmentSnatching extends Enchantment {
   @SubscribeEvent
   public static void playerHook(PlayerInteractEvent e) {
     if (e instanceof PlayerInteractEvent.EntityInteract || e instanceof PlayerInteractEvent.EntityInteractSpecific)return;
-    PlayerEntity player = e.getEntityPlayer();
-    if (e.getEntityPlayer().fishingBobber == null || player.world.isRemote) return;
+    PlayerEntity player = e.getPlayer();
+    if (e.getPlayer().fishingBobber == null || player.world.isRemote) return;
     FishingBobberEntity hook = player.fishingBobber;
     Entity entity = hook.caughtEntity;
     if (!(entity instanceof LivingEntity) || !EnchantUtils.hasEnch(player, SNATCHING)) return;
@@ -85,7 +85,7 @@ public class EnchantmentSnatching extends Enchantment {
     if (piece == null) return;
     BlockPos pos = victim.getPosition();
     ItemEntity entityItem = new ItemEntity(victim.world, pos.getX(), pos.getY(), pos.getZ(), piece);
-    Vec3d veloctiyVector = new Vec3d(player.posX-victim.posX,player.posY-victim.posY,player.posZ-victim.posZ);
+    Vec3d veloctiyVector = new Vec3d(player.func_226277_ct_()-victim.func_226277_ct_(),player.func_226278_cu_()-victim.func_226278_cu_(),player.func_226281_cx_()-victim.func_226281_cx_());
     spawnItemWithVelocity(veloctiyVector,entityItem);
   }
   public static ItemStack removeArmor(LivingEntity victim) {

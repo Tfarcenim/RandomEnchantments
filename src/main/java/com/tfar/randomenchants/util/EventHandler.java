@@ -26,7 +26,7 @@ public class EventHandler {
      if (tile != null)return;
 
     ItemStack stack = e.getItemStack();
-    if (EnchantUtils.hasEnch(stack, GLOBAL_TRAVELER) && e.getPlayer().isSneaking()) {
+    if (EnchantUtils.hasEnch(stack, GLOBAL_TRAVELER) && e.getPlayer().isCrouching()) {
       toggle(stack);
     }
   }

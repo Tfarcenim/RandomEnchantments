@@ -25,7 +25,7 @@ import static com.tfar.randomenchants.ench.enchantment.EnchantmentGlobalTraveler
 public class ClientEventHandler {
   @SubscribeEvent(priority = EventPriority.HIGHEST)
   public static void onTooltip(ItemTooltipEvent e) {
-    PlayerEntity p = e.getEntityPlayer();
+    PlayerEntity p = e.getPlayer();
     if (p == null) return;
     List<ITextComponent> tooltip = e.getToolTip();
     if ((EnchantUtils.hasEnch(e.getItemStack(),STONEBOUND))) {
@@ -33,12 +33,6 @@ public class ClientEventHandler {
       if (e.getItemStack() != stack) return;
       tooltip.add(new StringTextComponent("Mining Bonus: " + TextFormatting.GREEN + "+" + stack.getDamage() * .02));
       tooltip.add(new StringTextComponent("Damage Penalty: " + TextFormatting.RED + "-" + stack.getDamage() * .02));
-    } else if (EnchantUtils.hasEnch(p,COMBO)) {
-      ItemStack stack = p.getHeldItemMainhand();
-      if (e.getItemStack() != stack) return;
-      CompoundNBT compound = stack.getOrCreateTag();
-      int combo = compound.getInt("combo");
-      tooltip.add(new StringTextComponent("Combo: " + TextFormatting.GOLD + combo + "x"));
     }
 
     if (e.getItemStack().getItem() instanceof EnchantedBookItem){

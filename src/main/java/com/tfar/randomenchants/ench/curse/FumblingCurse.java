@@ -52,7 +52,7 @@ public class FumblingCurse extends Enchantment {
 
   @SubscribeEvent
   public static void onBreakSpeed(PlayerEvent.BreakSpeed e) {
-    PlayerEntity p = e.getEntityPlayer();
+    PlayerEntity p = e.getPlayer();
     if (EnchantUtils.hasEnch(p, FUMBLING)) {
       float oldSpeed = e.getOriginalSpeed();
       e.setNewSpeed((float)Math.sqrt(oldSpeed));

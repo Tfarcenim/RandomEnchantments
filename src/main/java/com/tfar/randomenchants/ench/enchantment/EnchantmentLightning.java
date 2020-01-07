@@ -55,7 +55,7 @@ public class EnchantmentLightning extends Enchantment {
   @Override
   public void onEntityDamaged(LivingEntity user, Entity target, int level) {
     if (!user.world.isRemote)
-      ((ServerWorld) user.world).addLightningBolt(new LightningBoltEntity(user.world, target.posX, target.posY, target.posZ, false));
+      ((ServerWorld) user.world).addLightningBolt(new LightningBoltEntity(user.world, target.func_226277_ct_(), target.func_226278_cu_(), target.func_226281_cx_(), false));
   }
 }
 

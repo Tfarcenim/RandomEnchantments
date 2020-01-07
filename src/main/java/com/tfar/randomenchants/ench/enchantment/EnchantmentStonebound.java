@@ -72,7 +72,7 @@ public class EnchantmentStonebound extends Enchantment {
   }
   @SubscribeEvent
   public void onBreakBlock(PlayerEvent.BreakSpeed e)  {
-    PlayerEntity p = e.getEntityPlayer();
+    PlayerEntity p = e.getPlayer();
     if ((EnchantmentHelper.getMaxEnchantmentLevel(STONEBOUND, p) > 0)){
       float oldSpeed = e.getOriginalSpeed();
       ItemStack stack = p.getHeldItemMainhand();

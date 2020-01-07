@@ -62,7 +62,7 @@ public class EnchantmentEqualMine extends Enchantment {
 
 @SubscribeEvent
 public static void onBreakSpeed(PlayerEvent.BreakSpeed e) {
-        PlayerEntity p = e.getEntityPlayer();
+        PlayerEntity p = e.getPlayer();
         BlockState state = e.getState();
         World world = p.getEntityWorld();
     BlockPos pos = e.getPos();

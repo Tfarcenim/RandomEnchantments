@@ -64,20 +64,24 @@ public class EnchantmentGrappling extends Enchantment {
   public static void playerGrapple(PlayerInteractEvent e) {
     if (e instanceof PlayerInteractEvent.EntityInteract || e instanceof PlayerInteractEvent.EntityInteractSpecific)
       return;
-    PlayerEntity player = e.getEntityPlayer();
+    PlayerEntity player = e.getPlayer();
     if (player.world.isRemote) return;
-    if (e.getEntityPlayer().fishingBobber != null) {
+    if (e.getPlayer().fishingBobber != null) {
       FishingBobberEntity hook = player.fishingBobber;
       Entity entity = hook.caughtEntity;
       if (EnchantmentHelper.getMaxEnchantmentLevel(GRAPPLING, player) == 0) return;
       if (entity != null) {
-        Vec3d veloctiyVector = new Vec3d(player.posX - entity.posX, player.posY - entity.posY, player.posZ - entity.posZ);
+        Vec3d veloctiyVector = new Vec3d(player.func_226277_ct_() - entity.func_226277_ct_(),
+                player.func_226278_cu_() - entity.func_226278_cu_(), player.func_226281_cx_()
+                - entity.func_226281_cx_());
         entity.addVelocity(veloctiyVector.x,veloctiyVector.y,veloctiyVector.z);
         entity.velocityChanged = true;
       } else {
         double speed = hook.getMotion().length();
         if (hook.isInWater()||(speed >.01))return;
-        Vec3d veloctiyVector = new Vec3d(hook.posX - player.posX, hook.posY - player.posY, hook.posZ - player.posZ);
+        Vec3d veloctiyVector = new Vec3d(hook.func_226277_ct_() - player.func_226277_ct_(),
+                hook.func_226278_cu_() - player.func_226278_cu_(),
+                hook.func_226281_cx_() - player.func_226281_cx_());
         player.addVelocity(veloctiyVector.x,veloctiyVector.y,veloctiyVector.z);
         player.velocityChanged = true;
       }

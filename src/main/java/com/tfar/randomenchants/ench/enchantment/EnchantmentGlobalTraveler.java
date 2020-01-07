@@ -174,7 +174,7 @@ public class EnchantmentGlobalTraveler extends Enchantment {
   @SubscribeEvent
   public static void onPlayerUse(PlayerInteractEvent.RightClickBlock event) {
     if (event.getWorld().isRemote
-            || !event.getPlayer().isSneaking()
+            || !event.getPlayer().isCrouching()
             || event.getFace() == null
             || !EnchantUtils.hasEnch(event.getItemStack(), GLOBAL_TRAVELER)
             || event.getHand() == Hand.OFF_HAND

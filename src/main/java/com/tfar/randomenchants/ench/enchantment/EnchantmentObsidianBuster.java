@@ -59,7 +59,7 @@ public class EnchantmentObsidianBuster extends Enchantment {
 
   @SubscribeEvent
   public static void onBreakSpeed(PlayerEvent.BreakSpeed e) {
-    PlayerEntity p = e.getEntityPlayer();
+    PlayerEntity p = e.getPlayer();
     BlockState state = e.getState();
     if (EnchantUtils.hasEnch(p, OBSIDIAN_BUSTER) && state.getBlock() == Blocks.OBSIDIAN) {
       float oldSpeed = e.getOriginalSpeed();
