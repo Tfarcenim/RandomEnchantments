@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
@@ -70,7 +71,7 @@ public class EnchantmentMagnetic extends Enchantment {
     return tools.enableMagnetic == NORMAL;
   }
 
-  @SubscribeEvent
+  @SubscribeEvent(priority = EventPriority.LOWEST)
   public static void onHarvestDrops(BlockEvent.HarvestDropsEvent e) {
     EntityPlayer player = e.getHarvester();
     if (player != null && EnchantmentUtils.stackHasEnch(player.getHeldItemMainhand(),MAGNETIC))
