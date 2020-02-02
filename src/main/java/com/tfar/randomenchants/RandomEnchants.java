@@ -85,7 +85,7 @@ public class RandomEnchants {
     enchants.add(new EnchantmentEqualMine());
     enchants.add(new EnchantmentStonebound());
     enchants.add(new EnchantmentStoneLover());
-    enchants.add(new EnchantmentRandomness());
+    enchants.add(new EnchantmentDungeoneering());
     enchants.add(new EnchantmentSnatching());
     enchants.add(new EnchantmentGrappling());
     enchants.add(new EnchantmentResistant());

@@ -23,8 +23,8 @@ import static com.tfar.randomenchants.RandomEnchants.itemList;
 
 
 @Mod.EventBusSubscriber(modid= RandomEnchants.MODID)
-public class EnchantmentRandomness extends Enchantment {
-    public EnchantmentRandomness() {
+public class EnchantmentDungeoneering extends Enchantment {
+    public EnchantmentDungeoneering() {
 
         super(Rarity.RARE, EnchantmentType.DIGGER, new EquipmentSlotType[]{
                 EquipmentSlotType.MAINHAND
