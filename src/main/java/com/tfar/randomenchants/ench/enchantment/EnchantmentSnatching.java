@@ -85,7 +85,7 @@ public class EnchantmentSnatching extends Enchantment {
     if (piece == null) return;
     BlockPos pos = victim.getPosition();
     ItemEntity entityItem = new ItemEntity(victim.world, pos.getX(), pos.getY(), pos.getZ(), piece);
-    Vec3d veloctiyVector = new Vec3d(player.func_226277_ct_()-victim.func_226277_ct_(),player.func_226278_cu_()-victim.func_226278_cu_(),player.func_226281_cx_()-victim.func_226281_cx_());
+    Vec3d veloctiyVector = new Vec3d(player.getPosX()-victim.getPosX(),player.getPosY()-victim.getPosY(),player.getPosZ()-victim.getPosZ());
     spawnItemWithVelocity(veloctiyVector,entityItem);
   }
   public static ItemStack removeArmor(LivingEntity victim) {

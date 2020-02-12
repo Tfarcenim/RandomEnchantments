@@ -144,7 +144,7 @@ public class RandomEnchants {
     public static final Enchantment DISCORD = null;
     public static final Enchantment LIGHTNING = null;
     public static final Enchantment TRANSPOSITION = null;
-    public static final Enchantment RANDOMNESS = null;
+    public static final Enchantment DUNGEONEERING = null;
     public static final Enchantment DISARM = null;
     public static final Enchantment HOMING = null;
     public static final Enchantment QUICKDRAW = null;

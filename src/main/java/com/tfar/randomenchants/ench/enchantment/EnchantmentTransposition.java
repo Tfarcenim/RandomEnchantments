@@ -68,10 +68,10 @@ public class EnchantmentTransposition extends Enchantment {
         if (!(shooter instanceof LivingEntity)) return;
         LivingEntity e1 = (LivingEntity) shooter;
         if (!EnchantUtils.hasEnch(e1, TRANSPOSITION)) return;
-        float[] pos1 = new float[]{(float)e1.func_226277_ct_(),(float)e1.func_226278_cu_(),(float)e1.func_226281_cx_(),e1.rotationYaw,e1.rotationPitch
+        float[] pos1 = new float[]{(float)e1.getPosX(),(float)e1.getPosY(),(float)e1.getPosZ(),e1.rotationYaw,e1.rotationPitch
         };
         LivingEntity e2 = (LivingEntity) ((EntityRayTraceResult) e.getRayTraceResult()).getEntity();
-        float[] pos2 = new float[]{(float)e2.func_226277_ct_(),(float)e2.func_226278_cu_(),(float)e2.func_226281_cx_(),e2.rotationYaw,e2.rotationPitch};
+        float[] pos2 = new float[]{(float)e2.getPosX(),(float)e2.getPosY(),(float)e2.getPosZ(),e2.rotationYaw,e2.rotationPitch};
         e1.setPosition(pos2[0],pos2[1],pos2[2]);
         e2.setPosition(pos1[0],pos1[1],pos1[2]);
         arrow.remove();

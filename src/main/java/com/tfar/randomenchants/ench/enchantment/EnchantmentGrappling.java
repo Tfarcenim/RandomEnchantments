@@ -71,17 +71,17 @@ public class EnchantmentGrappling extends Enchantment {
       Entity entity = hook.caughtEntity;
       if (EnchantmentHelper.getMaxEnchantmentLevel(GRAPPLING, player) == 0) return;
       if (entity != null) {
-        Vec3d veloctiyVector = new Vec3d(player.func_226277_ct_() - entity.func_226277_ct_(),
-                player.func_226278_cu_() - entity.func_226278_cu_(), player.func_226281_cx_()
-                - entity.func_226281_cx_());
+        Vec3d veloctiyVector = new Vec3d(player.getPosX() - entity.getPosX(),
+                player.getPosY() - entity.getPosY(), player.getPosZ()
+                - entity.getPosZ());
         entity.addVelocity(veloctiyVector.x,veloctiyVector.y,veloctiyVector.z);
         entity.velocityChanged = true;
       } else {
         double speed = hook.getMotion().length();
         if (hook.isInWater()||(speed >.01))return;
-        Vec3d veloctiyVector = new Vec3d(hook.func_226277_ct_() - player.func_226277_ct_(),
-                hook.func_226278_cu_() - player.func_226278_cu_(),
-                hook.func_226281_cx_() - player.func_226281_cx_());
+        Vec3d veloctiyVector = new Vec3d(hook.getPosX() - player.getPosX(),
+                hook.getPosY() - player.getPosY(),
+                hook.getPosZ() - player.getPosZ());
         player.addVelocity(veloctiyVector.x,veloctiyVector.y,veloctiyVector.z);
         player.velocityChanged = true;
       }

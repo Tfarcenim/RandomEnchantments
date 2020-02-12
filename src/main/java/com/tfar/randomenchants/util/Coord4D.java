@@ -25,9 +25,9 @@ public class Coord4D {
   public DimensionType dimensionType;
 
   public Coord4D(Entity ent) {
-    xCoord = (int)ent.func_226277_ct_();
-    yCoord = (int)ent.func_226278_cu_();
-    zCoord = (int)ent.func_226281_cx_();
+    xCoord = (int)ent.getPosX();
+    yCoord = (int)ent.getPosY();
+    zCoord = (int)ent.getPosZ();
 
     dimensionId = ent.dimension.getId();
   }

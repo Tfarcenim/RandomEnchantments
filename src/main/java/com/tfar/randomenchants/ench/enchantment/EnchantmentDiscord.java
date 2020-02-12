@@ -63,9 +63,9 @@ public class EnchantmentDiscord extends Enchantment {
     }
     if (!(target instanceof LivingEntity)) return;
     int r = 64;
-    double x = target.func_226277_ct_();
-    double y = target.func_226278_cu_();
-    double z = target.func_226281_cx_();
+    double x = target.getPosX();
+    double y = target.getPosY();
+    double z = target.getPosZ();
     List<Entity> aggro = target.world.getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(x - r, y - r, z - r, x + r, y + r, z + r));
     for (Entity triggered : aggro) {
       ((LivingEntity) triggered).setRevengeTarget((LivingEntity) target);

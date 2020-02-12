@@ -2,7 +2,6 @@ package com.tfar.randomenchants;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -54,7 +53,7 @@ public class Config {
     public static ForgeConfigSpec.EnumValue<Restriction> paralysis;
     public static ForgeConfigSpec.EnumValue<Restriction> phasing;
     public static ForgeConfigSpec.EnumValue<Restriction> quickdraw;
-    public static ForgeConfigSpec.EnumValue<Restriction> randomness;
+    public static ForgeConfigSpec.EnumValue<Restriction> dungeoneering;
     public static ForgeConfigSpec.EnumValue<Restriction> reflect;
     public static ForgeConfigSpec.EnumValue<Restriction> resistant;
     public static ForgeConfigSpec.EnumValue<Restriction> ricochet;
@@ -162,10 +161,10 @@ public class Config {
               .comment(s1)
               .translation("text.randomenchants.config.quickdraw")
               .defineEnum("quickdraw", NORMAL);
-      randomness = builder
+      dungeoneering = builder
               .comment(s1)
-              .translation("text.randomenchants.config.randomness")
-              .defineEnum("randomness", NORMAL);
+              .translation("text.randomenchants.config.dungeoneering")
+              .defineEnum("dungeoneering", NORMAL);
       reflect = builder
               .comment(s1)
               .translation("text.randomenchants.config.reflect")
@@ -255,11 +254,4 @@ public class Config {
   }
 
   public enum Restriction {DISABLED,ANVIL,NORMAL}
-
-  @SubscribeEvent
-  public static void onConfigChanged(ConfigChangedEvent e){
-    if (e.getModID().equals(MODID)){
-  //    ConfigManager.sync(MODID);
-    }
-  }
 }
