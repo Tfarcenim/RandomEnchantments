@@ -87,12 +87,12 @@ public class EnchantmentBackToTheChamber extends Enchantment {
     if (!player.world.isRemote) {
       try {
         // EntityArrow#getArrowStack
-        ItemStack arrowItem = ObfuscationReflectionHelper.findMethod(EntityArrow.class, "func_184550_j", ItemStack.class).invoke((EntityArrow) arrow);
+        ItemStack arrowItem = (ItemStack) ObfuscationReflectionHelper.findMethod(EntityArrow.class, "func_184550_j", ItemStack.class).invoke((EntityArrow) arrow);
 
         boolean found = false;
         List<ItemStack> inventory = player.inventory.mainInventory;
         for (ItemStack stack : inventory) {
-          if (!(stack.getItem() == arrowItem))
+          if (!(stack.getItem() == arrowItem.getItem()))
             continue;
           stack.grow(1);
           found = true;
