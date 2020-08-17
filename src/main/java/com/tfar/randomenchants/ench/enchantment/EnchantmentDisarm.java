@@ -57,13 +57,15 @@ public class EnchantmentDisarm extends Enchantment {
 
   @Override
   public void onEntityDamaged(LivingEntity user, Entity target, int level) {
-    World world = user.world;
-    BlockPos pos = user.getPosition();
-    LivingEntity victim = (LivingEntity) target;
-    ItemStack stack = victim.getHeldItemMainhand();
-    victim.setItemStackToSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
-    ItemEntity itemStack = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-    world.addEntity(itemStack);
+    if (target instanceof LivingEntity) {
+      World world = user.world;
+      BlockPos pos = user.getPosition();
+      LivingEntity victim = (LivingEntity) target;
+      ItemStack stack = victim.getHeldItemMainhand();
+      victim.setItemStackToSlot(EquipmentSlotType.MAINHAND, ItemStack.EMPTY);
+      ItemEntity itemStack = new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+      world.addEntity(itemStack);
+    }
   }
 }
 
