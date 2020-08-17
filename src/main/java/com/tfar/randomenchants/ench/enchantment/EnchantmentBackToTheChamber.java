@@ -14,10 +14,12 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.List;
 
+import com.tfar.randomenchants.RandomEnchants;
 import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.weapons;
 import static com.tfar.randomenchants.init.ModEnchantment.BACK_TO_THE_CHAMBER;
@@ -83,12 +85,24 @@ public class EnchantmentBackToTheChamber extends Enchantment {
     int level = EnchantmentHelper.getMaxEnchantmentLevel(BACK_TO_THE_CHAMBER, player);
     if (5 * Math.random() > level) return;
     if (!player.world.isRemote) {
-      List<ItemStack> inventory = player.inventory.mainInventory;
-      for (ItemStack stack : inventory) {
-        if (!(stack.getItem() == Items.ARROW || stack.getItem() == Items.TIPPED_ARROW))
-          continue;
-        stack.grow(1);
-        break;
+      try {
+        // EntityArrow#getArrowStack
+        ItemStack arrowItem = ObfuscationReflectionHelper.findMethod(EntityArrow.class, "func_184550_j", ItemStack.class).invoke((EntityArrow) arrow);
+
+        boolean found = false;
+        List<ItemStack> inventory = player.inventory.mainInventory;
+        for (ItemStack stack : inventory) {
+          if (!(stack.getItem() == arrowItem))
+            continue;
+          stack.grow(1);
+          found = true;
+          break;
+        }
+        if (!found) {
+          player.addItemStackToInventory(arrowItem);
+        }
+      } catch (Exception e) {
+        RandomEnchants.logger.error("Reflection error ", e);
       }
     }
   }
