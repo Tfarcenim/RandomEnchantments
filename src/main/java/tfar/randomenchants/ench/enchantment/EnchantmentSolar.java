@@ -1,0 +1,74 @@
+package tfar.randomenchants.ench.enchantment;
+
+import tfar.randomenchants.Config;
+import tfar.randomenchants.RandomEnchants;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.EnchantmentType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+import static tfar.randomenchants.RandomEnchants.ObjectHolders.SOLAR;
+import static tfar.randomenchants.util.EnchantUtils.isDark;
+
+@Mod.EventBusSubscriber(modid= RandomEnchants.MODID)
+public class EnchantmentSolar extends Enchantment {
+  public EnchantmentSolar() {
+
+    super(Rarity.RARE, EnchantmentType.BREAKABLE, list);
+    this.setRegistryName("solar");
+  }
+
+  @Override
+  public int getMinEnchantability(int level) {
+    return 5 + 10 * (level - 1);
+  }
+
+  @Override
+  public int getMaxLevel() {
+    return 5;
+  }
+
+
+  private static final EquipmentSlotType[] list = new EquipmentSlotType[]{EquipmentSlotType.HEAD,
+          EquipmentSlotType.CHEST, EquipmentSlotType.LEGS, EquipmentSlotType.FEET,
+          EquipmentSlotType.MAINHAND, EquipmentSlotType.OFFHAND};
+
+  @Override
+  public boolean canApply(ItemStack stack){
+    return Config.ServerConfig.solar.get() != Config.Restriction.DISABLED && super.canApply(stack);
+  }
+
+  @Override
+  public boolean isTreasureEnchantment() {
+    return Config.ServerConfig.solar.get() == Config.Restriction.ANVIL;
+  }
+
+  @Override
+  public boolean canApplyAtEnchantingTable(ItemStack stack) {
+    return Config.ServerConfig.solar.get() != Config.Restriction.DISABLED && super.canApplyAtEnchantingTable(stack);
+  }
+
+  @Override
+  public boolean isAllowedOnBooks() {
+    return Config.ServerConfig.solar.get() == Config.Restriction.NORMAL;
+  }
+
+  @SubscribeEvent
+  public static void applySolar(TickEvent.PlayerTickEvent e) {
+    PlayerEntity p = e.player;
+    if (p.world.isRemote || p.world.getWorldInfo().getGameTime() % 20 != 0)return;
+    for (EquipmentSlotType slot : list) {
+      ItemStack stack = p.getItemStackFromSlot(slot);
+      int level = EnchantmentHelper.getEnchantmentLevel(SOLAR, stack);
+      if (level == 0) continue;
+      if (!isDark(p) && stack.isDamaged())
+        stack.setDamage(stack.getDamage()-level);
+    }
+  }
+}
+

@@ -8,8 +8,10 @@ modLoader="javafml" #mandatory
 # A version range to match for said mod loader - for regular FML @Mod it will be the forge version
 loaderVersion="[25,)" #mandatory (24 is current forge version)
 # A URL to refer people to when problems occur with this mod
-issueTrackerURL="http://my.issue.tracker/" #optional
+#issueTrackerURL="http://my.issue.tracker/" #optional
 # A list of mods - how many allowed here is determined by the individual mod loader
+license="crayon"
+
 [[mods]] #mandatory
 # The modid of the mod
 modId="randomenchants" #mandatory
@@ -18,11 +20,11 @@ version="${file.jarVersion}" #mandatory
  # A display name for the mod
 displayName="Random Enchants" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
-updateJSONURL="http://myurl.me/" #optional
+#updateJSONURL="http://myurl.me/" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
-displayURL="http://example.com/" #optional
+#displayURL="http://example.com/" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="examplemod.png" #optional
+#logoFile="examplemod.png" #optional
 # A text field displayed in the mod UI
 credits="Thanks for this example mod goes to Java" #optional
 # A text field displayed in the mod UI
@@ -30,25 +32,6 @@ authors="Tfarecnim" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 
-placeholder
+Random enchantments that do weird stuff
 
 '''
-# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.examplemod]] #optional
-    # the modid of the dependency
-    modId="forge" #mandatory
-    # Does this dependency have to exist - if not, ordering below must be specified
-    mandatory=true #mandatory
-    # The version range of the dependency
-    versionRange="[25,)" #mandatory
-    # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
-    ordering="NONE"
-    # Side this dependency is applied on - BOTH, SERVER or SERVER
-    side="BOTH"
-# Here's another dependency
-[[dependencies.examplemod]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[1.13.2]"
-    ordering="NONE"
-    side="BOTH"
