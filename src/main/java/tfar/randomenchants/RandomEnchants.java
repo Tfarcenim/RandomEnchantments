@@ -5,13 +5,10 @@ import tfar.randomenchants.ench.curse.ButterfingersCurse;
 import tfar.randomenchants.ench.curse.BreakingCurse;
 import tfar.randomenchants.ench.curse.ShadowCurse;
 import tfar.randomenchants.ench.curse.FumblingCurse;
-import tfar.randomenchants.util.EventHandler;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.item.*;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -36,13 +33,13 @@ public class RandomEnchants {
 
   public static final ArrayList<Item> itemList = new ArrayList<>();
   public static final String MODID = "randomenchants";
-  public static final EnchantmentType SWORDS_BOWS = addEnchantment("weapons", item -> item instanceof SwordItem || item instanceof ShootableItem);
+  public static final EnchantmentType SWORDS_BOWS = registerEnchantmentType("weapons", item -> item instanceof SwordItem || item instanceof ShootableItem);
 
-  public static final EnchantmentType PICKAXE = addEnchantment("pickaxe", PickaxeItem.class::isInstance);
-  public static final EnchantmentType SHOOTABLE = addEnchantment("shootable", ShootableItem.class::isInstance);
-  public static final EnchantmentType SHIELDS = addEnchantment("shields", ShieldItem.class::isInstance);
-  public static final EnchantmentType AXE = addEnchantment("axe", AxeItem.class::isInstance);
-  public static final EnchantmentType TOOLSANDWEAPONS = addEnchantment("tools&weapons", item -> item instanceof SwordItem || item instanceof ShootableItem || item instanceof ToolItem);
+  public static final EnchantmentType PICKAXE = registerEnchantmentType("pickaxe", PickaxeItem.class::isInstance);
+  public static final EnchantmentType SHOOTABLE = registerEnchantmentType("shootable", ShootableItem.class::isInstance);
+  public static final EnchantmentType SHIELDS = registerEnchantmentType("shields", ShieldItem.class::isInstance);
+  public static final EnchantmentType AXE = registerEnchantmentType("axe", AxeItem.class::isInstance);
+  public static final EnchantmentType TOOLSANDWEAPONS = registerEnchantmentType("tools&weapons", item -> item instanceof SwordItem || item instanceof ShootableItem || item instanceof ToolItem);
 
   public static Set<Enchantment> enchants = new HashSet<>();
 
@@ -53,7 +50,6 @@ public class RandomEnchants {
     FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Enchantment.class,this::registerEnchantments);
   }
 
-  @SubscribeEvent
   public void registerEnchantments(RegistryEvent.Register<Enchantment> event) {
 
     enchants.add(ObjectHolders.NETHERPROOF.setRegistryName("netherproof"));
@@ -101,8 +97,6 @@ public class RandomEnchants {
     enchants.add(new ShadowCurse());
     enchants.add(new EnchantmentSilverfish());
 
-
-
     IForgeRegistry<Enchantment> r = event.getRegistry();
 
     for (Enchantment enchant : enchants)
@@ -113,19 +107,13 @@ public class RandomEnchants {
   //    MinecraftForge.EVENT_BUS.register(GLOBAL_TRAVELER);
     //  EnchantmentGlobalTraveler.GLOBAL_TRAVELER_KEY = GLOBAL_TRAVELER.getRegistryName().toString();
     }
-    setup();
   }
 
   @Nonnull
-  public static EnchantmentType addEnchantment(String name, Predicate<Item> condition) {
+  public static EnchantmentType registerEnchantmentType(String name, Predicate<Item> condition) {
     return EnchantmentType.create(name, condition);
   }
 
-  public static void setup() {
-    for (Item item : ForgeRegistries.ITEMS) {
-      itemList.add(item);
-    }
-  }
   @ObjectHolder(MODID)
   public static class ObjectHolders {
 
@@ -166,7 +154,7 @@ public class RandomEnchants {
     public static final Enchantment RICOCHET = null;
     public static final Enchantment AUTOSMELT = null;
     public static final Enchantment Assimilation = null;
-    public static final Enchantment NETHERPROOF = new NetherProofingEnchant(Enchantment.Rarity.RARE, EnchantmentType.BREAKABLE, new EquipmentSlotType[]{
+    public static final Enchantment NETHERPROOF = new NetherProofingEnchantment(Enchantment.Rarity.RARE, EnchantmentType.BREAKABLE, new EquipmentSlotType[]{
             EquipmentSlotType.MAINHAND});
 
     //register curses

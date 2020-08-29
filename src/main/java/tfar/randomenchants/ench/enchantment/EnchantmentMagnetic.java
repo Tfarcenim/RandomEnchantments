@@ -62,13 +62,6 @@ public class EnchantmentMagnetic extends Enchantment {
   }
 
   @SubscribeEvent
-  public static void onHarvestDrops(BlockEvent.HarvestDropsEvent e) {
-    PlayerEntity player = e.getHarvester();
-    if (player != null && EnchantUtils.hasEnch(player.getHeldItemMainhand(),MAGNETIC))
-      e.getDrops().removeIf(player::addItemStackToInventory);
-  }
-
-  @SubscribeEvent
   public static void onEnemyKilled(LivingDropsEvent e) {
     Entity attacker = e.getSource().getTrueSource();
 
@@ -87,7 +80,7 @@ public class EnchantmentMagnetic extends Enchantment {
   public static List<ItemStack> getStacksFromEntityItems(Collection<ItemEntity> l){
 
     List<ItemStack> stacks = new ArrayList<>();
-    for (ItemEntity item : l){
+    for (ItemEntity item : l) {
       stacks.add(item.getItem());
     }
     return stacks;

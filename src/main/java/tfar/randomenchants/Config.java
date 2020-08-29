@@ -57,6 +57,7 @@ public class Config {
     public static ForgeConfigSpec.EnumValue<Restriction> resistant;
     public static ForgeConfigSpec.EnumValue<Restriction> ricochet;
     public static ForgeConfigSpec.EnumValue<Restriction> shattering;
+    public static ForgeConfigSpec.EnumValue<Restriction> silverfish;
     public static ForgeConfigSpec.EnumValue<Restriction> snatching;
     public static ForgeConfigSpec.EnumValue<Restriction> solar;
     public static ForgeConfigSpec.EnumValue<Restriction> stonebound;
@@ -180,6 +181,10 @@ public class Config {
               .comment(s1)
               .translation("text.randomenchants.config.shattering")
               .defineEnum("shattering", NORMAL);
+      silverfish = builder
+              .comment(s1)
+              .translation("text.randomenchants.config.shattering")
+              .defineEnum("shattering", ANVIL);
       snatching = builder
               .comment(s1)
               .translation("text.randomenchants.config.snatching")

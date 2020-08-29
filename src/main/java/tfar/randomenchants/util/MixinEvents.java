@@ -4,7 +4,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber
-public class CoremodHooks {
+public class MixinEvents {
 
   //@SubscribeEvent
   //public static void drops(DropLootEvent event) {

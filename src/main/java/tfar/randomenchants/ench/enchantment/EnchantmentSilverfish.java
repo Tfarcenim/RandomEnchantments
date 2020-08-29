@@ -40,37 +40,23 @@ public class EnchantmentSilverfish extends Enchantment {
 
   @Override
   public boolean canApply(ItemStack stack) {
-    return Config.ServerConfig.disarm.get() != Config.Restriction.DISABLED && super.canApply(stack);
+    return Config.ServerConfig.silverfish.get() != Config.Restriction.DISABLED && super.canApply(stack);
   }
 
   @Override
   public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return Config.ServerConfig.disarm.get() != Config.Restriction.DISABLED && super.canApplyAtEnchantingTable(stack);
+    return Config.ServerConfig.silverfish.get() != Config.Restriction.DISABLED && super.canApplyAtEnchantingTable(stack);
   }
 
   @Override
   public boolean isAllowedOnBooks() {
-    return Config.ServerConfig.disarm.get() == Config.Restriction.NORMAL;
+    return Config.ServerConfig.silverfish.get() == Config.Restriction.NORMAL;
   }
 
   @Override
   public boolean isTreasureEnchantment() {
-    return Config.ServerConfig.disarm.get() == Config.Restriction.ANVIL;
+    return Config.ServerConfig.silverfish.get() == Config.Restriction.ANVIL;
   }
 
-  public static void repair(PlayerEntity player, List<ItemStack> drops) {
-    List<ItemStack> remove = new ArrayList<>();
-    ItemStack tool = player.getHeldItemMainhand();
-    for (ItemStack stack : drops) {
-      int fuelvalue = (int)Math.ceil(ForgeHooks.getBurnTime(stack)/50d);
-      if (fuelvalue == 0) continue;
-      int toRepair = tool.getDamage();
-      if (toRepair >= fuelvalue) {
-        tool.setDamage(toRepair - fuelvalue);
-        remove.add(stack);
-      }
-    }
-    drops.removeAll(remove);
-  }
 }
 
