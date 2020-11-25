@@ -15,8 +15,6 @@ import static tfar.randomenchants.RandomEnchants.ObjectHolders.GLOBAL_TRAVELER;
 @Mod.EventBusSubscriber
 public class EventHandler {
 
-
-
   @SubscribeEvent
   public static void toggle(PlayerInteractEvent.RightClickBlock e) {
     World world = e.getWorld();

@@ -4,7 +4,6 @@ import com.mojang.serialization.Dynamic;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTDynamicOps;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -12,11 +11,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.server.ServerLifecycleHooks;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
+import java.util.Objects;
 
 public class Coord4D {
     public int xCoord;
@@ -29,7 +27,7 @@ public class Coord4D {
         yCoord = (int) ent.getPosY();
         zCoord = (int) ent.getPosZ();
 
-        dimensionType = ent.world.func_234923_W_();
+        dimensionType = ent.world.getDimensionKey();
     }
 
     public Coord4D(double x, double y, double z, RegistryKey<World> worldRegistryKey) {
@@ -40,21 +38,21 @@ public class Coord4D {
     }
 
     public Coord4D(BlockPos pos, World world) {
-        this(pos.getX(), pos.getY(), pos.getZ(), world.func_234923_W_());
+        this(pos.getX(), pos.getY(), pos.getZ(), world.getDimensionKey());
     }
 
     @Nullable
     public static Coord4D fromNBT(CompoundNBT nbt) {
         return nbt.isEmpty() ? null : new Coord4D(nbt.getInt("x"), nbt.getInt("y"), nbt.getInt("z"),
 
-                RegistryKey.func_240903_a_(Registry.WORLD_KEY,new ResourceLocation(nbt.getString("Dimension"))));
+                RegistryKey.getOrCreateKey(Registry.WORLD_KEY,new ResourceLocation(nbt.getString("Dimension"))));
     }
 
     public CompoundNBT toNBT(CompoundNBT nbt) {
         nbt.putInt("x", xCoord);
         nbt.putInt("y", yCoord);
         nbt.putInt("z", zCoord);
-        nbt.putString("Dimension", dimensionType.func_240901_a_().toString());
+        nbt.putString("Dimension", dimensionType.getLocation().toString());
         return nbt;
     }
 
@@ -63,9 +61,9 @@ public class Coord4D {
     }
 
     public static RegistryKey<World> getRegistryKey(CompoundNBT nbt) {
-        return nbt != null ? DimensionType.func_236025_a_(new Dynamic<>(NBTDynamicOps.INSTANCE, nbt)).resultOrPartial(LOGGER -> {
+        return nbt != null ? DimensionType.decodeWorldKey(new Dynamic<>(NBTDynamicOps.INSTANCE, nbt)).resultOrPartial(LOGGER -> {
                 }
-        ).orElse(World.field_234918_g_) : World.field_234918_g_;
+        ).orElse(World.OVERWORLD) : World.OVERWORLD;
     }
 
     @Override
@@ -74,11 +72,18 @@ public class Coord4D {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj instanceof Coord4D &&
-                ((Coord4D) obj).xCoord == xCoord &&
-                ((Coord4D) obj).yCoord == yCoord &&
-                ((Coord4D) obj).zCoord == zCoord;// &&
-                //((Coord4D) obj).dimensionId == null;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coord4D coord4D = (Coord4D) o;
+        return xCoord == coord4D.xCoord &&
+                yCoord == coord4D.yCoord &&
+                zCoord == coord4D.zCoord &&
+                Objects.equals(dimensionType, coord4D.dimensionType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(xCoord, yCoord, zCoord, dimensionType);
     }
 }

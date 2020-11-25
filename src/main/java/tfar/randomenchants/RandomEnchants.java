@@ -138,7 +138,7 @@ public class RandomEnchants {
     public static final Enchantment QUICKDRAW = null;
     public static final Enchantment SWIFT = null;
     public static final Enchantment GRAPPLING = null;
-    public static final Enchantment TELEPORTATON = null;
+    public static final Enchantment TELEPORTATION = null;
     public static final Enchantment SOLAR = null;
     public static final Enchantment LUMBERJACK = null;
     public static final Enchantment SHATTERING = null;

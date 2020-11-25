@@ -1,5 +1,8 @@
 package tfar.randomenchants.ench.enchantment;
 
+import net.minecraft.entity.LivingEntity;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.player.ArrowLooseEvent;
 import tfar.randomenchants.Config;
 import tfar.randomenchants.RandomEnchants;
 import tfar.randomenchants.util.EnchantUtils;
@@ -17,7 +20,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import static tfar.randomenchants.Config.Restriction.*;
-import static tfar.randomenchants.RandomEnchants.ObjectHolders.TELEPORTATON;
+import static tfar.randomenchants.RandomEnchants.ObjectHolders.TELEPORTATION;
 
 @Mod.EventBusSubscriber(modid = RandomEnchants.MODID)
 public class EnchantmentTeleportation extends Enchantment {
@@ -65,13 +68,22 @@ public class EnchantmentTeleportation extends Enchantment {
         if (!(e.getEntity() instanceof AbstractArrowEntity) || e.getEntity().world.isRemote) return;
         AbstractArrowEntity arrow = (AbstractArrowEntity) e.getEntity();
         Entity shooter = arrow.func_234616_v_();
-        if (!(shooter instanceof PlayerEntity)) return;
-        PlayerEntity p = (PlayerEntity) shooter;
-        if (!EnchantUtils.hasEnch(p,TELEPORTATON)) return;
-        BlockPos pos = ((BlockRayTraceResult) e.getRayTraceResult()).getPos().down();
-        if (arrow.world.getBlockState(pos).getMaterial() == Material.LAVA)return;
-        p.setPositionAndUpdate(pos.getX(),pos.getY(),pos.getZ());
+        if (!(shooter instanceof LivingEntity)) return;
+        if (!arrow.getPersistentData().getBoolean(TELEPORTATION.getRegistryName().toString())) return;
+        BlockPos pos = ((BlockRayTraceResult) e.getRayTraceResult()).getPos();
+        if (arrow.world.getBlockState(pos.up()).getMaterial() == Material.LAVA)return;
+        shooter.setPositionAndUpdate(pos.getX(),pos.getY()+1,pos.getZ());
+    }
 
+    @SubscribeEvent
+    public static void looseArrow(EntityJoinWorldEvent e) {
+        if (e.getEntity() instanceof AbstractArrowEntity) {
+            AbstractArrowEntity arrow = (AbstractArrowEntity)e.getEntity();
+            Entity owner = arrow.func_234616_v_();
+            if (owner instanceof LivingEntity && EnchantUtils.hasEnch((LivingEntity)owner, TELEPORTATION)) {
+                arrow.getPersistentData().putBoolean(TELEPORTATION.getRegistryName().toString(),true);
+            }
+        }
     }
 }
 
