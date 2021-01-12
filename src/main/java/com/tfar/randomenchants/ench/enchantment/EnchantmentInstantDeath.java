@@ -58,7 +58,13 @@ public class EnchantmentInstantDeath extends Enchantment {
         if (target instanceof LivingEntity) {
             LivingEntity victim = (LivingEntity) target;
             float victimHealth = victim.getMaxHealth();
-            victim.attackEntityFrom(DamageSource.MAGIC, (victimHealth * 2));
+            float victimArmor = victim.getTotalArmorValue();
+            // Debug:
+//            System.out.println("Victim Absorption Amount: " + victim.getAbsorptionAmount());
+//            System.out.println("Victim Health: " + victim.getHealth());
+//            System.out.println("Victim Max Health: " + victim.getMaxHealth());
+//            System.out.println("Victim Total Armor Value: " + victim.getTotalArmorValue());
+            victim.attackEntityFrom(DamageSource.MAGIC, (victimHealth + victimArmor * 2));
 
         }
     }
