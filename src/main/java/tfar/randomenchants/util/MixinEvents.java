@@ -1,13 +1,26 @@
 package tfar.randomenchants.util;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.items.wrapper.InvWrapper;
+
+import javax.annotation.Nullable;
+
+import static tfar.randomenchants.RandomEnchants.ObjectHolders.MAGNETIC;
 
 @Mod.EventBusSubscriber
 public class MixinEvents {
 
-  //@SubscribeEvent
-  //public static void drops(DropLootEvent event) {
+    //@SubscribeEvent
+    //public static void drops(DropLootEvent event) {
     /*PlayerEntity player = event.getPlayer();
     LootContext context = event.getContext();
     ItemStack tool = context.get(LootParameters.TOOL);
@@ -91,5 +104,13 @@ public class MixinEvents {
       if (EnchantUtils.hasEnch(player.getHeldItemMainhand(), MAGNETIC))
         contents.removeIf(player::addItemStackToInventory);
     }*/
- // }
+    // }
+
+    public static void handleBlockSpawns(BlockState state, World world, BlockPos pos, @Nullable TileEntity tileEntityIn, @Nullable Entity entityIn, ItemStack toolStack, ItemStack droppedStack) {
+        if (entityIn instanceof PlayerEntity) {
+            if (EnchantUtils.hasEnch((LivingEntity) entityIn, MAGNETIC)) {
+                ((PlayerEntity)entityIn).addItemStackToInventory(droppedStack);
+            }
+        }
+    }
 }

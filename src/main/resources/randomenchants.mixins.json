@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "randomenchants.refmap.json",
   "mixins": [
+    "BlockMixin",
     "ItemEntityMixin"
   ],
   "injectors": {
