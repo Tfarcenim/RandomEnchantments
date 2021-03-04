@@ -1,13 +1,18 @@
 package tfar.randomenchants.util;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import tfar.randomenchants.RandomEnchants;
 import tfar.randomenchants.ench.enchantment.EnchantmentGlobalTraveler;
 
 import static tfar.randomenchants.RandomEnchants.ObjectHolders.GLOBAL_TRAVELER;
@@ -26,6 +31,15 @@ public class EventHandler {
     ItemStack stack = e.getItemStack();
     if (EnchantUtils.hasEnch(stack, GLOBAL_TRAVELER) && e.getPlayer().isCrouching()) {
       toggle(stack);
+    }
+  }
+
+  @SubscribeEvent
+  public static void hit(LivingDamageEvent event) {
+    LivingEntity victim = event.getEntityLiving();
+    Entity user = event.getSource().getTrueSource();
+    if (user instanceof PlayerEntity && EnchantUtils.hasEnch((LivingEntity) user, RandomEnchants.ObjectHolders.INSTANT_DEATH)) {
+      victim.setHealth(0);
     }
   }
 

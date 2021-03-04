@@ -51,9 +51,6 @@ public class EnchantmentInstantDeath extends Enchantment {
 
   @Override
   public void onEntityDamaged(LivingEntity user, Entity target, int level) {
-    if (target instanceof LivingEntity && user instanceof PlayerEntity) {
-      LivingEntity victim = (LivingEntity) target;
-      victim.setHealth(0);
-    }
+
   }
 }
