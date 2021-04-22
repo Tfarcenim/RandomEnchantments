@@ -1,7 +1,6 @@
 package tfar.randomenchants.util;
 
 import com.mojang.serialization.Dynamic;
-import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTDynamicOps;
 import net.minecraft.util.RegistryKey;
@@ -21,14 +20,6 @@ public class Coord4D {
     public int yCoord;
     public int zCoord;
     public RegistryKey<World> dimensionType;
-
-    public Coord4D(Entity ent) {
-        xCoord = (int) ent.getPosX();
-        yCoord = (int) ent.getPosY();
-        zCoord = (int) ent.getPosZ();
-
-        dimensionType = ent.world.getDimensionKey();
-    }
 
     public Coord4D(double x, double y, double z, RegistryKey<World> worldRegistryKey) {
         xCoord = MathHelper.floor(x);
