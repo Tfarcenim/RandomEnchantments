@@ -57,7 +57,9 @@ public class EnchantmentExploding extends Enchantment {
       handled = false;
       return;
     }
-    if (!(user instanceof PlayerEntity) || !EnchantUtils.isArrow((LivingEntity) target)) return;
+    if (!(user instanceof PlayerEntity)) {
+      return;
+    }
     PlayerEntity player = (PlayerEntity) user;
     if (!player.world.isRemote) {
       target.world.createExplosion(null, target.getPosX(), target.getPosY(), target.getPosZ(), level, Explosion.Mode.DESTROY);
