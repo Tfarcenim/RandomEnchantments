@@ -21,62 +21,61 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = RandomEnchants.MODID)
 
 public class EnchantmentShattering extends Enchantment {
-  public EnchantmentShattering() {
-    super(Rarity.RARE, RandomEnchants.SHOOTABLE, new EquipmentSlotType[]{
-            EquipmentSlotType.MAINHAND
-    });
-    this.setRegistryName("shattering");
-  }
+    public EnchantmentShattering() {
+        super(Rarity.RARE, RandomEnchants.SHOOTABLE, new EquipmentSlotType[]{
+                EquipmentSlotType.MAINHAND
+        });
+        this.setRegistryName("shattering");
+    }
 
-  @Override
-  public int getMinEnchantability(int level) {
-    return 25;
-  }
+    @Override
+    public int getMinEnchantability(int level) {
+        return 25;
+    }
 
-  @Override
-  public int getMaxLevel() {
-    return 1;
-  }
+    @Override
+    public int getMaxLevel() {
+        return 1;
+    }
 
-  @Override
-  public boolean canApply(ItemStack stack){
-    return Config.ServerConfig.shattering.get() != Config.Restriction.DISABLED && super.canApply(stack);
-  }
+    @Override
+    public boolean canApply(ItemStack stack) {
+        return Config.ServerConfig.shattering.get() != Config.Restriction.DISABLED && super.canApply(stack);
+    }
 
-  @Override
-  public boolean isTreasureEnchantment() {
-    return Config.ServerConfig.shattering.get() == Config.Restriction.ANVIL;
-  }
+    @Override
+    public boolean isTreasureEnchantment() {
+        return Config.ServerConfig.shattering.get() == Config.Restriction.ANVIL;
+    }
 
-  @Override
-  public boolean canApplyAtEnchantingTable(ItemStack stack) {
-    return Config.ServerConfig.shattering.get() != Config.Restriction.DISABLED && super.canApplyAtEnchantingTable(stack);
-  }
+    @Override
+    public boolean canApplyAtEnchantingTable(ItemStack stack) {
+        return Config.ServerConfig.shattering.get() != Config.Restriction.DISABLED && super.canApplyAtEnchantingTable(stack);
+    }
 
-  @Override
-  public boolean isAllowedOnBooks() {
-      return Config.ServerConfig.shattering.get() == Config.Restriction.NORMAL;
+    @Override
+    public boolean isAllowedOnBooks() {
+        return Config.ServerConfig.shattering.get() == Config.Restriction.NORMAL;
     }
 
 
-  @SubscribeEvent
-  public static void arrowHit(ProjectileImpactEvent event) {
-    RayTraceResult result = event.getRayTraceResult();
-    if (!(result instanceof BlockRayTraceResult))return;
-    Entity arrow = event.getEntity();
-    if (!(arrow instanceof  AbstractArrowEntity))return;
-    Entity shooter = ((AbstractArrowEntity) arrow).func_234616_v_();
-    if (!(shooter instanceof PlayerEntity))return;
-    PlayerEntity player = (PlayerEntity) ((AbstractArrowEntity) arrow).func_234616_v_();
-    if (player == null)return;
-    if (!EnchantUtils.hasEnch(player.getHeldItemMainhand(), RandomEnchants.ObjectHolders.SHATTERING))return;
-    BlockPos pos = ((BlockRayTraceResult) result).getPos();
-    Block glass = arrow.world.getBlockState(pos).getBlock();
-    if (!(glass instanceof GlassBlock))return;
-    if (true)
-      arrow.world.destroyBlock(pos,true);
-      event.setCanceled(true);
+    @SubscribeEvent
+    public static void arrowHit(ProjectileImpactEvent event) {
+        RayTraceResult result = event.getRayTraceResult();
+        if (!(result instanceof BlockRayTraceResult)) return;
+        Entity arrow = event.getEntity();
+        if (!(arrow instanceof AbstractArrowEntity)) return;
+        Entity shooter = ((AbstractArrowEntity) arrow).getShooter();
+        if (!(shooter instanceof PlayerEntity)) return;
+        PlayerEntity player = (PlayerEntity) ((AbstractArrowEntity) arrow).getShooter();
+        if (player == null) return;
+        if (!EnchantUtils.hasEnch(player.getHeldItemMainhand(), RandomEnchants.ObjectHolders.SHATTERING)) return;
+        BlockPos pos = ((BlockRayTraceResult) result).getPos();
+        Block glass = arrow.world.getBlockState(pos).getBlock();
+        if (!(glass instanceof GlassBlock)) return;
+        arrow.world.destroyBlock(pos, true);
+        event.setCanceled(true);
     }
-  }
+}
 
 

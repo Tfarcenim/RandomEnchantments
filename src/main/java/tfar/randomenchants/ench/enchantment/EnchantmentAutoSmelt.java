@@ -56,15 +56,11 @@ public class EnchantmentAutoSmelt extends Enchantment {
   }
 
   public static ItemStack getResult(ItemStack stackInSlot, World world) {
-    AbstractCookingRecipe irecipe = getRecipe(stackInSlot,world);
-    return irecipe != null ? irecipe.getRecipeOutput() : ItemStack.EMPTY;
-  }
-
-  @Nullable
-  public static AbstractCookingRecipe getRecipe(ItemStack input, World world) {
     IInventory inventory = new Inventory(1);
-    inventory.setInventorySlotContents(0,input);
-    return world.getRecipeManager().getRecipe(IRecipeType.SMELTING,inventory, world).orElse(null);
-    }
+    inventory.setInventorySlotContents(0,stackInSlot);
+    AbstractCookingRecipe irecipe = world.getRecipeManager().getRecipe(IRecipeType.SMELTING,inventory, world).orElse(null);
+
+    return irecipe != null ? irecipe.getCraftingResult(inventory) : ItemStack.EMPTY;
+  }
 }
 

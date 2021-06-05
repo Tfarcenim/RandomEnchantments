@@ -19,13 +19,13 @@ public class Coord4D {
     public int xCoord;
     public int yCoord;
     public int zCoord;
-    public RegistryKey<World> dimensionType;
+    public RegistryKey<World> registryKey;
 
     public Coord4D(double x, double y, double z, RegistryKey<World> worldRegistryKey) {
         xCoord = MathHelper.floor(x);
         yCoord = MathHelper.floor(y);
         zCoord = MathHelper.floor(z);
-        dimensionType = worldRegistryKey;
+        registryKey = worldRegistryKey;
     }
 
     public Coord4D(BlockPos pos, World world) {
@@ -43,7 +43,7 @@ public class Coord4D {
         nbt.putInt("x", xCoord);
         nbt.putInt("y", yCoord);
         nbt.putInt("z", zCoord);
-        nbt.putString("Dimension", dimensionType.getLocation().toString());
+        nbt.putString("Dimension", registryKey.getLocation().toString());
         return nbt;
     }
 
@@ -70,11 +70,11 @@ public class Coord4D {
         return xCoord == coord4D.xCoord &&
                 yCoord == coord4D.yCoord &&
                 zCoord == coord4D.zCoord &&
-                Objects.equals(dimensionType, coord4D.dimensionType);
+                Objects.equals(registryKey, coord4D.registryKey);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(xCoord, yCoord, zCoord, dimensionType);
+        return Objects.hash(xCoord, yCoord, zCoord, registryKey);
     }
 }

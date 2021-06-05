@@ -68,7 +68,7 @@ public class EnchantmentHarvest extends Enchantment {
     AbstractArrowEntity arrow = (AbstractArrowEntity)proj;
     if (!(result instanceof BlockRayTraceResult))return;
     BlockPos pos = ((BlockRayTraceResult)result).getPos();
-    Entity shooter = arrow.func_234616_v_();
+    Entity shooter = arrow.getShooter();
     if (!(shooter instanceof PlayerEntity))return;
     PlayerEntity player = (PlayerEntity)shooter;
     if (!EnchantUtils.hasEnch(player, RandomEnchants.ObjectHolders.HARVEST))return;

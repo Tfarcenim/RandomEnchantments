@@ -61,7 +61,7 @@ public class EnchantmentTransposition extends Enchantment {
         if(!(e.getRayTraceResult() instanceof EntityRayTraceResult) || !(((EntityRayTraceResult) e.getRayTraceResult()).getEntity() instanceof LivingEntity))return;
         if (!(e.getEntity() instanceof AbstractArrowEntity) || e.getEntity().world.isRemote) return;
         AbstractArrowEntity arrow = (AbstractArrowEntity) e.getEntity();
-        Entity shooter = arrow.func_234616_v_();
+        Entity shooter = arrow.getShooter();
         if (!(shooter instanceof LivingEntity)) return;
         LivingEntity e1 = (LivingEntity) shooter;
         if (!EnchantUtils.hasEnch(e1, RandomEnchants.ObjectHolders.TRANSPOSITION)) return;

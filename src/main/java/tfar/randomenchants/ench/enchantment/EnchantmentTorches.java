@@ -68,10 +68,10 @@ public class EnchantmentTorches extends Enchantment {
     if (!(arrow instanceof AbstractArrowEntity)) return;
     RayTraceResult result = e.getRayTraceResult();
     if (!(result instanceof BlockRayTraceResult)) return;
-    Entity shooter = ((AbstractArrowEntity) arrow).func_234616_v_();
+    Entity shooter = ((AbstractArrowEntity) arrow).getShooter();
     if (!(shooter instanceof LivingEntity)) return;
     if (result.getType() == RayTraceResult.Type.MISS) return;
-    LivingEntity user = (LivingEntity) ((AbstractArrowEntity) arrow).func_234616_v_();
+    LivingEntity user = (LivingEntity) ((AbstractArrowEntity) arrow).getShooter();
     if (user == null) return;
     if (!EnchantUtils.hasEnch(user, TORCHES)) return;
     World world = arrow.world;

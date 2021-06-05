@@ -67,7 +67,7 @@ public class EnchantmentTeleportation extends Enchantment {
         if(!(e.getRayTraceResult() instanceof BlockRayTraceResult))return;
         if (!(e.getEntity() instanceof AbstractArrowEntity) || e.getEntity().world.isRemote) return;
         AbstractArrowEntity arrow = (AbstractArrowEntity) e.getEntity();
-        Entity shooter = arrow.func_234616_v_();
+        Entity shooter = arrow.getShooter();
         if (!(shooter instanceof LivingEntity)) return;
         if (!arrow.getPersistentData().getBoolean(TELEPORTATION.getRegistryName().toString())) return;
         BlockPos pos = ((BlockRayTraceResult) e.getRayTraceResult()).getPos();
@@ -79,7 +79,7 @@ public class EnchantmentTeleportation extends Enchantment {
     public static void looseArrow(EntityJoinWorldEvent e) {
         if (e.getEntity() instanceof AbstractArrowEntity) {
             AbstractArrowEntity arrow = (AbstractArrowEntity)e.getEntity();
-            Entity owner = arrow.func_234616_v_();
+            Entity owner = arrow.getShooter();
             if (owner instanceof LivingEntity && EnchantUtils.hasEnch((LivingEntity)owner, TELEPORTATION)) {
                 arrow.getPersistentData().putBoolean(TELEPORTATION.getRegistryName().toString(),true);
             }

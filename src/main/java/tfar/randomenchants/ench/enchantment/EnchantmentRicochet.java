@@ -67,7 +67,7 @@ public class EnchantmentRicochet extends Enchantment {
     Entity entity = event.getEntity();
     if (!(entity instanceof AbstractArrowEntity)) return;
     AbstractArrowEntity arrow = (AbstractArrowEntity) entity;
-    Entity shooter = arrow.func_234616_v_();
+    Entity shooter = arrow.getShooter();
     if (!(shooter instanceof PlayerEntity)) return;
     PlayerEntity player = (PlayerEntity) shooter;
     if (!EnchantUtils.hasEnch(player,RICOCHET))return;

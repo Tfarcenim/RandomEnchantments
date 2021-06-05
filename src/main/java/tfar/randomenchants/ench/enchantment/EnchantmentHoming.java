@@ -61,7 +61,7 @@ public class EnchantmentHoming extends Enchantment {
   public static void arrowLoose(EntityJoinWorldEvent event)  {
     Entity entity = event.getEntity();
     if (!(entity instanceof AbstractArrowEntity))return;
-    Entity shooter = ((AbstractArrowEntity) entity).func_234616_v_();
+    Entity shooter = ((AbstractArrowEntity) entity).getShooter();
     if (!(shooter instanceof PlayerEntity))return;
     PlayerEntity player = (PlayerEntity) shooter;
       if (!EnchantUtils.hasEnch(player,HOMING))return;

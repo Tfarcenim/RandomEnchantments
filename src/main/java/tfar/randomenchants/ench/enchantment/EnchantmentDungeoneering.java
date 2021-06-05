@@ -82,7 +82,7 @@ public class EnchantmentDungeoneering extends Enchantment {
         LootContext.Builder builder = (new LootContext.Builder(serverWorld))
                 .withRandom(serverWorld.rand)
                 .withParameter(LootParameters.THIS_ENTITY,p)
-                .withParameter(LootParameters.field_237457_g_,victim.getPositionVec())
+                .withParameter(LootParameters.ORIGIN,victim.getPositionVec())
                 .withParameter(LootParameters.DAMAGE_SOURCE,e.getSource());
         LootContext lootcontext = builder.build(LootParameterSets.ENTITY);
         ResourceLocation rl = new ResourceLocation("chests/simple_dungeon");
