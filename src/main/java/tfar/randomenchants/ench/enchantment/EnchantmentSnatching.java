@@ -29,7 +29,7 @@ public class EnchantmentSnatching extends Enchantment {
     super(Rarity.RARE, EnchantmentType.FISHING_ROD, new EquipmentSlotType[]{
             EquipmentSlotType.MAINHAND
     });
-    this.setRegistryName("hooked");
+    this.setRegistryName("snatching");
   }
 
   @Override
@@ -83,7 +83,7 @@ public class EnchantmentSnatching extends Enchantment {
     ItemStack piece = removeArmor(victim);
     if (piece == null) return;
     BlockPos pos = victim.getPosition();
-    ItemEntity entityItem = new ItemEntity(victim.world, pos.getX(), pos.getY(), pos.getZ(), piece);
+    ItemEntity entityItem = new ItemEntity(player.world, pos.getX(), pos.getY(), pos.getZ(), piece);
     Vector3d veloctiyVector = new Vector3d(player.getPosX()-victim.getPosX(),player.getPosY()-victim.getPosY(),player.getPosZ()-victim.getPosZ());
     spawnItemWithVelocity(veloctiyVector,entityItem);
   }
