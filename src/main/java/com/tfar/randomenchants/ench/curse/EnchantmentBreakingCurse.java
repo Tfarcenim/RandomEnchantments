@@ -1,5 +1,6 @@
 package com.tfar.randomenchants.ench.curse;
 
+import com.tfar.randomenchants.util.EnchantmentUtils;
 import com.tfar.randomenchants.util.GlobalVars;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -15,7 +16,7 @@ import static com.tfar.randomenchants.EnchantmentConfig.EnumAccessLevel.*;
 import static com.tfar.randomenchants.EnchantmentConfig.curses;
 import static com.tfar.randomenchants.init.ModEnchantment.BREAKING;
 
-@Mod.EventBusSubscriber(modid= GlobalVars.MOD_ID)
+@Mod.EventBusSubscriber(modid = GlobalVars.MOD_ID)
 public class EnchantmentBreakingCurse extends Enchantment {
     public EnchantmentBreakingCurse() {
 
@@ -40,15 +41,14 @@ public class EnchantmentBreakingCurse extends Enchantment {
     public int getMaxLevel() {
         return 3;
     }
+
     @Override
-    public boolean canApply(ItemStack stack)
-    {
+    public boolean canApply(ItemStack stack) {
         return curses.enableBreaking != DISABLED && stack.isItemStackDamageable() || super.canApply(stack);
     }
 
     @Override
-    public boolean isCurse()
-    {
+    public boolean isCurse() {
         return true;
     }
 
@@ -58,10 +58,12 @@ public class EnchantmentBreakingCurse extends Enchantment {
     }
 
     @SubscribeEvent
-public static void amplifyDamage(BlockEvent.BreakEvent e) {
+    public static void amplifyDamage(BlockEvent.BreakEvent e) {
         EntityPlayer p = e.getPlayer();
         ItemStack stack = p.getHeldItemMainhand();
-        stack.damageItem(EnchantmentHelper.getEnchantmentLevel(BREAKING,stack),p);
-}
+
+        if (EnchantmentUtils.stackHasEnch(stack,BREAKING))
+        stack.damageItem(EnchantmentHelper.getEnchantmentLevel(BREAKING, stack), p);
+    }
 }
 
