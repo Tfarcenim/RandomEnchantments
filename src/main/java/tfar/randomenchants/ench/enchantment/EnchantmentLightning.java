@@ -1,5 +1,9 @@
 package tfar.randomenchants.ench.enchantment;
 
+import net.minecraft.entity.EntityType;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.GameRules;
 import tfar.randomenchants.Config;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
@@ -53,6 +57,13 @@ public class EnchantmentLightning extends Enchantment {
 
   @Override
   public void onEntityDamaged(LivingEntity user, Entity target, int level) {
+    if (!user.world.isRemote){
+      LightningBoltEntity lightningboltentity = EntityType.LIGHTNING_BOLT.create(user.world);
+      lightningboltentity.moveForced(Vector3d.copyCenteredHorizontally(new BlockPos(target.getPosX(),target.getPosY(),target.getPosZ())));
+      lightningboltentity.setEffectOnly(false);
+      user.world.addEntity(lightningboltentity);
+    }
+
    // if (!user.world.isRemote)
       //((ServerWorld) user.world).addLightningBolt(new LightningBoltEntity(user.world, target.getPosX(), target.getPosY(), target.getPosZ(), false));
   }
