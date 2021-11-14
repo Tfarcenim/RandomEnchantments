@@ -136,7 +136,7 @@ public class Config {
       lightning = builder
               .comment(s1)
               .translation("text.randomenchants.config.lightning")
-              .defineEnum("instant_death", NORMAL);
+              .defineEnum("lightning", NORMAL);
       lumberjack = builder
               .comment(s1)
               .translation("text.randomenchants.config.lumberjack")
@@ -183,8 +183,8 @@ public class Config {
               .defineEnum("shattering", NORMAL);
       silverfish = builder
               .comment(s1)
-              .translation("text.randomenchants.config.shattering")
-              .defineEnum("shattering", ANVIL);
+              .translation("text.randomenchants.config.silverfish")
+              .defineEnum("silverfish", ANVIL);
       snatching = builder
               .comment(s1)
               .translation("text.randomenchants.config.snatching")
@@ -251,7 +251,7 @@ public class Config {
       global_traveller = builder
               .comment(s1)
               .translation("text.randomenchants.config.global_traveller")
-              .defineEnum("golbal_traveller", NORMAL);
+              .defineEnum("global_traveller", NORMAL);
 
       builder.pop();
     }
